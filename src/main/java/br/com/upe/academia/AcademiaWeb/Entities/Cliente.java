@@ -25,6 +25,7 @@ public class Cliente {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "IdEndereco")
     private Endereco endereco;
+    @Enumerated(EnumType.STRING)
     private perfil perfil;
 }
 
