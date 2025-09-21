@@ -1,14 +1,12 @@
 package br.com.upe.academia.AcademiaWeb.Entities;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
@@ -17,11 +15,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Vendas {
+public class Aluno extends Usuario{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID IDvenda;
-    private Timestamp dataVenda;
-    //
+    private UUID IDAluno;
+    private double moedas;
+
 
 }

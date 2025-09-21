@@ -1,6 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Entities.Enums;
 
-public enum perfil {
+public enum tipo {
     usuario,
     personalTrainer
 }
