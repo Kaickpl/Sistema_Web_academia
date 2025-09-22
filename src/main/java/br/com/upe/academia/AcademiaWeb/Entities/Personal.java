@@ -1,10 +1,13 @@
 package br.com.upe.academia.AcademiaWeb.Entities;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -13,5 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class Personal extends Usuario{
-
+    private String cref;
+    @OneToMany
+    private List<Aluno> alunos;
 }
