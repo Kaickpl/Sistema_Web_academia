@@ -17,6 +17,5 @@ import java.util.UUID;
 
 public class Personal extends Usuario{
     private String cref;
-    @OneToMany
-    private List<Aluno> alunos;
+
 }

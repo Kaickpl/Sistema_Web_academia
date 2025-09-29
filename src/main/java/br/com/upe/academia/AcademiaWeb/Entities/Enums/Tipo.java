@@ -1,6 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Entities.Enums;
 
-public enum tipo {
+public enum Tipo {
     cliente,
     personalTrainer
 }
