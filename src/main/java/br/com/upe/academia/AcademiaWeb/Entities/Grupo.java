@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Grupo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID idGrupoUuid;
+    private UUID idGrupo;
     private String nomeGrupo;
     private String DescricaoGrupo;
 

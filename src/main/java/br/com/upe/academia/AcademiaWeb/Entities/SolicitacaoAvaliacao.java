@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +22,7 @@ public class SolicitacaoAvaliacao {
     private UUID IdAvaliacao;
     private Double peso;
     private Double altura;
+    private Date dataSolicitacao;
 
     @ManyToOne
     @JoinColumn(name = "idMedidas")
