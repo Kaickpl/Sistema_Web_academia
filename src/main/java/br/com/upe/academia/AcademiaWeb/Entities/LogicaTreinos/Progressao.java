@@ -1,5 +1,8 @@
-package br.com.upe.academia.AcademiaWeb.Entities;
+package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
+import br.com.upe.academia.AcademiaWeb.Entities.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,10 +20,10 @@ public class Progressao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idProgressao;
-    /*
+
     @ManyToOne
     @JoinColumn(name = "idUsuario")
-    private Usuario usuario;
+    private Aluno aluno;
 
     @ManyToOne
     @JoinColumn(name = "idExercicio")
@@ -28,6 +31,6 @@ public class Progressao {
 
     @ManyToOne
     @JoinColumn(name = "idConquista")
-    private Conquista conquista;
-     */
+    private Conquistas conquista;
+
 }

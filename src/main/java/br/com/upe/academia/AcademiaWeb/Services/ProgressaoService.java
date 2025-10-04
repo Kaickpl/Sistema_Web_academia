@@ -1,7 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
-import br.com.upe.academia.AcademiaWeb.Entities.Progressao;
-import br.com.upe.academia.AcademiaWeb.Repositories.ProgressaoRepository;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Progressao;
 import org.springframework.stereotype.Service;
 
 @Service
