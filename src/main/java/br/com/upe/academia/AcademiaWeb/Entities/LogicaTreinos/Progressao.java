@@ -2,7 +2,6 @@ package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
-import br.com.upe.academia.AcademiaWeb.Entities.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
