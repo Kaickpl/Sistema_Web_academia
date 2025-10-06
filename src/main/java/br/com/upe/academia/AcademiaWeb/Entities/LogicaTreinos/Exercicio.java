@@ -24,7 +24,7 @@ public class Exercicio {
     private Integer numeroDeSeries;
     private Duration tempoDeDescanso;
 
-    @OneToMany(mappedBy = "exercicio", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "idExercicio", cascade = CascadeType.ALL)
     private List<Serie> series;
 
     @ManyToOne

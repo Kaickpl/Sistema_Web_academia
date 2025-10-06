@@ -22,6 +22,7 @@ public class Serie {
     private UUID idSerie;
     private Integer numeroDeRepeticoes;
     private Float pesoDaSerie;
+    private UUID idExercicio;
 
     @ManyToOne
     @JoinColumn(name = "exercicio")
