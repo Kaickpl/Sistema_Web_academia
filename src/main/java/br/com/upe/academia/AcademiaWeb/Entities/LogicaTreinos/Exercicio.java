@@ -28,7 +28,7 @@ public class Exercicio {
     private List<Serie> series;
 
     @ManyToOne
-    @JoinColumn(name = "treino")
+    @JoinColumn(name = "treino_id")
     private Treino treino;
 
 }
