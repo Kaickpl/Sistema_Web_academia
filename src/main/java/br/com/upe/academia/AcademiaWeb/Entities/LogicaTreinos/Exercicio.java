@@ -24,11 +24,11 @@ public class Exercicio {
     private Integer numeroDeSeries;
     private Duration tempoDeDescanso;
 
-    @OneToMany(mappedBy = "idExercicio", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "exercicio", cascade = CascadeType.ALL)
     private List<Serie> series;
 
     @ManyToOne
-    @JoinColumn(name = "conjunto_de_exercicios")
+    @JoinColumn(name = "treino")
     private Treino treino;
 
 }
