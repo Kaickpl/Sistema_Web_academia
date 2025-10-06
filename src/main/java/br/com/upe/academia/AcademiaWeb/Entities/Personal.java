@@ -18,4 +18,7 @@ import java.util.UUID;
 public class Personal extends Usuario{
     private String cref;
 
+    @OneToMany(mappedBy = "personal")
+    private List<Grupo> grupo;
+
 }

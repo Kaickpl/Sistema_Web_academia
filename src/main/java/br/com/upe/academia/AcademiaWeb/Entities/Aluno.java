@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -17,5 +19,8 @@ public class Aluno extends Usuario{
     @ManyToOne
     @JoinColumn(name = "id_Grupo")
     private Grupo grupo;
+
+    @ManyToMany(mappedBy = "ListaAlunos")
+    private List<Grupo> ListaGrupo;
 
 }

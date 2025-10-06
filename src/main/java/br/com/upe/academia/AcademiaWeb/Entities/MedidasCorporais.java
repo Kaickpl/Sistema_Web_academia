@@ -31,5 +31,7 @@ public class MedidasCorporais {
     private Double massaMagra;
     private Double gordura;
     private Double percentualAgua;
+    private Double peso;
+    private Double altura;
 
 }

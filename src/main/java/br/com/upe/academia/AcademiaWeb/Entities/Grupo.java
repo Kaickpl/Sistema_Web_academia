@@ -20,11 +20,17 @@ public class Grupo {
     private UUID idGrupo;
     private String nomeGrupo;
     private String DescricaoGrupo;
-
-    @OneToOne
-    @JoinColumn(name = "id_Personal" )
+//many to one
+    @ManyToOne
+    @JoinColumn(name = "id_personal")
     private Personal personal;
 
-    @OneToMany (mappedBy = "grupo")
-    private List<Aluno> alunos;
+//// many to many
+    @ManyToMany
+    @JoinTable(
+            name = "Lista_Alunos",
+            joinColumns = @JoinColumn(name = "id_grupo"),
+            inverseJoinColumns = @JoinColumn(name = "id_usuario")
+    )
+    private List<Aluno> ListaAlunos;
 }

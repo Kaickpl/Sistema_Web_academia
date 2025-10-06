@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,13 +14,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class SolicitacaoAvaliacao {
+public class Avaliacao {
     @Id
     @GeneratedValue(strategy =  GenerationType.UUID)
     private UUID IdAvaliacao;
-    private Double peso;
-    private Double altura;
     private Date dataSolicitacao;
+    private Date dataAvaliacao;
+    private String objeitvoAvaliacao;
+
 
     @ManyToOne
     @JoinColumn(name = "idMedidas")
