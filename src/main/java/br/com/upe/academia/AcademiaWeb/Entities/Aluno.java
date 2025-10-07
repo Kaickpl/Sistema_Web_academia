@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Aluno extends Usuario{
     private double saldoMoedas;
+
     @ManyToOne
     @JoinColumn(name = "id_Grupo")
     private Grupo grupo;

@@ -12,9 +12,8 @@ import java.util.UUID;
 public interface AlunoRepository extends JpaRepository<Aluno, UUID> {
 
     Aluno findByEmail(String email);
-    Aluno findByNomeUsuario(String NomeUsuario);
+    Aluno findByNomeUsuarioContaining(String NomeUsuario);
     List<Aluno> findByGrupo(Grupo grupo);
-    List<Aluno> findByGrupoIsNull();
 
 }
 
