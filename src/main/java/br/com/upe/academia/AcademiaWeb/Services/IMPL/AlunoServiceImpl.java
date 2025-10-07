@@ -18,13 +18,13 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     public Aluno cadastrarAluno(Aluno aluno) {
-        return null;
+        aluno.setTipo(Tipo.aluno);
+        return alunoRepository.save(aluno);
     }
 
     @Override
     public Aluno alterarAluno(Aluno aluno) {
-        aluno.setTipo(Tipo.aluno);
-        return alunoRepository.save(aluno);
+        return null;
     }
 
     @Override
