@@ -24,7 +24,7 @@ public class Serie {
     private Float pesoDaSerie;
 
     @ManyToOne
-    @JoinColumn(name = "exercicio")
+    @JoinColumn(name = "exercicio_id")
     private Exercicio exercicio;
 
 

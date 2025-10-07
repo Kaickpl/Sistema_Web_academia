@@ -19,7 +19,7 @@ public class Treino {
     private Duration duracao;
     private String nome;
 
-    @OneToMany(mappedBy = "exercicio", cascade = CascadeType.ALL)
-    private List<Exercicio> exercicioList;
+    @OneToMany(mappedBy = "treino", cascade = CascadeType.ALL)
+    private List<Exercicio> exercicio;
 
 }
