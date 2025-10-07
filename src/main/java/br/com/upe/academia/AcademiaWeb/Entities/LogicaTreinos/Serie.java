@@ -22,6 +22,7 @@ public class Serie {
     private UUID idSerie;
     private Integer numeroDeRepeticoes;
     private Float pesoDaSerie;
+    private boolean isConcluida = false;
 
     @ManyToOne
     @JoinColumn(name = "exercicio_id")
@@ -33,5 +34,9 @@ public class Serie {
             return pesoDaSerie * numeroDeRepeticoes;
         }
         return 0.0f;
+    }
+
+    public boolean isConcluida() {
+        return isConcluida;
     }
 }
