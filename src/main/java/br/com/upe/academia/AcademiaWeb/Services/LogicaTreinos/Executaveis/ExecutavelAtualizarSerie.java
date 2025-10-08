@@ -1,6 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis;
 
-public class ExercicioExecutavel implements Executavel{
+public class ExecutavelAtualizarSerie implements Executavel{
 
     @Override
     public void executar() {
