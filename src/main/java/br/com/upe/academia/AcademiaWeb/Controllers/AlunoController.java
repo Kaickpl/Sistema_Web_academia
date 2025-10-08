@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
+import aj.org.objectweb.asm.commons.TryCatchBlockSorter;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
@@ -57,14 +58,48 @@ public class AlunoController {
         return ResponseEntity.ok(alunoService.ListarAlunos(page).map(AlunoDTOs::new));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizarAluno(@RequestBody AlunoDTOs alunoDTOs, @PathVariable UUID id) {
+        // Busca aluno existente
+        Aluno alunoExistente = alunoService.buscarPorId(id);
+        if (alunoExistente == null) {
+            return ResponseEntity.status(404).body("Aluno não encontrado");
+        }
+
+        // Atualiza somente os campos permitidos
+        if (alunoDTOs.getNomeUsuario() != null) {
+            alunoExistente.setNomeUsuario(alunoDTOs.getNomeUsuario());
+        }
+        if (alunoDTOs.getTelefone() != null) {
+            alunoExistente.setTelefone(alunoDTOs.getTelefone());
+        }
+        if (alunoDTOs.getEmail() != null && !alunoDTOs.getEmail().equals(alunoExistente.getEmail())) {
+            if (alunoService.validaremail(alunoDTOs.getEmail())) {
+                return ResponseEntity.status(409).body("Já existe um aluno com esse email!");
+            }
+            alunoExistente.setEmail(alunoDTOs.getEmail());
+        }
+
+        // Salva no banco
+        Aluno alunoAtualizado = alunoService.alterarAluno(id, alunoExistente);
+
+        return ResponseEntity.ok(alunoAtualizado);
+    }
+
+
+
+
+
 
 
     private Aluno convertToEntity(AlunoDTOs alunoDTOs) {
         Aluno aluno = new Aluno();
         aluno.setIdUsuario(alunoDTOs.getIdUsuario());
+        aluno.setDataNascimento(alunoDTOs.getDataNascimento());
         aluno.setNomeUsuario(alunoDTOs.getNomeUsuario());
         aluno.setEmail(alunoDTOs.getEmail());
         aluno.setSenha(alunoDTOs.getSenha());
+        aluno.setTelefone(alunoDTOs.getTelefone());
         aluno.setTipo(Tipo.aluno);
         aluno.setSaldoMoedas(alunoDTOs.getSaldoMoedas());
         return aluno;

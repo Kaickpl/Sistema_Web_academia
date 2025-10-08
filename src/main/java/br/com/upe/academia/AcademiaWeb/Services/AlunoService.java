@@ -11,11 +11,15 @@ public interface AlunoService {
 
     public boolean validaremail(String email);
 
-    public Aluno alterarAluno(Aluno aluno);
+    public Aluno alterarAluno(UUID id, Aluno aluno);
 
     public boolean removerAluno(UUID ID);
 
     public List<Aluno> buscaraluno(String nomeUsuario);
 
+    public Aluno buscarPorId(UUID id);
+
+
     public Page<Aluno> ListarAlunos(Pageable page);
 }
+

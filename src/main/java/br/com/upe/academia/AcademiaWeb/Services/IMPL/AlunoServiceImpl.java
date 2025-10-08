@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -36,10 +37,29 @@ public class AlunoServiceImpl implements AlunoService {
         return alunoRepository.save(aluno);
     }
     @Override
-    public Aluno alterarAluno(Aluno aluno) {
+    public Aluno alterarAluno(UUID id, Aluno aluno) {
+        Aluno alunoExiste = alunoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado!"));
 
-        return null;
+        // Atualiza email somente se for diferente e válido
+        if (aluno.getEmail() != null && !alunoExiste.getEmail().equals(aluno.getEmail())) {
+            if (validaremail(aluno.getEmail())) {
+                throw new IllegalArgumentException("Já existe um aluno com esse email!");
+            }
+            alunoExiste.setEmail(aluno.getEmail());
+        }
+
+        // Atualiza nome e telefone somente se vierem preenchidos
+        if (aluno.getNomeUsuario() != null) {
+            alunoExiste.setNomeUsuario(aluno.getNomeUsuario());
+        }
+        if (aluno.getTelefone() != null) {
+            alunoExiste.setTelefone(aluno.getTelefone());
+        }
+
+        return alunoRepository.save(alunoExiste);
     }
+
 
     @Override
     public boolean removerAluno(UUID id) {
@@ -60,5 +80,9 @@ public class AlunoServiceImpl implements AlunoService {
         return alunoRepository.findAll(page);
     }
 
+    @Override
+    public Aluno buscarPorId(UUID id) {
+        return alunoRepository.findById(id).orElse(null);
+    }
 
 }
