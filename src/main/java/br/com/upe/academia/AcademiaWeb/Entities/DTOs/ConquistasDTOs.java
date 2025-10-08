@@ -18,4 +18,12 @@ public class ConquistasDTOs {
     public ConquistasDTOs(Conquistas conquistas) {
         this.idConquistas = conquistas.getIdConquistas();
     }
+
+    public UUID getIdConquistas() {
+        return idConquistas;
+    }
+
+    public void setIdConquistas(UUID idConquistas) {
+        this.idConquistas = idConquistas;
+    }
 }

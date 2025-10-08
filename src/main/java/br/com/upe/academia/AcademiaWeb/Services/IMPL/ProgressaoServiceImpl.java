@@ -21,8 +21,6 @@ public class ProgressaoServiceImpl implements ProgressaoService{
         progressao.setAlunoId(alunoId);
         progressao.setNomeExercicio(nomeExercicio);
         progressao.setPeso(peso);
-        progressao.setData(LocalDate.now());
-
         return progressaoRepository.save(progressao);
     }
 

@@ -21,4 +21,11 @@ public class AlunoDTOs extends UsuarioDTOs{
         this.saldoMoedas = aluno.getSaldoMoedas();
     }
 
+    public double getSaldoMoedas() {
+        return saldoMoedas;
+    }
+
+    public void setSaldoMoedas(double saldoMoedas) {
+        this.saldoMoedas = saldoMoedas;
+    }
 }

@@ -17,4 +17,12 @@ public class PersonalDTOs extends UsuarioDTOs {
         super(personal);
         this.cref = personal.getCref();
     }
+
+    public String getCref() {
+        return cref;
+    }
+
+    public void setCref(String cref) {
+        this.cref = cref;
+    }
 }

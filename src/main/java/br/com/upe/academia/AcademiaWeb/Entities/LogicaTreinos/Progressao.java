@@ -28,6 +28,16 @@ public class Progressao {
 
     private int peso;
 
+    private LocalDate data;
+
+    @PrePersist
+    protected void onCreate() {
+        if (data == null) {
+            data = LocalDate.now();
+        }
+    }
+
+
     public LocalDate getData() {
         return data;
     }
@@ -36,7 +46,6 @@ public class Progressao {
         this.data = data;
     }
 
-    private LocalDate data;
 
     public void setAlunoId(UUID alunoId) {
         this.alunoId = alunoId;

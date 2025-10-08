@@ -26,4 +26,36 @@ public class AvaliacaoDTOs {
         this.objeitvoAvaliacao = Avaliacao.getObjeitvoAvaliacao();
 
     }
+
+    public Date getDataAvaliacao() {
+        return dataAvaliacao;
+    }
+
+    public void setDataAvaliacao(Date dataAvaliacao) {
+        this.dataAvaliacao = dataAvaliacao;
+    }
+
+    public Date getDataSolicitacao() {
+        return dataSolicitacao;
+    }
+
+    public void setDataSolicitacao(Date dataSolicitacao) {
+        this.dataSolicitacao = dataSolicitacao;
+    }
+
+    public String getObjeitvoAvaliacao() {
+        return objeitvoAvaliacao;
+    }
+
+    public void setObjeitvoAvaliacao(String objeitvoAvaliacao) {
+        this.objeitvoAvaliacao = objeitvoAvaliacao;
+    }
+
+    public UUID getIdAvaliacao() {
+        return IdAvaliacao;
+    }
+
+    public void setIdAvaliacao(UUID idAvaliacao) {
+        IdAvaliacao = idAvaliacao;
+    }
 }
