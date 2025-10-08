@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.nio.MappedByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 @Entity
@@ -20,17 +21,17 @@ public class Grupo {
     private UUID idGrupo;
     private String nomeGrupo;
     private String DescricaoGrupo;
-//many to one
+
     @ManyToOne
-    @JoinColumn(name = "id_personal")
+    @JoinColumn(name = "personal_id")
     private Personal personal;
 
-//// many to many
     @ManyToMany
     @JoinTable(
-            name = "Lista_Alunos",
-            joinColumns = @JoinColumn(name = "id_grupo"),
-            inverseJoinColumns = @JoinColumn(name = "id_usuario")
+            name = "grupo_aluno",
+            joinColumns = @JoinColumn(name = "grupo_id"),
+            inverseJoinColumns = @JoinColumn(name = "aluno_id")
     )
-    private List<Aluno> ListaAlunos;
+    private List<Aluno> alunos = new ArrayList<>();
+
 }

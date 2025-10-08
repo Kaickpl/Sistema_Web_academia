@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,11 +17,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Aluno extends Usuario{
     private double saldoMoedas;
-    @ManyToOne
-    @JoinColumn(name = "id_Grupo")
-    private Grupo grupo;
 
-    @ManyToMany(mappedBy = "ListaAlunos")
-    private List<Grupo> ListaGrupo;
+    @ManyToMany(mappedBy = "alunos")
+    private List<Grupo> grupos = new ArrayList<>();
+
+
 
 }
