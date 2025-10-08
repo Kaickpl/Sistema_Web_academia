@@ -18,6 +18,7 @@ public class Treino {
     private UUID idTreino;
     private Duration duracao;
     private String nome;
+    private boolean isConcluido = false;
 
     @OneToMany(mappedBy = "treino", cascade = CascadeType.ALL)
     private List<Exercicio> exercicio;
