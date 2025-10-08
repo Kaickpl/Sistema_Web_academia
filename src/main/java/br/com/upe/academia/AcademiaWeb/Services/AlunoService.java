@@ -21,5 +21,6 @@ public interface AlunoService {
 
 
     public Page<Aluno> ListarAlunos(Pageable page);
+
 }
 

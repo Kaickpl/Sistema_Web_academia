@@ -34,4 +34,43 @@ public class Grupo {
     )
     private List<Aluno> alunos = new ArrayList<>();
 
+    public String getDescricaoGrupo() {
+        return DescricaoGrupo;
+    }
+
+    public void setDescricaoGrupo(String descricaoGrupo) {
+        DescricaoGrupo = descricaoGrupo;
+    }
+
+    public UUID getIdGrupo() {
+        return idGrupo;
+    }
+
+    public void setIdGrupo(UUID idGrupo) {
+        this.idGrupo = idGrupo;
+    }
+
+    public String getNomeGrupo() {
+        return nomeGrupo;
+    }
+
+    public void setNomeGrupo(String nomeGrupo) {
+        this.nomeGrupo = nomeGrupo;
+    }
+
+    public Personal getPersonal() {
+        return personal;
+    }
+
+    public void setPersonal(Personal personal) {
+        this.personal = personal;
+    }
+
+    public List<Aluno> getAlunos() {
+        return alunos;
+    }
+
+    public void setAlunos(List<Aluno> alunos) {
+        this.alunos = alunos;
+    }
 }

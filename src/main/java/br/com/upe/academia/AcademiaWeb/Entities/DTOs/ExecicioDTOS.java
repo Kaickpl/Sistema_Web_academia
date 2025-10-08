@@ -24,4 +24,36 @@ public class ExecicioDTOS {
         this.descricaoExercicio = exercicio.getDescricaoExercicio();
         this.tempoDeDescanso = exercicio.getTempoDeDescanso();
     }
+
+    public String getDescricaoExercicio() {
+        return descricaoExercicio;
+    }
+
+    public void setDescricaoExercicio(String descricaoExercicio) {
+        this.descricaoExercicio = descricaoExercicio;
+    }
+
+    public UUID getIdExercicio() {
+        return idExercicio;
+    }
+
+    public void setIdExercicio(UUID idExercicio) {
+        this.idExercicio = idExercicio;
+    }
+
+    public Duration getTempoDeDescanso() {
+        return tempoDeDescanso;
+    }
+
+    public void setTempoDeDescanso(Duration tempoDeDescanso) {
+        this.tempoDeDescanso = tempoDeDescanso;
+    }
+
+    public String getNomeExercicio() {
+        return nomeExercicio;
+    }
+
+    public void setNomeExercicio(String nomeExercicio) {
+        this.nomeExercicio = nomeExercicio;
+    }
 }

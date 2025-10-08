@@ -8,9 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
+@Table(name = "Progressão")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,16 +22,60 @@ public class Progressao {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idProgressao;
 
-    @ManyToOne
-    @JoinColumn(name = "idUsuario")
-    private Aluno aluno;
+    private UUID alunoId;
 
-    @ManyToOne
-    @JoinColumn(name = "idExercicio")
-    private Exercicio exercicio;
+    private String nomeExercicio;
 
-    @ManyToOne
-    @JoinColumn(name = "idConquista")
-    private Conquistas conquista;
+    private int peso;
 
+    private LocalDate data;
+
+    @PrePersist
+    protected void onCreate() {
+        if (data == null) {
+            data = LocalDate.now();
+        }
+    }
+
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+
+    public void setAlunoId(UUID alunoId) {
+        this.alunoId = alunoId;
+    }
+
+    public UUID getAlunoId() {
+        return alunoId;
+    }
+
+    public UUID getIdProgressao() {
+        return idProgressao;
+    }
+
+    public void setIdProgressao(UUID idProgressao) {
+        this.idProgressao = idProgressao;
+    }
+
+    public String getNomeExercicio() {
+        return nomeExercicio;
+    }
+
+    public void setNomeExercicio(String nomeExercicio) {
+        this.nomeExercicio = nomeExercicio;
+    }
+
+    public int getPeso() {
+        return peso;
+    }
+
+    public void setPeso(int peso) {
+        this.peso = peso;
+    }
 }
