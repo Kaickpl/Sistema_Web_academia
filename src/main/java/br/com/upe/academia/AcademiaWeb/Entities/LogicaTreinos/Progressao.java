@@ -28,6 +28,16 @@ public class Progressao {
 
     private int peso;
 
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    private LocalDate data;
+
     public void setAlunoId(UUID alunoId) {
         this.alunoId = alunoId;
     }

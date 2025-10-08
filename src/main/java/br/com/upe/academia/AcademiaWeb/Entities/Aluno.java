@@ -18,9 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Aluno extends Usuario{
     private double saldoMoedas;
-    public void setTipo(Tipo tipo){
-        this.setTipo(tipo);
-    }
+
     @ManyToMany(mappedBy = "alunos")
     private List<Grupo> grupos = new ArrayList<>();
 
