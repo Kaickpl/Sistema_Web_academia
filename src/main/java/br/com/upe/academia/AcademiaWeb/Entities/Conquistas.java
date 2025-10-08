@@ -27,5 +27,6 @@ public class Conquistas {
     private Aluno aluno;
 
     private Date dataConquista;
+    @Column(length = 512)
     private String objetivo;
 }
