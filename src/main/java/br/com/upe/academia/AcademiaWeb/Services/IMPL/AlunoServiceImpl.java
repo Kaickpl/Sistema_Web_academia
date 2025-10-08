@@ -6,8 +6,9 @@ import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.awt.print.Pageable;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -16,21 +17,23 @@ public class AlunoServiceImpl implements AlunoService {
     @Autowired
     AlunoRepository alunoRepository;
 
-    @Override
-    public Aluno cadastrarAluno(Aluno aluno) {
-        aluno.setTipo(Tipo.aluno);
-        if(alunoRepository.findByEmail(aluno.getEmail())!=null){
-            return null;
-        }
-        if(aluno.getNomeUsuario()==null||aluno.getNomeUsuario().isEmpty()){
-            return null;
-        }
-        return alunoRepository.save(aluno);
+    public boolean validaremail(String email) {
+        return alunoRepository.findByEmail(email).isPresent();
     }
 
-    @Override
-    public boolean validaremail(String email) {
-        return alunoRepository.findByEmail(email) != null;
+
+    public Aluno cadastrarAluno(Aluno aluno) {
+        aluno.setTipo(Tipo.aluno);
+
+        if (alunoRepository.findByEmail(aluno.getEmail()).isPresent()) {
+            return null;
+        }
+
+        if (aluno.getNomeUsuario() == null || aluno.getNomeUsuario().isEmpty()) {
+            return null;
+        }
+
+        return alunoRepository.save(aluno);
     }
     @Override
     public Aluno alterarAluno(Aluno aluno) {
@@ -48,12 +51,14 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public boolean buscarUsuario(String nomeUsuario) {
-        return false;
+    public List<Aluno> buscaraluno(String nome) {
+        return alunoRepository.findByNomeUsuarioContaining(nome);
     }
 
     @Override
     public Page<Aluno> ListarAlunos(Pageable page) {
-        return null;
+        return alunoRepository.findAll(page);
     }
+
+
 }
