@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Entities;
 
 
+import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,9 @@ public class Aluno extends Usuario{
     @ManyToMany(mappedBy = "alunos")
     private List<Grupo> grupos = new ArrayList<>();
 
+    public void setTipo(Tipo tipo) {
+        this.setTipo(tipo);
+    }
 
 
 }
