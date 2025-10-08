@@ -19,6 +19,7 @@ public class Personal extends Usuario{
     private String cref;
 
     @OneToMany(mappedBy = "personal")
-    private List<Grupo> grupo;
+    private List<Grupo> grupos;
+
 
 }
