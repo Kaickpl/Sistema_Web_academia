@@ -24,6 +24,9 @@ public class Aluno extends Usuario{
     @ManyToMany(mappedBy = "alunos")
     private List<Grupo> grupos = new ArrayList<>();
 
+    public void setTipo(Tipo tipo) {
+        this.setTipo(tipo);
+    }
 
 
 }
