@@ -1,23 +1,21 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
-
+import java.net.URI;
+import java.util.UUID;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelAtualizarSerie;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelCriarSerie;
+import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelDeletarSerie;
 import br.com.upe.academia.AcademiaWeb.Services.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriBuilder;
 
-import java.net.URI;
-import java.util.UUID;
 
-@RestController("/serie")
-public class SerieController {
+@RestController
+@RequestMapping("/serie")
+public class SerieController{
 
     @Autowired
     private CommandHistory commandHistory;
@@ -31,27 +29,31 @@ public class SerieController {
         return ResponseEntity.ok().body(serie);
     }
 
-
     //A parte do uri serve para dizer que deu certo e mostar o caminho exato para o que criou
-@PostMapping("id")
-    public ResponseEntity<Void> adicionarSerie(@RequestBody Serie serie){
-        this.commandHistory.execute(new ExecutavelCriarSerie());
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(serie.getIdSerie()).toUri();
-        return ResponseEntity.created(null).build();
+    @PostMapping
+    public ResponseEntity<Serie> adicionarSerie(@RequestBody Serie serie){
+        ExecutavelCriarSerie comandoCriarSerie = new ExecutavelCriarSerie(serieService, serie);
+        commandHistory.execute(comandoCriarSerie);
+        Serie novaSerie = comandoCriarSerie.getSerieCriada();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(novaSerie.getIdSerie()).toUri();
+        return ResponseEntity.created(location).body(novaSerie);
 }
 
-@PutMapping("/id")
-    public ResponseEntity<Void> atualizarSerie(@RequestBody Serie serie, @PathVariable UUID id){
+    @PutMapping("/{id}")
+    public ResponseEntity<Serie> atualizarSerie(@RequestBody Serie serie, @PathVariable UUID id) {
         serie.setIdSerie(id);
-        this.commandHistory.execute(new ExecutavelAtualizarSerie());
-        return ResponseEntity.noContent().build();
-}
+        ExecutavelAtualizarSerie comandoAtualizar = new ExecutavelAtualizarSerie(serieService, serie.getIdSerie(), serie);
+        commandHistory.execute(comandoAtualizar);
+        Serie serieAtualizada = comandoAtualizar.getSerieAtualizada();
+        return ResponseEntity.ok().body(serieAtualizada);
+    }
 
-@DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> removerSerie(@PathVariable UUID id){
-        this.commandHistory.execute(new ExecutavelCriarSerie());
+        ExecutavelDeletarSerie comandoDeletar = new ExecutavelDeletarSerie(serieService, id);
+        commandHistory.execute(comandoDeletar);
         return ResponseEntity.noContent().build();
 }
-
 }
+
