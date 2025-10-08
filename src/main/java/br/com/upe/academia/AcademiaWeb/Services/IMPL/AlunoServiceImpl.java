@@ -19,21 +19,36 @@ public class AlunoServiceImpl implements AlunoService {
     @Override
     public Aluno cadastrarAluno(Aluno aluno) {
         aluno.setTipo(Tipo.aluno);
+        if(alunoRepository.findByEmail(aluno.getEmail())!=null){
+            return null;
+        }
+        if(aluno.getNomeUsuario()==null||aluno.getNomeUsuario().isEmpty()){
+            return null;
+        }
         return alunoRepository.save(aluno);
     }
 
     @Override
+    public boolean validaremail(String email) {
+        return alunoRepository.findByEmail(email) != null;
+    }
+    @Override
     public Aluno alterarAluno(Aluno aluno) {
+
         return null;
     }
 
     @Override
-    public boolean removerAluno(Aluno aluno) {
+    public boolean removerAluno(UUID id) {
+        if(alunoRepository.existsById(id)){
+            alunoRepository.deleteById(id);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public boolean findById(UUID id) {
+    public boolean buscarUsuario(String nomeUsuario) {
         return false;
     }
 

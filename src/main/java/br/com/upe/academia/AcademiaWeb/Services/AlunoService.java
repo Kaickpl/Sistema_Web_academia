@@ -4,10 +4,11 @@ import org.springframework.data.domain.Page;
 import java.awt.print.Pageable;
 import java.util.UUID;
 
-public interface AlunoService {
+public interface AlunoService{
     public Aluno cadastrarAluno(Aluno aluno);
+    public boolean validaremail(String email);
     public Aluno alterarAluno(Aluno aluno);
-    public boolean removerAluno(Aluno aluno);
-    public boolean findById(UUID id);
+    public boolean removerAluno(UUID ID);
+    public boolean buscarUsuario(String nomeUsuario);
     public Page<Aluno> ListarAlunos(Pageable page);
 }
