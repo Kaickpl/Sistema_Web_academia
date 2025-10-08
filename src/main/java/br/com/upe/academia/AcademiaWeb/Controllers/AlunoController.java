@@ -1,6 +1,8 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,11 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
+
 @RequestMapping("/api/aluno")
 public class AlunoController {
 
@@ -20,8 +23,9 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @PostMapping
-    public ResponseEntity<?> cadastrarAluno(@RequestBody Aluno aluno) {
+    public ResponseEntity<?> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
 
+        Aluno aluno = convertToEntity(alunoDTOs);
         if (alunoService.validaremail(aluno.getEmail())) {
             return ResponseEntity.status(409).body("Erro: aluno já cadastrado com esse email!");
         }
@@ -37,9 +41,10 @@ public class AlunoController {
         }
         return ResponseEntity.status(404).body(false);
     }
+
     @GetMapping("/buscar")
-    public ResponseEntity<List<Aluno>> buscaraluno(@RequestParam String nome) {
-        List<Aluno> alunos = alunoService.buscaraluno(nome);
+    public ResponseEntity<List<AlunoDTOs>> buscaraluno(@RequestParam String nome) {
+        List<AlunoDTOs> alunos = alunoService.buscaraluno(nome).stream().map(AlunoDTOs::new).collect(Collectors.toList());
         if (alunos != null) {
             return ResponseEntity.status(200).body(alunos);
 
@@ -48,8 +53,21 @@ public class AlunoController {
     }
 
     @GetMapping("/buscarTodos")
-    public ResponseEntity<Page<Aluno>> listar(@PageableDefault(size = 10)Pageable page) {
-        return ResponseEntity.ok(alunoService.ListarAlunos(page));
+    public ResponseEntity<Page<AlunoDTOs>> listar(@PageableDefault(size = 2)Pageable page) {
+        return ResponseEntity.ok(alunoService.ListarAlunos(page).map(AlunoDTOs::new));
+    }
+
+
+
+    private Aluno convertToEntity(AlunoDTOs alunoDTOs) {
+        Aluno aluno = new Aluno();
+        aluno.setIdUsuario(alunoDTOs.getIdUsuario());
+        aluno.setNomeUsuario(alunoDTOs.getNomeUsuario());
+        aluno.setEmail(alunoDTOs.getEmail());
+        aluno.setSenha(alunoDTOs.getSenha());
+        aluno.setTipo(Tipo.aluno);
+        aluno.setSaldoMoedas(alunoDTOs.getSaldoMoedas());
+        return aluno;
     }
 
 
