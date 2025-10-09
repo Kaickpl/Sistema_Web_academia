@@ -23,4 +23,4 @@ public class Treino {
     @OneToMany(mappedBy = "treino", cascade = CascadeType.ALL)
     private List<Exercicio> exercicio;
 
-}
+    }

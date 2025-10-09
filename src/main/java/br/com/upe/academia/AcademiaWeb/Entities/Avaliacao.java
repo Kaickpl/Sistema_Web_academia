@@ -36,6 +36,4 @@ public class Avaliacao {
     private Aluno aluno;
 
 
-
-
 }

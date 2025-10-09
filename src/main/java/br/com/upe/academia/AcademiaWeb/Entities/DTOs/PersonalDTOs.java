@@ -13,6 +13,7 @@ import lombok.Setter;
 
 public class PersonalDTOs extends UsuarioDTOs {
     private String cref;
+
     public PersonalDTOs(Personal personal) {
         super(personal);
         this.cref = personal.getCref();

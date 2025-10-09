@@ -39,6 +39,5 @@ public class Serie {
         }
         return 0.0f;
     }
-
 }
 

@@ -41,15 +41,12 @@ public class AlunoServiceImpl implements AlunoService {
         Aluno alunoExiste = alunoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado!"));
 
-        // Atualiza email somente se for diferente e válido
         if (aluno.getEmail() != null && !alunoExiste.getEmail().equals(aluno.getEmail())) {
             if (validaremail(aluno.getEmail())) {
                 throw new IllegalArgumentException("Já existe um aluno com esse email!");
             }
             alunoExiste.setEmail(aluno.getEmail());
         }
-
-        // Atualiza nome e telefone somente se vierem preenchidos
         if (aluno.getNomeUsuario() != null) {
             alunoExiste.setNomeUsuario(aluno.getNomeUsuario());
         }

@@ -30,6 +30,12 @@ public class AlunoController {
         if (alunoService.validaremail(aluno.getEmail())) {
             return ResponseEntity.status(409).body("Erro: aluno já cadastrado com esse email!");
         }
+        if(aluno.getSenha() == null || (aluno.getSenha().isEmpty())){
+            return ResponseEntity.status(409).body("Insira um SENHA valida!");
+        }
+        if(aluno.getNomeUsuario()  == null || (aluno.getNomeUsuario().isEmpty())){
+            return ResponseEntity.status(409).body("Insira um NOME valido!");
+        }
         Aluno alunoCadastrado = alunoService.cadastrarAluno(aluno);
         return ResponseEntity.status(201).body(alunoCadastrado);
     }

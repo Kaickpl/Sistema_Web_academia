@@ -17,14 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Aluno extends Usuario{
-    private double saldoMoedas;
+    @Column(nullable = false)
+    private int saldoMoedas;
 
     @ManyToMany(mappedBy = "alunos")
     private List<Grupo> grupos = new ArrayList<>();
-
-    public void setTipo(Tipo tipo) {
-        this.setTipo(tipo);
-    }
 
 
 }

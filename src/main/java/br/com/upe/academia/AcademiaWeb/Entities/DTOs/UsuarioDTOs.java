@@ -26,14 +26,13 @@ public class UsuarioDTOs {
     private Tipo tipo;
 
     public UsuarioDTOs(Usuario usuario){
-        this.idUsuario = usuario.getIdUsuario();
+        //this.idUsuario = usuario.getIdUsuario();
         this.nomeUsuario = usuario.getNomeUsuario();
         this.dataNascimento = usuario.getDataNascimento();
-        this.senha = usuario.getSenha();
-        this.email = usuario.getEmail();
+        //this.senha = usuario.getSenha();
+        //this.email = usuario.getEmail();
         this.telefone = usuario.getTelefone();
-        this.tipo = usuario.getTipo();
+        //this.tipo = usuario.getTipo();
     }
-
 
 }

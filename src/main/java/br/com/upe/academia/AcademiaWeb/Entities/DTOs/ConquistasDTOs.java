@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,17 @@ import java.util.UUID;
 public class ConquistasDTOs {
 
     private UUID idConquistas;
-    public ConquistasDTOs(Conquistas conquistas) {
-        this.idConquistas = conquistas.getIdConquistas();
+    private UUID alunoId;
+    private String nomeConquista;
+    private String descricaoConquista;
+    private int moedas;
+
+    public ConquistasDTOs(UUID alunoId, String descricaoConquista, UUID idConquistas, String nomeConquista, int moedas) {
+        this.alunoId = alunoId;
+        this.descricaoConquista = descricaoConquista;
+        this.idConquistas = idConquistas;
+        this.nomeConquista = nomeConquista;
+        this.moedas = moedas;
     }
+
 }

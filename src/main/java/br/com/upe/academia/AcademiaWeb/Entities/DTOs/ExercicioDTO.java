@@ -33,4 +33,5 @@ public class ExercicioDTO {
 
         this.isConcluido = exercicio.getIsConcluido();
     }
+
 }

@@ -21,5 +21,4 @@ public class Personal extends Usuario{
     @OneToMany(mappedBy = "personal")
     private List<Grupo> grupos;
 
-
 }
