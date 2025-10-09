@@ -61,13 +61,13 @@ public class PersonalController {
     }
 
     @GetMapping("/buscarCref")
-    public ResponseEntity<PersonalDTOs> buscarPersonalCref(@RequestParam String cref) {
+    public ResponseEntity<?> buscarPersonalCref(@RequestParam String cref) {
         Personal personal = personalService.buscarPersonal(cref);
         if (personal != null) {
             PersonalDTOs personalDTOs = convertToDTO(personal);
             return ResponseEntity.status(200).body(personalDTOs);
         }
-        return ResponseEntity.status(404).body(null);
+        return ResponseEntity.status(404).body("Personal não encontrado");
     }
 
     @PutMapping("/{cref}")

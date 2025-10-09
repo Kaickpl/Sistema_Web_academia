@@ -99,7 +99,7 @@ public class AlunoController {
         aluno.setDataNascimento(alunoDTOs.getDataNascimento());
         aluno.setNomeUsuario(alunoDTOs.getNomeUsuario());
         aluno.setEmail(alunoDTOs.getEmail());
-        //aluno.setSenha(alunoDTOs.getSenha());
+        aluno.setSenha(alunoDTOs.getSenha());
         aluno.setTelefone(alunoDTOs.getTelefone());
         //aluno.setTipo(Tipo.aluno);
         aluno.setSaldoMoedas(alunoDTOs.getSaldoMoedas());
