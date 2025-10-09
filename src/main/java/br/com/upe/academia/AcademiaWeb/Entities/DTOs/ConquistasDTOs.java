@@ -11,6 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 
 public class ConquistasDTOs {
 
@@ -18,12 +19,14 @@ public class ConquistasDTOs {
     private UUID alunoId;
     private String nomeConquista;
     private String descricaoConquista;
+    private int moedas;
 
-    public ConquistasDTOs(UUID alunoId, String descricaoConquista, UUID idConquistas, String nomeConquista) {
+    public ConquistasDTOs(UUID alunoId, String descricaoConquista, UUID idConquistas, String nomeConquista, int moedas) {
         this.alunoId = alunoId;
         this.descricaoConquista = descricaoConquista;
         this.idConquistas = idConquistas;
         this.nomeConquista = nomeConquista;
+        this.moedas = moedas;
     }
 
 }

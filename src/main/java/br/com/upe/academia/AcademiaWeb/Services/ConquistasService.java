@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @Service
 public interface ConquistasService {
-    public Conquistas registrarConquista(UUID alunoId, String titulo, String descricao);
+    public Conquistas registrarConquista(UUID alunoId, String titulo, String descricao, int moedas);
     public List<Conquistas> mostrarConquistas(UUID alunoId);
 }

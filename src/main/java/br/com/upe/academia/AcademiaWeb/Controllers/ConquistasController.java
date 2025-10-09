@@ -25,9 +25,10 @@ public class ConquistasController {
     @PostMapping
     public ResponseEntity<Conquistas> registrarConquistas(@RequestBody ConquistasDTOs conquistasDTOs){
         Conquistas novaConquista = conquistasService.registrarConquista(
-                conquistasDTOs.getAlunoId(), // <-- AGORA É O UUID!
+                conquistasDTOs.getAlunoId(),
                 conquistasDTOs.getNomeConquista(),
-                conquistasDTOs.getDescricaoConquista()
+                conquistasDTOs.getDescricaoConquista(),
+                conquistasDTOs.getMoedas()
         );
         return new ResponseEntity<>(novaConquista, HttpStatus.CREATED);
     }
