@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -19,31 +19,43 @@ public class Conquistas {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idConquistas;
 
-    private String nome;
-    private String descricao;
+    private String nomeConquista;
+    private String descricaoConquista;
 
     @ManyToOne
     @JoinColumn(name = "id_aluno")
     private Aluno aluno;
 
-    private Date dataConquista;
-    @Column(length = 512)
-    private String objetivo;
+    public Conquistas(Aluno aluno, String descricao, String nome) {
+        this.aluno = aluno;
+        this.descricaoConquista = descricao;
+        this.nomeConquista = nome;
+    }
 
-    public Date getDataConquista() {
+    private LocalDate dataConquista;
+
+
+    @PrePersist
+    protected void onCreate() {
+        if (dataConquista == null) {
+            dataConquista = LocalDate.now();
+        }
+    }
+
+    public LocalDate getDataConquista() {
         return dataConquista;
     }
 
-    public void setDataConquista(Date dataConquista) {
+    public void setDataConquista(LocalDate dataConquista) {
         this.dataConquista = dataConquista;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getDescricaoConquista() {
+        return descricaoConquista;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescricaoConquista(String descricaoConquista) {
+        this.descricaoConquista = descricaoConquista;
     }
 
     public Aluno getAluno() {
@@ -62,19 +74,12 @@ public class Conquistas {
         this.idConquistas = idConquistas;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeConquista() {
+        return nomeConquista;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeConquista(String nomeConquista) {
+        this.nomeConquista = nomeConquista;
     }
 
-    public String getObjetivo() {
-        return objetivo;
-    }
-
-    public void setObjetivo(String objetivo) {
-        this.objetivo = objetivo;
-    }
 }
