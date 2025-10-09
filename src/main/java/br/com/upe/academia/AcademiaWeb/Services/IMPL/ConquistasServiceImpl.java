@@ -1,20 +1,36 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
+import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
+import br.com.upe.academia.AcademiaWeb.Repositories.ConquistasRepository;
 import br.com.upe.academia.AcademiaWeb.Services.ConquistasService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
+@Service
 public class ConquistasServiceImpl implements ConquistasService {
-    @Override
-    public void concederConquistas(UUID id_usuario) {
+    @Autowired
+    ConquistasRepository conquistasRepository;
 
+    @Autowired
+    AlunoRepository alunoRepository;
+
+    @Override
+    public Conquistas registrarConquista(UUID alunoId, String titulo, String descricao) {
+
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com o ID: " + alunoId));
+
+        Conquistas conquistas = new Conquistas(aluno, titulo, descricao);
+        return conquistasRepository.save(conquistas);
     }
 
     @Override
-    public Page<Conquistas> mostrarQuadroDeConquistas(Pageable page) {
-        return null;
+    public List<Conquistas> mostrarConquistas(UUID alunoId) {
+        return conquistasRepository.findByAluno_IdUsuario(alunoId);
     }
 }
