@@ -19,10 +19,18 @@ public class ExercicioDTO {
     private String descricaoExercicio;
     private Duration tempoDeDescanso;
     private UUID idTreino;
+    private Boolean isConcluido;
+
     public ExercicioDTO(Exercicio exercicio) {
         this.idExercicio = exercicio.getIdExercicio();
         this.nomeExercicio = exercicio.getNomeExercicio();
         this.descricaoExercicio = exercicio.getDescricaoExercicio();
         this.tempoDeDescanso = exercicio.getTempoDeDescanso();
+
+        if (exercicio.getTreino() != null) {
+            this.idTreino = exercicio.getTreino().getIdTreino();
+        }
+
+        this.isConcluido = exercicio.getIsConcluido();
     }
 }

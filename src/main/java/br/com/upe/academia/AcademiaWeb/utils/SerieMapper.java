@@ -1,4 +1,4 @@
-package br.com.upe.academia.AcademiaWeb.Mappers;
+package br.com.upe.academia.AcademiaWeb.utils;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;

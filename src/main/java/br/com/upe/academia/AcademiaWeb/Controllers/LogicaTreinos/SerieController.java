@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
-import br.com.upe.academia.AcademiaWeb.Mappers.SerieMapper;
+import br.com.upe.academia.AcademiaWeb.utils.SerieMapper;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelAtualizarSerie;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelCriarSerie;
@@ -50,8 +50,9 @@ public class SerieController{
 
     @PutMapping("/{id}")
     public ResponseEntity<Serie> atualizarSerie(@RequestBody SerieDTO seriedto, @PathVariable UUID id) {
+        seriedto.setIdSerie(id);
         Serie serie = serieMapper.toEntity(seriedto);
-        ExecutavelAtualizarSerie comandoAtualizar = new ExecutavelAtualizarSerie(serieService, serie.getIdSerie(), serie);
+        ExecutavelAtualizarSerie comandoAtualizar = new ExecutavelAtualizarSerie(serieService, id, serie);
         commandHistory.execute(comandoAtualizar);
         Serie serieAtualizada = comandoAtualizar.getSerieAtualizada();
         return ResponseEntity.ok().body(serieAtualizada);
