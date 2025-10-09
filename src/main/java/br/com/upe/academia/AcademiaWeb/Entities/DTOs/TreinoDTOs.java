@@ -25,36 +25,4 @@ public class TreinoDTOs {
         this.nome = treino.getNome();
         this.isConcluido = treino.isConcluido();
     }
-
-    public Duration getDuracao() {
-        return duracao;
-    }
-
-    public void setDuracao(Duration duracao) {
-        this.duracao = duracao;
-    }
-
-    public UUID getIdTreino() {
-        return idTreino;
-    }
-
-    public void setIdTreino(UUID idTreino) {
-        this.idTreino = idTreino;
-    }
-
-    public boolean isConcluido() {
-        return isConcluido;
-    }
-
-    public void setConcluido(boolean concluido) {
-        isConcluido = concluido;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 }

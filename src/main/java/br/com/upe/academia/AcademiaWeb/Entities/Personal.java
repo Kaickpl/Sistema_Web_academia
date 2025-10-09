@@ -21,19 +21,4 @@ public class Personal extends Usuario{
     @OneToMany(mappedBy = "personal")
     private List<Grupo> grupos;
 
-    public String getCref() {
-        return cref;
-    }
-
-    public void setCref(String cref) {
-        this.cref = cref;
-    }
-
-    public List<Grupo> getGrupos() {
-        return grupos;
-    }
-
-    public void setGrupos(List<Grupo> grupos) {
-        this.grupos = grupos;
-    }
 }

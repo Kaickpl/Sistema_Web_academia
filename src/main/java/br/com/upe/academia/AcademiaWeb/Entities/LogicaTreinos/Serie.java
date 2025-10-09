@@ -37,45 +37,5 @@ public class Serie {
         }
         return 0.0f;
     }
-
-    public Integer getNumeroDeRepeticoes() {
-        return numeroDeRepeticoes;
-    }
-
-    public void setNumeroDeRepeticoes(Integer numeroDeRepeticoes) {
-        this.numeroDeRepeticoes = numeroDeRepeticoes;
-    }
-
-    public Float getPesoDaSerie() {
-        return pesoDaSerie;
-    }
-
-    public void setPesoDaSerie(Float pesoDaSerie) {
-        this.pesoDaSerie = pesoDaSerie;
-    }
-
-    public void setConcluida(boolean concluida) {
-        isConcluida = concluida;
-    }
-
-    public UUID getIdSerie() {
-        return idSerie;
-    }
-
-    public void setIdSerie(UUID idSerie) {
-        this.idSerie = idSerie;
-    }
-
-    public boolean isConcluida() {
-        return isConcluida;
-    }
-
-    public Exercicio getExercicio() {
-        return exercicio;
-    }
-
-    public void setExercicio(Exercicio exercicio) {
-        this.exercicio = exercicio;
-    }
 }
 
