@@ -13,16 +13,9 @@ import lombok.Setter;
 
 public class PersonalDTOs extends UsuarioDTOs {
     private String cref;
+
     public PersonalDTOs(Personal personal) {
         super(personal);
         this.cref = personal.getCref();
-    }
-
-    public String getCref() {
-        return cref;
-    }
-
-    public void setCref(String cref) {
-        this.cref = cref;
     }
 }

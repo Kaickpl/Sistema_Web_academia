@@ -22,23 +22,5 @@ public class Aluno extends Usuario{
     @ManyToMany(mappedBy = "alunos")
     private List<Grupo> grupos = new ArrayList<>();
 
-    public void setTipo(Tipo tipo) {
-        this.setTipo(tipo);
-    }
 
-    public List<Grupo> getGrupos() {
-        return grupos;
-    }
-
-    public void setGrupos(List<Grupo> grupos) {
-        this.grupos = grupos;
-    }
-
-    public double getSaldoMoedas() {
-        return saldoMoedas;
-    }
-
-    public void setSaldoMoedas(double saldoMoedas) {
-        this.saldoMoedas = saldoMoedas;
-    }
 }

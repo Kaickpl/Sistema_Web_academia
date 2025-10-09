@@ -18,7 +18,6 @@ public class Conquistas {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idConquistas;
-
     private String nomeConquista;
     private String descricaoConquista;
 
@@ -41,46 +40,6 @@ public class Conquistas {
         if (dataConquista == null) {
             dataConquista = LocalDate.now();
         }
-    }
-
-    public LocalDate getDataConquista() {
-        return dataConquista;
-    }
-
-    public void setDataConquista(LocalDate dataConquista) {
-        this.dataConquista = dataConquista;
-    }
-
-    public String getDescricaoConquista() {
-        return descricaoConquista;
-    }
-
-    public void setDescricaoConquista(String descricaoConquista) {
-        this.descricaoConquista = descricaoConquista;
-    }
-
-    public Aluno getAluno() {
-        return aluno;
-    }
-
-    public void setAluno(Aluno aluno) {
-        this.aluno = aluno;
-    }
-
-    public UUID getIdConquistas() {
-        return idConquistas;
-    }
-
-    public void setIdConquistas(UUID idConquistas) {
-        this.idConquistas = idConquistas;
-    }
-
-    public String getNomeConquista() {
-        return nomeConquista;
-    }
-
-    public void setNomeConquista(String nomeConquista) {
-        this.nomeConquista = nomeConquista;
     }
 
 }

@@ -23,43 +23,4 @@ public class Treino {
     @OneToMany(mappedBy = "treino", cascade = CascadeType.ALL)
     private List<Exercicio> exercicio;
 
-    public Duration getDuracao() {
-        return duracao;
     }
-
-    public void setDuracao(Duration duracao) {
-        this.duracao = duracao;
-    }
-
-    public List<Exercicio> getExercicio() {
-        return exercicio;
-    }
-
-    public void setExercicio(List<Exercicio> exercicio) {
-        this.exercicio = exercicio;
-    }
-
-    public UUID getIdTreino() {
-        return idTreino;
-    }
-
-    public void setIdTreino(UUID idTreino) {
-        this.idTreino = idTreino;
-    }
-
-    public boolean isConcluido() {
-        return isConcluido;
-    }
-
-    public void setConcluido(boolean concluido) {
-        isConcluido = concluido;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-}

@@ -22,28 +22,4 @@ public class GrupoDTOs {
         this.nomeGrupo = grupo.getNomeGrupo();
         this.DescricaoGrupo = grupo.getDescricaoGrupo();
     }
-
-    public UUID getIdGrupo() {
-        return idGrupo;
-    }
-
-    public void setIdGrupo(UUID idGrupo) {
-        this.idGrupo = idGrupo;
-    }
-
-    public String getNomeGrupo() {
-        return nomeGrupo;
-    }
-
-    public void setNomeGrupo(String nomeGrupo) {
-        this.nomeGrupo = nomeGrupo;
-    }
-
-    public String getDescricaoGrupo() {
-        return DescricaoGrupo;
-    }
-
-    public void setDescricaoGrupo(String descricaoGrupo) {
-        DescricaoGrupo = descricaoGrupo;
-    }
 }

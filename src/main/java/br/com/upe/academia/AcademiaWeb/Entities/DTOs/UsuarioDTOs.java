@@ -26,68 +26,13 @@ public class UsuarioDTOs {
     private Tipo tipo;
 
     public UsuarioDTOs(Usuario usuario){
-        this.idUsuario = usuario.getIdUsuario();
+        //this.idUsuario = usuario.getIdUsuario();
         this.nomeUsuario = usuario.getNomeUsuario();
         this.dataNascimento = usuario.getDataNascimento();
-        this.senha = usuario.getSenha();
-        this.email = usuario.getEmail();
+        //this.senha = usuario.getSenha();
+        //this.email = usuario.getEmail();
         this.telefone = usuario.getTelefone();
-        this.tipo = usuario.getTipo();
+        //this.tipo = usuario.getTipo();
     }
 
-    public String getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(String dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public UUID getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(UUID idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public String getNomeUsuario() {
-        return nomeUsuario;
-    }
-
-    public void setNomeUsuario(String nomeUsuario) {
-        this.nomeUsuario = nomeUsuario;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public Tipo getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(Tipo tipo) {
-        this.tipo = tipo;
-    }
 }
