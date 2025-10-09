@@ -24,5 +24,6 @@ public abstract class Usuario {
     private String telefone;
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
+
 }
 

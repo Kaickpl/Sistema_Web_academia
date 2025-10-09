@@ -20,8 +20,11 @@ public class Serie {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idSerie;
+    @Column(nullable = false)
     private Integer numeroDeRepeticoes;
+    @Column(nullable = false)
     private Float pesoDaSerie;
+    private boolean isConcluida = false;
 
     @ManyToOne
     @JoinColumn(name = "exercicio_id")
@@ -35,3 +38,4 @@ public class Serie {
         return 0.0f;
     }
 }
+
