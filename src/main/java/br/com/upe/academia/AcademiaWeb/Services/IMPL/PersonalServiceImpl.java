@@ -6,6 +6,7 @@ import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +46,7 @@ public class PersonalServiceImpl implements PersonalService {
     }
 
     @Override
+    @Transactional
     public Boolean deletarPersonal(String cref) {
         if(personalRepository.existsByCref(cref)){
             personalRepository.deleteByCref(cref);
