@@ -54,7 +54,6 @@ public class AlunoController {
         List<AlunoDTOs> alunos = alunoService.buscaraluno(nome).stream().map(AlunoDTOs::new).collect(Collectors.toList());
         if (alunos != null) {
             return ResponseEntity.status(200).body(alunos);
-
         }
         return ResponseEntity.status(404).body(null);
     }
@@ -66,13 +65,11 @@ public class AlunoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarAluno(@RequestBody AlunoDTOs alunoDTOs, @PathVariable UUID id) {
-        // Busca aluno existente
+
         Aluno alunoExistente = alunoService.buscarPorId(id);
         if (alunoExistente == null) {
             return ResponseEntity.status(404).body("Aluno não encontrado");
         }
-
-        // Atualiza somente os campos permitidos
         if (alunoDTOs.getNomeUsuario() != null) {
             alunoExistente.setNomeUsuario(alunoDTOs.getNomeUsuario());
         }
@@ -85,8 +82,6 @@ public class AlunoController {
             }
             alunoExistente.setEmail(alunoDTOs.getEmail());
         }
-
-        // Salva no banco
         Aluno alunoAtualizado = alunoService.alterarAluno(id, alunoExistente);
 
         return ResponseEntity.ok(alunoAtualizado);
@@ -100,13 +95,13 @@ public class AlunoController {
 
     private Aluno convertToEntity(AlunoDTOs alunoDTOs) {
         Aluno aluno = new Aluno();
-        aluno.setIdUsuario(alunoDTOs.getIdUsuario());
+        //aluno.setIdUsuario(alunoDTOs.getIdUsuario());
         aluno.setDataNascimento(alunoDTOs.getDataNascimento());
         aluno.setNomeUsuario(alunoDTOs.getNomeUsuario());
         aluno.setEmail(alunoDTOs.getEmail());
-        aluno.setSenha(alunoDTOs.getSenha());
+        //aluno.setSenha(alunoDTOs.getSenha());
         aluno.setTelefone(alunoDTOs.getTelefone());
-        aluno.setTipo(Tipo.aluno);
+        //aluno.setTipo(Tipo.aluno);
         aluno.setSaldoMoedas(alunoDTOs.getSaldoMoedas());
         return aluno;
     }

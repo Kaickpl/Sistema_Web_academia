@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
@@ -41,8 +42,39 @@ public class PersonalServiceImpl implements PersonalService {
     }
 
     @Override
-    public Personal alterarPersonal(UUID id, Personal personal) {
-        return null;
+    public Personal alterarPersonal(String cref, Personal personal) {
+        // Verifica se o personal existe pelo CREF
+        Personal personalExiste = personalRepository.findByCref(cref)
+                .orElseThrow(() -> new IllegalArgumentException("Personal não encontrado!"));
+
+        // Verifica se o email foi alterado e se já existe outro igual
+        if (personal.getEmail() != null && !personalExiste.getEmail().equals(personal.getEmail())) {
+            if (validarEmail(personal.getEmail())) {
+                throw new IllegalArgumentException("Já existe um personal com esse email!");
+            }
+            personalExiste.setEmail(personal.getEmail());
+        }
+
+        // Verifica se o CREF foi alterado e se já existe outro igual
+        if (personal.getCref() != null && !personalExiste.getCref().equals(personal.getCref())) {
+            if (validarCref(personal.getCref())) {
+                throw new IllegalArgumentException("Já existe um personal com esse CREF!");
+            }
+            personalExiste.setCref(personal.getCref());
+        }
+
+        // Atualiza nome de usuário, se informado
+        if (personal.getNomeUsuario() != null) {
+            personalExiste.setNomeUsuario(personal.getNomeUsuario());
+        }
+
+        // Atualiza telefone, se informado
+        if (personal.getTelefone() != null) {
+            personalExiste.setTelefone(personal.getTelefone());
+        }
+
+        // Salva e retorna o personal atualizado
+        return personalRepository.save(personalExiste);
     }
 
     @Override
