@@ -69,5 +69,13 @@ public class Serie {
     public boolean isConcluida() {
         return isConcluida;
     }
+
+    public Exercicio getExercicio() {
+        return exercicio;
+    }
+
+    public void setExercicio(Exercicio exercicio) {
+        this.exercicio = exercicio;
+    }
 }
 
