@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.RequestPath;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequestMapping("/api/personal")
 @RestController
 public class PersonalController {
@@ -46,11 +49,39 @@ public class PersonalController {
             return ResponseEntity.ok(true);
         }
         return ResponseEntity.status(404).body(false);
+    }
 
+    @GetMapping("/buscar")
+    public ResponseEntity<List<PersonalDTOs >> buscarPersonal(@RequestParam String nome) {
+        List<PersonalDTOs> personal = personalService.buscarPersonalNome(nome).stream().map(PersonalDTOs::new).toList();
+        if (personal != null) {
+            return ResponseEntity.status(200).body(personal);
+        }
+        return ResponseEntity.status(404).body(null);
+    }
+
+    @GetMapping("/buscarCref")
+    public ResponseEntity<PersonalDTOs> buscarPersonalCref(@RequestParam String cref) {
+        Personal personal = personalService.buscarPersonal(cref);
+        if (personal != null) {
+            PersonalDTOs personalDTOs = convertToDTO(personal);
+            return ResponseEntity.status(200).body(personalDTOs);
+        }
+        return ResponseEntity.status(404).body(null);
+    }
+
+    @PutMapping("/{cref}")
+    public ResponseEntity<PersonalDTOs> atualizarPersonal(@PathVariable String cref, @RequestBody PersonalDTOs personalDTOs) {
+        Personal personal = convertToEntity(personalDTOs);
+        Personal personalAtualizado = personalService.alterarPersonal(cref, personal);
+        PersonalDTOs personalAtualizadoDTO = convertToDTO(personalAtualizado);
+        return ResponseEntity.status(200).body(personalAtualizadoDTO);
     }
 
 
 
+
+    //recebe e convert
     private Personal convertToEntity(PersonalDTOs personalDTOs) {
         Personal personal = new Personal();
         personal.setIdUsuario(personalDTOs.getIdUsuario());
@@ -62,6 +93,19 @@ public class PersonalController {
         personal.setTipo(Tipo.aluno);
         personal.setCref(personalDTOs.getCref());
         return personal;
+    }
+//recebe e convert
+    private PersonalDTOs convertToDTO(Personal personal) {
+        PersonalDTOs dto = new PersonalDTOs();
+        //dto.setIdUsuario(personal.getIdUsuario());
+        //dto.setDataNascimento(personal.getDataNascimento());
+        dto.setNomeUsuario(personal.getNomeUsuario());
+        dto.setEmail(personal.getEmail());
+        //dto.setSenha(personal.getSenha());
+        dto.setTelefone(personal.getTelefone());
+        //dto.setTipo(personal.getTipo());
+        dto.setCref(personal.getCref());
+        return dto;
     }
 
 }

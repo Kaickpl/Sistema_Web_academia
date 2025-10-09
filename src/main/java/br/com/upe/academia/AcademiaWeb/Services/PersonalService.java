@@ -12,7 +12,7 @@ public interface PersonalService {
 
     public boolean validarEmail(String email);
 
-    public Personal  alterarPersonal(UUID id, Personal personal);
+    public Personal  alterarPersonal(String cref, Personal personal);
 
     public Boolean deletarPersonal(String cref);
 
