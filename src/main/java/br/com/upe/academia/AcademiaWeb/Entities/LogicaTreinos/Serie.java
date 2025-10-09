@@ -77,33 +77,5 @@ public class Serie {
     public void setExercicio(Exercicio exercicio) {
         this.exercicio = exercicio;
     }
-
-    public UUID getIdSerie() {
-        return idSerie;
-    }
-
-    public void setIdSerie(UUID idSerie) {
-        this.idSerie = idSerie;
-    }
-
-    public void setConcluida(boolean concluida) {
-        isConcluida = concluida;
-    }
-
-    public Integer getNumeroDeRepeticoes() {
-        return numeroDeRepeticoes;
-    }
-
-    public void setNumeroDeRepeticoes(Integer numeroDeRepeticoes) {
-        this.numeroDeRepeticoes = numeroDeRepeticoes;
-    }
-
-    public Float getPesoDaSerie() {
-        return pesoDaSerie;
-    }
-
-    public void setPesoDaSerie(Float pesoDaSerie) {
-        this.pesoDaSerie = pesoDaSerie;
-    }
 }
 
