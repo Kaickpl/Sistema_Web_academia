@@ -31,6 +31,7 @@ public class Conquistas {
         this.descricaoConquista = descricao;
         this.nomeConquista = nome;
     }
+    public Conquistas() {}
 
     private LocalDate dataConquista;
 
