@@ -14,7 +14,7 @@ import lombok.Setter;
 
 public class AlunoDTOs extends UsuarioDTOs{
 
-    private double saldoMoedas;
+    private int saldoMoedas;
 
     public AlunoDTOs(Aluno aluno) {
         super(aluno);

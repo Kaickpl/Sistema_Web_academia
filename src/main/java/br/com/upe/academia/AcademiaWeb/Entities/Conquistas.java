@@ -12,7 +12,6 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Conquistas {
     @Id
@@ -25,14 +24,9 @@ public class Conquistas {
     @JoinColumn(name = "id_aluno")
     private Aluno aluno;
 
-    public Conquistas(Aluno aluno, String descricao, String nome) {
-        this.aluno = aluno;
-        this.descricaoConquista = descricao;
-        this.nomeConquista = nome;
-    }
-    public Conquistas() {}
-
     private LocalDate dataConquista;
+    @Column(columnDefinition = "int default 0", nullable = false)
+    private int moedas;
 
 
     @PrePersist
@@ -41,5 +35,10 @@ public class Conquistas {
             dataConquista = LocalDate.now();
         }
     }
-
+    public Conquistas(Aluno aluno, String titulo, String descricao, int moedas) {
+        this.aluno = aluno;
+        this.nomeConquista = titulo;
+        this.descricaoConquista = descricao;
+        this.moedas = moedas;
+    }
 }
