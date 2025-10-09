@@ -13,12 +13,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ExecicioDTOS {
+public class ExercicioDTO {
     private UUID idExercicio;
     private String nomeExercicio;
     private String descricaoExercicio;
     private Duration tempoDeDescanso;
-    public ExecicioDTOS(Exercicio exercicio) {
+    private UUID idTreino;
+    public ExercicioDTO(Exercicio exercicio) {
         this.idExercicio = exercicio.getIdExercicio();
         this.nomeExercicio = exercicio.getNomeExercicio();
         this.descricaoExercicio = exercicio.getDescricaoExercicio();
