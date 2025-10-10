@@ -17,4 +17,8 @@ public interface AvaliacaoService {
     List<Avaliacao> mostrarAvaliacaoPersonalEData(String cref, LocalDate data);
 
     boolean removerAvaliacao(UUID idAvaliacao);
+
+    Avaliacao buscarPorId(UUID idAvaliacao);
+
+    Avaliacao alterarDataAvaliacao(UUID idAvaliacao, Avaliacao avaliacaoExiste);
 }

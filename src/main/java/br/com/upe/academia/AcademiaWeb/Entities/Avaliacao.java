@@ -19,7 +19,7 @@ import java.util.UUID;
 public class Avaliacao {
     @Id
     @GeneratedValue(strategy =  GenerationType.UUID)
-    private UUID IdAvaliacao;
+    private UUID idAvaliacao;
     private LocalDate dataSolicitacao;
     private LocalDate dataAvaliacao;
     private String objetivoAvaliacao;

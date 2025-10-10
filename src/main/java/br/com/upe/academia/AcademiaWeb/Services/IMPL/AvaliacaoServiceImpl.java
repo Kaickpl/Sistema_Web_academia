@@ -71,4 +71,17 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         }
         return false;
     }
+
+    @Override
+    public Avaliacao buscarPorId(UUID idAvaliacao) {
+        return avaliacaoRepository.findByIdAvaliacao(idAvaliacao);
+    }
+
+    @Override
+    public Avaliacao alterarDataAvaliacao(UUID idAvaliacao, Avaliacao avaliacaoExiste) {
+        Avaliacao avaliacao = avaliacaoRepository.findByIdAvaliacao(idAvaliacao);
+        avaliacao.setDataAvaliacao(avaliacaoExiste.getDataAvaliacao());
+
+        return avaliacaoRepository.save(avaliacao);
+    }
 }

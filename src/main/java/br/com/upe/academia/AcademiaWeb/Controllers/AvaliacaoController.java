@@ -48,4 +48,21 @@ public class AvaliacaoController {
         Avaliacao novaAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoDTOs);
         return new ResponseEntity<>(novaAvaliacao, HttpStatus.CREATED);
     }
+
+    //atualiza data
+    @PutMapping("/{idAvaliacao}")
+    public ResponseEntity<?> atualizarData(@RequestBody AvaliacaoDTOs avaliacaoDTOs, @PathVariable UUID idAvaliacao){
+        Avaliacao avaliacaoExiste = avaliacaoService.buscarPorId(idAvaliacao);
+        if (avaliacaoExiste == null) {
+            return ResponseEntity.status(404).body("Avaliação não encontrada");
+        }
+
+        if (avaliacaoDTOs.getDataAvaliacao() != null){
+            avaliacaoExiste.setDataAvaliacao(avaliacaoDTOs.getDataAvaliacao());
+        }
+
+        Avaliacao avaliacaoAtualizada = avaliacaoService.alterarDataAvaliacao(idAvaliacao, avaliacaoExiste);
+
+        return ResponseEntity.ok(avaliacaoAtualizada);
+    }
 }

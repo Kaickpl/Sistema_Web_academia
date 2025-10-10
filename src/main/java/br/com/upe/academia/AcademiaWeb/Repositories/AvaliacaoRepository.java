@@ -20,4 +20,6 @@ public interface AvaliacaoRepository extends JpaRepository<Avaliacao, UUID> {
     List<Avaliacao> findByAluno_IdUsuario(UUID alunoIdUsuario);
 
     List<Avaliacao> findByDataAvaliacao(LocalDate data);
+
+    Avaliacao findByIdAvaliacao(UUID idAvaliacao);
 }
