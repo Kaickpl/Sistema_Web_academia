@@ -56,7 +56,6 @@ public class PersonalServiceImpl implements PersonalService {
             }
             personalExiste.setEmail(personal.getEmail());
         }
-
         // Verifica se o CREF foi alterado e se já existe outro igual
         if (personal.getCref() != null && !personalExiste.getCref().equals(personal.getCref())) {
             if (validarCref(personal.getCref())) {
@@ -64,17 +63,14 @@ public class PersonalServiceImpl implements PersonalService {
             }
             personalExiste.setCref(personal.getCref());
         }
-
         // Atualiza nome de usuário, se informado
         if (personal.getNomeUsuario() != null) {
             personalExiste.setNomeUsuario(personal.getNomeUsuario());
         }
-
         // Atualiza telefone, se informado
         if (personal.getTelefone() != null) {
             personalExiste.setTelefone(personal.getTelefone());
         }
-
         // Salva e retorna o personal atualizado
         return personalRepository.save(personalExiste);
     }

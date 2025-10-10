@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+
 @Service
 
 
@@ -22,8 +24,12 @@ public class GrupoServiceImpl implements GrupoService {
     }
 
     @Override
-    public Boolean removerGrupo(Grupo Grupo) {
-        return null;
+    public Boolean removerGrupo(UUID id) {
+        if (grupoRepository.existsById(id)) {
+            grupoRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -33,11 +39,11 @@ public class GrupoServiceImpl implements GrupoService {
 
     @Override
     public Page<Grupo> buscarGrupos(Pageable page) {
-        return null;
+        return grupoRepository.findAll(page);
     }
 
     @Override
     public List<Grupo> buscarGrupo(String nomeGrupo) {
-        return List.of();
+        return grupoRepository.findByNomeGrupoContainingIgnoreCase(nomeGrupo);
     }
 }
