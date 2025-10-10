@@ -43,11 +43,7 @@ public class SerieServiceImpl implements SerieService {
     @Override
     public void removerSerie(UUID uuid) {
         buscarSerie(uuid);
-        try {
-            this.serieRepository.deleteById(uuid);
-        } catch (Exception e) {
-            throw new RuntimeException("Não é possível excluir o serie, pois há entidades que dependem dela.");
-        }
+        serieRepository.deleteById(uuid);
     }
 
     @Override
