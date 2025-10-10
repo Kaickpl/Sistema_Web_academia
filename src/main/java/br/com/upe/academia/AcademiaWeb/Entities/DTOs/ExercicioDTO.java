@@ -1,6 +1,10 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
 
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
+import br.com.upe.academia.AcademiaWeb.utils.DurationDeserializer;
+import br.com.upe.academia.AcademiaWeb.utils.DurationSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +21,8 @@ public class ExercicioDTO {
     private UUID idExercicio;
     private String nomeExercicio;
     private String descricaoExercicio;
+    @JsonDeserialize(using = DurationDeserializer.class)
+    @JsonSerialize(using = DurationSerializer.class)
     private Duration tempoDeDescanso;
     private UUID idTreino;
     private Boolean isConcluido;
