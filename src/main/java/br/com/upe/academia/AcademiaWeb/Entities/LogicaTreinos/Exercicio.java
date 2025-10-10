@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,10 @@ public class Exercicio {
 
     @ManyToOne
     @JoinColumn(name = "treino_id")
+    @JsonIgnore
     private Treino treino;
 
+    public Boolean getIsConcluido() {
+        return isConcluido();
+    }
 }

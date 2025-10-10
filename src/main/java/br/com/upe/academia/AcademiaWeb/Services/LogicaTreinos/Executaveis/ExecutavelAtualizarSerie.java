@@ -22,7 +22,7 @@ public class ExecutavelAtualizarSerie implements Executavel {
 
     @Override
     public void executar() {
-        this.serieAntiga = serieService.buscarSerie(id);
+        this.serieAntiga = serieService.buscarSerie(this.id);
         this.serieAtualizada = serieService.atualizarSerie(novaSerie);
     }
 

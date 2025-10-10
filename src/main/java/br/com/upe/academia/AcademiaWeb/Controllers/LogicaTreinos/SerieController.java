@@ -1,7 +1,11 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
 import java.net.URI;
 import java.util.UUID;
+
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
+import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.SerieServiceImpl;
+import br.com.upe.academia.AcademiaWeb.utils.SerieMapper;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelAtualizarSerie;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelCriarSerie;
@@ -23,30 +27,37 @@ public class SerieController{
     @Autowired
     private SerieService serieService;
 
+    @Autowired
+    private SerieMapper serieMapper;
+
     @GetMapping("/{id}")
-    public ResponseEntity<Serie> buscarSerie(@PathVariable UUID id){
+    public ResponseEntity<SerieDTO> buscarSerie(@PathVariable UUID id){
         Serie serie = serieService.buscarSerie(id);
-        return ResponseEntity.ok().body(serie);
+        SerieDTO serieDTO = serieMapper.toResponseDTO(serie);
+        return ResponseEntity.ok().body(serieDTO);
     }
 
     //A parte do uri serve para dizer que deu certo e mostar o caminho exato para o que criou
     @PostMapping
-    public ResponseEntity<Serie> adicionarSerie(@RequestBody Serie serie){
-        ExecutavelCriarSerie comandoCriarSerie = new ExecutavelCriarSerie(serieService, serie);
+    public ResponseEntity<SerieDTO> adicionarSerie(@RequestBody SerieDTO seriedto){
+        ExecutavelCriarSerie comandoCriarSerie = new ExecutavelCriarSerie(serieService, serieMapper.toEntity(seriedto));
         commandHistory.execute(comandoCriarSerie);
         Serie novaSerie = comandoCriarSerie.getSerieCriada();
+        SerieDTO serieDTO = serieMapper.toResponseDTO(novaSerie);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(novaSerie.getIdSerie()).toUri();
-        return ResponseEntity.created(location).body(novaSerie);
+        return ResponseEntity.created(location).body(serieDTO);
 }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Serie> atualizarSerie(@RequestBody Serie serie, @PathVariable UUID id) {
-        serie.setIdSerie(id);
-        ExecutavelAtualizarSerie comandoAtualizar = new ExecutavelAtualizarSerie(serieService, serie.getIdSerie(), serie);
+    public ResponseEntity<SerieDTO> atualizarSerie(@RequestBody SerieDTO seriedto, @PathVariable UUID id) {
+        seriedto.setIdSerie(id);
+        Serie serie = serieMapper.toEntity(seriedto);
+        ExecutavelAtualizarSerie comandoAtualizar = new ExecutavelAtualizarSerie(serieService, id, serie);
         commandHistory.execute(comandoAtualizar);
         Serie serieAtualizada = comandoAtualizar.getSerieAtualizada();
-        return ResponseEntity.ok().body(serieAtualizada);
+        SerieDTO serieAttDTO = serieMapper.toResponseDTO(serieAtualizada);
+        return ResponseEntity.ok().body(serieAttDTO);
     }
 
     @DeleteMapping("/{id}")

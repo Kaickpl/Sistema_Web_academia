@@ -5,7 +5,6 @@ import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Repositories.SerieRepository;
 import br.com.upe.academia.AcademiaWeb.Services.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Transient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
