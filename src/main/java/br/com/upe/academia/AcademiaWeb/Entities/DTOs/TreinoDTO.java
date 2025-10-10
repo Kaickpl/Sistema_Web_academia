@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class TreinoDTOs {
+public class TreinoDTO {
     private UUID idTreino;
     @JsonDeserialize(using = DurationDeserializer.class)
     @JsonSerialize(using = DurationSerializer.class)
@@ -25,7 +25,7 @@ public class TreinoDTOs {
     private String nome;
     private boolean isConcluido = false;
 
-    public TreinoDTOs(Treino treino){
+    public TreinoDTO(Treino treino){
         this.idTreino = treino.getIdTreino();
         this.duracao = treino.getDuracao();
         this.nome = treino.getNome();

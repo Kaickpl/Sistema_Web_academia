@@ -2,7 +2,6 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis;
 
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Services.SerieService;
-import org.springframework.stereotype.Component;
 
 public class ExecutavelCriarSerie implements Executavel {
     private SerieService serieService;

@@ -39,11 +39,9 @@ public class ExercicioController {
     public ResponseEntity<ExercicioDTO> criarExercicio(@RequestBody ExercicioDTO exercicioDto){
         ExecutavelCriarExercicio comandoCriarExerc = new ExecutavelCriarExercicio(exercicioService, exercicioMapper.toEntity(exercicioDto));
         commandHistory.execute(comandoCriarExerc);
-        Exercicio novaSerie = comandoCriarExerc.getExercicioCriado();
-        ExercicioDTO exercicioDTO = exercicioMapper.toDTO(novaSerie);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(novaSerie.getIdExercicio()).toUri();
-        return ResponseEntity.created(location).body(exercicioDTO);
+        Exercicio novoExercicio = comandoCriarExerc.getExercicioCriado();
+        ExercicioDTO exercicioDTO = exercicioMapper.toDTO(novoExercicio);
+        return ResponseEntity.ok().body(exercicioDTO);
     }
 
     @PutMapping("/{id}")
