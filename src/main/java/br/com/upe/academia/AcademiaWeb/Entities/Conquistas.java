@@ -25,7 +25,7 @@ public class Conquistas {
     private Aluno aluno;
 
     private LocalDate dataConquista;
-    @Column(columnDefinition = "int default 0", nullable = false)
+    @Column(columnDefinition = "int", nullable = false)
     private int moedas;
 
 

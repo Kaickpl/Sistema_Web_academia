@@ -24,11 +24,7 @@ public class ProgressaoController {
 
     @PostMapping
     public ResponseEntity<Progressao> registrarCarga(@RequestBody ProgressaoDTOs progressaoDTOs) {
-        Progressao novaProgressao = progressaoService.salvaCarga(
-          progressaoDTOs.getAlunoId(),
-          progressaoDTOs.getNomeExercicio(),
-          progressaoDTOs.getPeso()
-        );
+        Progressao novaProgressao = progressaoService.salvaCarga(progressaoDTOs);
         return new ResponseEntity<>(novaProgressao, HttpStatus.CREATED);
     }
 }

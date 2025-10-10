@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -17,10 +19,10 @@ import java.util.UUID;
 public class Avaliacao {
     @Id
     @GeneratedValue(strategy =  GenerationType.UUID)
-    private UUID IdAvaliacao;
-    private Date dataSolicitacao;
-    private Date dataAvaliacao;
-    private String objeitvoAvaliacao;
+    private UUID idAvaliacao;
+    private LocalDate dataSolicitacao;
+    private LocalDate dataAvaliacao;
+    private String objetivoAvaliacao;
 
 
     @ManyToOne
