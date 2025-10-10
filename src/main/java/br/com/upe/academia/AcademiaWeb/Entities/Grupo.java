@@ -1,4 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 
 public class Grupo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idGrupo;

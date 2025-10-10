@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 @Service
 
@@ -40,6 +41,7 @@ public class PersonalServiceImpl implements PersonalService {
     public boolean validarCref(String cref) {
         return personalRepository.findByCref(cref).isEmpty();
     }
+
 
     @Override
     public Personal alterarPersonal(String cref, Personal personal) {
