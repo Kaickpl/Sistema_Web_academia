@@ -22,8 +22,7 @@ public class ConquistasServiceImpl implements ConquistasService {
     @Override
     public Conquistas registrarConquista(UUID alunoId, String titulo, String descricao, int moedas) {
 
-        Aluno aluno = alunoRepository.findById(alunoId)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com o ID: " + alunoId));
+        Aluno aluno = alunoRepository.findByIdUsuario(alunoId);
 
         int novoSaldo = aluno.getSaldoMoedas() + moedas;
 
