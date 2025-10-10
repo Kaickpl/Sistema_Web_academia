@@ -33,6 +33,16 @@ public class AvaliacaoController {
         return avaliacaoService.mostrarAvaliacaoPersonalEData(cref, dataAvaliacao);
     }
 
+    //delete
+    @DeleteMapping("/{idAvaliacao}")
+    public ResponseEntity<Boolean> deletarAluno(@PathVariable UUID idAvaliacao) {
+        boolean foiDeletado = avaliacaoService.removerAvaliacao(idAvaliacao);
+        if(foiDeletado) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.status(404).body(false);
+    }
+
     @PostMapping
     public ResponseEntity<Avaliacao> criarAvaliacao(@RequestBody AvaliacaoDTOs avaliacaoDTOs){
         Avaliacao novaAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoDTOs);

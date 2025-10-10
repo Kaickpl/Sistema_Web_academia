@@ -62,4 +62,13 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     public List<Avaliacao> mostrarAvaliacaoPersonalEData(String cref, LocalDate data) {
         return avaliacaoRepository.findByPersonal_CrefAndDataAvaliacao(cref, data);
     }
+
+    @Override
+    public boolean removerAvaliacao(UUID idAvaliacao) {
+        if(avaliacaoRepository.existsById(idAvaliacao)){
+            avaliacaoRepository.deleteById(idAvaliacao);
+            return true;
+        }
+        return false;
+    }
 }

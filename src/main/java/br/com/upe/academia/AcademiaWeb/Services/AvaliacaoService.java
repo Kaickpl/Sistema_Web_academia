@@ -15,4 +15,6 @@ public interface AvaliacaoService {
     public List<Avaliacao> mostrarAvaliacaoPersonal(String cref);
 
     List<Avaliacao> mostrarAvaliacaoPersonalEData(String cref, LocalDate data);
+
+    boolean removerAvaliacao(UUID idAvaliacao);
 }
