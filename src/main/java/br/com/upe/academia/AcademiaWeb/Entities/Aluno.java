@@ -1,6 +1,8 @@
 package br.com.upe.academia.AcademiaWeb.Entities;
 
 
+import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,11 +18,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Aluno extends Usuario{
-    private double saldoMoedas;
+    @Column(nullable = false)
+    private int saldoMoedas;
 
     @ManyToMany(mappedBy = "alunos")
+    @JsonIgnore
     private List<Grupo> grupos = new ArrayList<>();
-
 
 
 }

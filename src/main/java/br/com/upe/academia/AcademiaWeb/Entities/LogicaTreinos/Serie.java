@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,11 +21,15 @@ public class Serie {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idSerie;
+    @Column(nullable = false)
     private Integer numeroDeRepeticoes;
+    @Column(nullable = false)
     private Float pesoDaSerie;
+    private boolean isConcluida = false;
 
     @ManyToOne
     @JoinColumn(name = "exercicio_id")
+    @JsonIgnore
     private Exercicio exercicio;
 
 
@@ -35,3 +40,4 @@ public class Serie {
         return 0.0f;
     }
 }
+

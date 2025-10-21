@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +19,8 @@ import java.util.UUID;
 public class Personal extends Usuario{
     private String cref;
 
-    @OneToMany(mappedBy = "personal")
+    @OneToMany(mappedBy = "personal", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Grupo> grupos;
-
 
 }
