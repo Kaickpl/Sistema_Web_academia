@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.UUID;
 
 public interface PersonalService {
 
-    public Personal cadastrarPersonal(Personal personal);
+    public Personal cadastrarPersonal(PersonalDTOs personalDTOs);
 
     public boolean validarEmail(String email);
 

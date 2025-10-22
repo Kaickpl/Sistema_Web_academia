@@ -1,16 +1,12 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
-import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
-import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.RequestPath;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,21 +21,12 @@ public class PersonalController {
 
 
     @PostMapping
-    public ResponseEntity<?>CadastroPersonal(@RequestBody PersonalDTOs personalDTOs){
-        Personal personal = convertToEntity(personalDTOs);
-        if (personalService.validarEmail(personal.getEmail())){
-            return ResponseEntity.status(409).body("Usuário já cadastrado com essa email!");}
-        if (personal.getCref() == null || (personal.getCref().isEmpty())){
-            return ResponseEntity.status(409).body("Preencha o campo cref!");
+    public ResponseEntity<Personal> CadastroPersonal(@RequestBody PersonalDTOs personalDTOs){
+        Personal personal = personalService.cadastrarPersonal(personalDTOs);
+        if (personal == null){
+            return ResponseEntity.badRequest().build();
         }
-        if(personal.getSenha() == null || (personal.getSenha().isEmpty())){
-            return ResponseEntity.status(409).body("Insira um SENHA valida!");
-        }
-        if(personalService.validarCref(personal.getCref())){
-            return ResponseEntity.status(409).body("Já existe um CREF cadastrado, insira um CREF valido!");
-        }
-        personal = personalService.cadastrarPersonal(personal);
-        return ResponseEntity.status(200).body(personal);
+        return ResponseEntity.ok(personal);
 
     }
     @DeleteMapping("/{cref}")
@@ -52,22 +39,23 @@ public class PersonalController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<PersonalDTOs >> buscarPersonal(@RequestParam String nome) {
-        List<PersonalDTOs> personal = personalService.buscarPersonalNome(nome).stream().map(PersonalDTOs::new).toList();
-        if (personal != null) {
-            return ResponseEntity.status(200).body(personal);
+    public ResponseEntity<List<PersonalResponseDTOs>> buscarPersonal(@RequestParam String nome) {
+        List<Personal> personal = personalService.buscarPersonalNome(nome);
+        if (personal.isEmpty()) {
+            return  ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(404).body(null);
+        List<PersonalResponseDTOs> dto = personal.stream().map(PersonalResponseDTOs::new).collect(Collectors.toList());
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/buscarCref")
-    public ResponseEntity<?> buscarPersonalCref(@RequestParam String cref) {
+    public ResponseEntity<PersonalResponseDTOs> buscarPersonalCref(@RequestParam String cref) {
         Personal personal = personalService.buscarPersonal(cref);
-        if (personal != null) {
-            PersonalDTOs personalDTOs = convertToDTO(personal);
-            return ResponseEntity.status(200).body(personalDTOs);
+        if (personal == null) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.status(404).body("Personal não encontrado");
+        PersonalResponseDTOs dto = new PersonalResponseDTOs(personal);
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{cref}")

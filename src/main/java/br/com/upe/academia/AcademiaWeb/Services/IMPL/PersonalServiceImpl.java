@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
@@ -21,14 +22,28 @@ public class PersonalServiceImpl implements PersonalService {
     PersonalRepository personalRepository;
 
     @Override
-    public Personal cadastrarPersonal(Personal personal) {
-        personal.setTipo(Tipo.personalTrainer);
-        if(personalRepository.findByEmail(personal.getEmail()).isPresent() ){
+    public Personal cadastrarPersonal(PersonalDTOs personalDTOs) {
+        personalDTOs.setTipo(Tipo.personalTrainer);
+        if(personalRepository.findByEmail(personalDTOs.getEmail()).isPresent() ){
             return null;
         }
-        if(personalRepository.findByCref(personal.getCref()).isPresent() ){
+        if(personalRepository.findByCref(personalDTOs.getCref()).isPresent() ){
             return null;
         }
+        if (personalDTOs.getSenha() == null || personalDTOs.getSenha().isEmpty()) {
+            return null;
+        }
+        if (personalDTOs.getCref() == null || personalDTOs.getCref().isEmpty()) {
+            return null;
+        }
+        Personal personal = new Personal();
+        personal.setNomeUsuario(personalDTOs.getNomeUsuario());
+        personal.setDataNascimento(personalDTOs.getDataNascimento());
+        personal.setTelefone(personalDTOs.getTelefone());
+        personal.setTipo(personalDTOs.getTipo());
+        personal.setEmail(personalDTOs.getEmail());
+        personal.setCref(personalDTOs.getCref());
+        personal.setSenha(personalDTOs.getSenha());
 
         return personalRepository.save(personal);
     }
