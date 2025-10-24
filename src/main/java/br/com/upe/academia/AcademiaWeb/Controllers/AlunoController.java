@@ -1,9 +1,8 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
-import aj.org.objectweb.asm.commons.TryCatchBlockSorter;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,21 +23,15 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @PostMapping
-    public ResponseEntity<?> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
-
-        Aluno aluno = convertToEntity(alunoDTOs);
-        if (alunoService.validaremail(aluno.getEmail())) {
-            return ResponseEntity.status(409).body("Erro: aluno já cadastrado com esse email!");
+    public ResponseEntity<AlunoResponseDTOs> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
+        Aluno aluno = alunoService.cadastrarAluno(alunoDTOs);
+        if (aluno == null) {
+            return ResponseEntity.badRequest().build();
         }
-        if(aluno.getSenha() == null || (aluno.getSenha().isEmpty())){
-            return ResponseEntity.status(409).body("Insira um SENHA valida!");
-        }
-        if(aluno.getNomeUsuario()  == null || (aluno.getNomeUsuario().isEmpty())){
-            return ResponseEntity.status(409).body("Insira um NOME valido!");
-        }
-        Aluno alunoCadastrado = alunoService.cadastrarAluno(aluno);
-        return ResponseEntity.status(201).body(alunoCadastrado);
+        AlunoResponseDTOs dto = new AlunoResponseDTOs(aluno);
+        return ResponseEntity.ok(dto);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deletarAluno(@PathVariable UUID id) {
@@ -50,8 +43,8 @@ public class AlunoController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<AlunoDTOs>> buscaraluno(@RequestParam String nome) {
-        List<AlunoDTOs> alunos = alunoService.buscaraluno(nome).stream().map(AlunoDTOs::new).collect(Collectors.toList());
+    public ResponseEntity<List<AlunoResponseDTOs>> buscaraluno(@RequestParam String nome) {
+        List<AlunoResponseDTOs> alunos = alunoService.buscaraluno(nome).stream().map(AlunoResponseDTOs::new).collect(Collectors.toList());
         if (alunos != null) {
             return ResponseEntity.status(200).body(alunos);
         }
@@ -59,32 +52,18 @@ public class AlunoController {
     }
 
     @GetMapping("/buscarTodos")
-    public ResponseEntity<Page<AlunoDTOs>> listar(@PageableDefault(size = 2)Pageable page) {
-        return ResponseEntity.ok(alunoService.ListarAlunos(page).map(AlunoDTOs::new));
+    public ResponseEntity<Page<AlunoResponseDTOs>> listar(@PageableDefault(size = 2)Pageable page) {
+        return ResponseEntity.ok(alunoService.ListarAlunos(page).map(AlunoResponseDTOs::new));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarAluno(@RequestBody AlunoDTOs alunoDTOs, @PathVariable UUID id) {
+    public ResponseEntity<AlunoResponseDTOs> atualizarAluno(@RequestBody AlunoDTOs alunoDTOs, @PathVariable UUID id) {
 
-        Aluno alunoExistente = alunoService.buscarPorId(id);
+        Aluno alunoExistente = alunoService.alterarAluno(id,alunoDTOs);
         if (alunoExistente == null) {
-            return ResponseEntity.status(404).body("Aluno não encontrado");
+            return ResponseEntity.badRequest().build();
         }
-        if (alunoDTOs.getNomeUsuario() != null) {
-            alunoExistente.setNomeUsuario(alunoDTOs.getNomeUsuario());
-        }
-        if (alunoDTOs.getTelefone() != null) {
-            alunoExistente.setTelefone(alunoDTOs.getTelefone());
-        }
-        if (alunoDTOs.getEmail() != null && !alunoDTOs.getEmail().equals(alunoExistente.getEmail())) {
-            if (alunoService.validaremail(alunoDTOs.getEmail())) {
-                return ResponseEntity.status(409).body("Já existe um aluno com esse email!");
-            }
-            alunoExistente.setEmail(alunoDTOs.getEmail());
-        }
-        Aluno alunoAtualizado = alunoService.alterarAluno(id, alunoExistente);
-
-        return ResponseEntity.ok(alunoAtualizado);
+        return ResponseEntity.ok(new AlunoResponseDTOs(alunoExistente));
     }
 
 
@@ -93,18 +72,7 @@ public class AlunoController {
 
 
 
-    private Aluno convertToEntity(AlunoDTOs alunoDTOs) {
-        Aluno aluno = new Aluno();
-        //aluno.setIdUsuario(alunoDTOs.getIdUsuario());
-        aluno.setDataNascimento(alunoDTOs.getDataNascimento());
-        aluno.setNomeUsuario(alunoDTOs.getNomeUsuario());
-        aluno.setEmail(alunoDTOs.getEmail());
-        aluno.setSenha(alunoDTOs.getSenha());
-        aluno.setTelefone(alunoDTOs.getTelefone());
-        //aluno.setTipo(Tipo.aluno);
-        aluno.setSaldoMoedas(alunoDTOs.getSaldoMoedas());
-        return aluno;
-    }
+
 
 
 

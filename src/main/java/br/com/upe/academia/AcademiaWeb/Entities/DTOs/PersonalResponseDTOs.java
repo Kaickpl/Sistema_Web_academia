@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class PersonalResponseDTOs extends UsuarioDTOs {
+public class PersonalResponseDTOs {
 private UUID IdUsuario;
 private String nomeUsuario;
 private String CREF;

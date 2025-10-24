@@ -1,5 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
@@ -21,12 +23,13 @@ public class PersonalController {
 
 
     @PostMapping
-    public ResponseEntity<Personal> CadastroPersonal(@RequestBody PersonalDTOs personalDTOs){
+    public ResponseEntity<PersonalResponseDTOs> CadastroPersonal(@RequestBody PersonalDTOs personalDTOs){
         Personal personal = personalService.cadastrarPersonal(personalDTOs);
         if (personal == null){
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(personal);
+        PersonalResponseDTOs dto = new PersonalResponseDTOs(personal);
+        return ResponseEntity.ok(dto);
 
     }
     @DeleteMapping("/{cref}")
@@ -59,11 +62,12 @@ public class PersonalController {
     }
 
     @PutMapping("/{cref}")
-    public ResponseEntity<PersonalDTOs> atualizarPersonal(@PathVariable String cref, @RequestBody PersonalDTOs personalDTOs) {
-        Personal personal = convertToEntity(personalDTOs);
-        Personal personalAtualizado = personalService.alterarPersonal(cref, personal);
-        PersonalDTOs personalAtualizadoDTO = convertToDTO(personalAtualizado);
-        return ResponseEntity.status(200).body(personalAtualizadoDTO);
+    public ResponseEntity<PersonalResponseDTOs> atualizarPersonal(@PathVariable String cref, @RequestBody PersonalDTOs personalDTOs) {
+        Personal personalExiste = personalService.alterarPersonal(cref, personalDTOs);
+        if (personalExiste == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(new PersonalResponseDTOs(personalExiste));
     }
 
 

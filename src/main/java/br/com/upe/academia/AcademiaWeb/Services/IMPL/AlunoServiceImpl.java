@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,38 +25,70 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
 
-    public Aluno cadastrarAluno(Aluno aluno) {
-        aluno.setTipo(Tipo.aluno);
+    public Aluno cadastrarAluno(AlunoDTOs alunoDTOs) {
+        alunoDTOs.setTipo(Tipo.aluno);
 
-        if (alunoRepository.findByEmail(aluno.getEmail()).isPresent()) {
+        if (alunoRepository.findByEmail(alunoDTOs.getEmail()).isPresent()) {
             return null;
         }
 
-        if (aluno.getNomeUsuario() == null || aluno.getNomeUsuario().isEmpty()) {
+        if (alunoDTOs.getNomeUsuario() == null || alunoDTOs.getNomeUsuario().isEmpty()) {
             return null;
         }
+        if (alunoDTOs.getSenha() == null || alunoDTOs.getSenha().isEmpty()) {
+            return null;
+        }
+        if (ValidarGmail(alunoDTOs.getEmail()) == false) {
+            return null;
 
+        }
+
+        Aluno aluno =  new Aluno();
+        aluno.setEmail(alunoDTOs.getEmail());
+        aluno.setSenha(alunoDTOs.getSenha());
+        aluno.setDataNascimento(alunoDTOs.getDataNascimento());
+        aluno.setTelefone(alunoDTOs.getTelefone());
+        aluno.setTipo(alunoDTOs.getTipo());
+        aluno.setNomeUsuario(alunoDTOs.getNomeUsuario());
+        aluno.setSaldoMoedas(alunoDTOs.getSaldoMoedas());
         return alunoRepository.save(aluno);
     }
     @Override
-    public Aluno alterarAluno(UUID id, Aluno aluno) {
-        Aluno alunoExiste = alunoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado!"));
-
-        if (aluno.getEmail() != null && !alunoExiste.getEmail().equals(aluno.getEmail())) {
-            if (validaremail(aluno.getEmail())) {
-                throw new IllegalArgumentException("Já existe um aluno com esse email!");
+    public Aluno alterarAluno(UUID id, AlunoDTOs alunoDTOs) {
+        Optional<Aluno> idExiste = alunoRepository.findById(id);
+        if (idExiste.isEmpty()) {
+            return null;
+        }
+        Aluno alunoEncontrado = idExiste.get();
+        if (alunoDTOs.getEmail() != null && !alunoDTOs.getEmail().equals(alunoEncontrado.getEmail())) {
+            if (validaremail(alunoDTOs.getEmail())) {
+                return null;
             }
-            alunoExiste.setEmail(aluno.getEmail());
+            if (ValidarGmail(alunoDTOs.getEmail()) == false) {
+                return null;
+            }
+            alunoEncontrado.setEmail(alunoDTOs.getEmail());
         }
-        if (aluno.getNomeUsuario() != null) {
-            alunoExiste.setNomeUsuario(aluno.getNomeUsuario());
+        if (alunoDTOs.getNomeUsuario() != null) {
+            alunoEncontrado.setNomeUsuario(alunoDTOs.getNomeUsuario());
         }
-        if (aluno.getTelefone() != null) {
-            alunoExiste.setTelefone(aluno.getTelefone());
+        if (alunoDTOs.getTelefone() != null) {
+            alunoEncontrado.setTelefone(alunoDTOs.getTelefone());
         }
+        return alunoRepository.save(alunoEncontrado);
+    }
 
-        return alunoRepository.save(alunoExiste);
+    @Override
+    public Aluno TrocarSenha(String Email){
+        return null;
+    }
+
+    @Override
+    public Boolean ValidarGmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+        return email.toLowerCase().contains("@gmail.com") || email.toLowerCase().contains("@upe.br");
     }
 
 
@@ -77,9 +111,5 @@ public class AlunoServiceImpl implements AlunoService {
         return alunoRepository.findAll(page);
     }
 
-    @Override
-    public Aluno buscarPorId(UUID id) {
-        return alunoRepository.findById(id).orElse(null);
-    }
-
 }
+

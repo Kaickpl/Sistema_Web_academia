@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.GrupoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
@@ -29,22 +30,13 @@ public class GrupoController {
 
     @PostMapping
     public ResponseEntity<GrupoDTOs> criarGrupo(@RequestBody Grupo grupo) {
-        if (grupo.getPersonal() == null || grupo.getPersonal().getIdUsuario() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        Personal personal = personalRepository.findById(grupo.getPersonal().getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("Personal não encontrado"));
-
-        grupo.setPersonal(personal);
-        grupo.setAlunos(new ArrayList<>()); // inicializa lista vazia
-
         Grupo grupoCriado = grupoService.CriarGrupo(grupo);
+        if (grupoCriado == null) {
+            return ResponseEntity.notFound().build();
+        }
+        GrupoDTOs grupoDTOs = new GrupoDTOs(grupoCriado);
 
-        // converter para DTO
-        GrupoDTOs grupoDTO = new GrupoDTOs(grupoCriado);
-
-        return ResponseEntity.status(201).body(grupoDTO);
+        return ResponseEntity.status(201).body(grupoDTOs);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> removerGrupo(@PathVariable UUID id) {
@@ -60,9 +52,21 @@ public class GrupoController {
     public ResponseEntity<List<GrupoDTOs>> buscarNome (@RequestParam String nome) {
         List<GrupoDTOs> grupo = grupoService.buscarGrupo(nome).stream().map(grupoCriado -> new GrupoDTOs(grupoCriado)).collect(Collectors.toList());
         return ResponseEntity.ok(grupo);
-
-
         }
+
+    @PutMapping("/grupos/{grupoId}/alunos/{idAluno}")
+    public ResponseEntity<GrupoDTOs> addAluno(@PathVariable UUID grupoId, @PathVariable UUID idAluno) {
+
+        GrupoDTOs grupoDTO = new GrupoDTOs();
+        grupoDTO.setIdGrupo(grupoId);
+
+        Grupo grupoAtualizado = grupoService.AddUsuarioGrupo(idAluno, grupoDTO);
+        if (grupoAtualizado == null) {
+            return ResponseEntity.notFound().build();
+    }
+        GrupoDTOs grupoDTOsnovo = new GrupoDTOs(grupoAtualizado);
+        return ResponseEntity.ok(grupoDTOsnovo);
+    }
 }
 
 

@@ -13,7 +13,7 @@ public interface PersonalService {
 
     public boolean validarEmail(String email);
 
-    public Personal  alterarPersonal(String cref, Personal personal);
+    public Personal alterarPersonal(String cref, PersonalDTOs personalDTOs);
 
     public Boolean deletarPersonal(String cref);
 
@@ -22,6 +22,8 @@ public interface PersonalService {
     public List<Personal> buscarPersonalNome(String nomeUsuario);
 
     public boolean validarCref(String cref);
+
+    public Boolean validarGmail(String email);
 
 
 }
