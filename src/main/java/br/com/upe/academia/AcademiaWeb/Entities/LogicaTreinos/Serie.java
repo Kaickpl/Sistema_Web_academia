@@ -7,10 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GeneratedColumn;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
+
+/* talvez de pra tirar o mapper, passando o construtor no dto mesmo,
+   criar um dto para cada entidade que retorne apenas o necessario, no caso da serie seria o peso, o num de repeticoes e o statuts
+*/
+
 
 @Entity
 @Getter
@@ -21,23 +24,11 @@ public class Serie {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idSerie;
-    @Column(nullable = false)
-    private Integer numeroDeRepeticoes;
-    @Column(nullable = false)
-    private Float pesoDaSerie;
-    private boolean isConcluida = false;
 
     @ManyToOne
     @JoinColumn(name = "exercicio_id")
     @JsonIgnore
     private Exercicio exercicio;
 
-
-    public Float getVolumeSerie() {
-        if (numeroDeRepeticoes != null && pesoDaSerie != null) {
-            return pesoDaSerie * numeroDeRepeticoes;
-        }
-        return 0.0f;
-    }
 }
 

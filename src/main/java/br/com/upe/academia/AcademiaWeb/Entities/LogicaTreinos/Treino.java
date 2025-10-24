@@ -20,7 +20,11 @@ public class Treino {
     private String nome;
     private boolean isConcluido = false;
 
-    @OneToMany(mappedBy = "treino", cascade = CascadeType.ALL)
-    private List<Exercicio> exercicio;
-
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "Treino_Exercicio",
+            joinColumns = @JoinColumn(name = "Treino_id") ,
+            inverseJoinColumns = @JoinColumn(name = "Exercicio_id")
+    )
+    private List<Exercicio> exercicios;
     }
