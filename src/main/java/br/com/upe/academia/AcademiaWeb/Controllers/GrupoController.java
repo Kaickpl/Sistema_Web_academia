@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,6 +68,25 @@ public class GrupoController {
         GrupoDTOs grupoDTOsnovo = new GrupoDTOs(grupoAtualizado);
         return ResponseEntity.ok(grupoDTOsnovo);
     }
+
+    @GetMapping("/ListarTodos")
+    public ResponseEntity<Page<GrupoDTOs>> listarTodos(@PageableDefault(size = 5)  Pageable pageable) {
+        return ResponseEntity.ok(grupoService.buscarGrupos(pageable).map(GrupoDTOs::new));
+    }
+
+    @PutMapping("/DeletarAluno/{grupoId}/{idAluno}")
+    public ResponseEntity<GrupoDTOs> RemoverAlunoGrupo(@PathVariable UUID grupoId, @PathVariable UUID idAluno) {
+        GrupoDTOs grupoDTO = new GrupoDTOs();
+        grupoDTO.setIdGrupo(grupoId);
+        Grupo grupoAtualizado = grupoService.removeUsuarioGrupo(idAluno, grupoDTO);
+        if (grupoAtualizado == null) {
+            return ResponseEntity.notFound().build();
+        }
+        GrupoDTOs grupoDTOs = new GrupoDTOs(grupoAtualizado);
+        return ResponseEntity.ok(grupoDTOs);
+    }
+
+
 }
 
 

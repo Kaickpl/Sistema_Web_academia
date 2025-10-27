@@ -87,7 +87,7 @@ public class AlunoServiceImpl implements AlunoService {
     public Boolean ValidarGmail(String email) {
         if (email == null || email.isEmpty()) {
             return false;
-        }
+        }//replace verificar se so tem gmail
         return email.toLowerCase().contains("@gmail.com") || email.toLowerCase().contains("@upe.br");
     }
 

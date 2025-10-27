@@ -101,4 +101,23 @@ public class GrupoServiceImpl implements GrupoService {
         grupo1.getAlunos().add(aluno.get());
         return  grupoRepository.save(grupo1);
     }
+
+    @Override
+    public Grupo removeUsuarioGrupo(UUID idUsuario, GrupoDTOs grupoDTOs) {
+        Optional<Grupo> grupo = grupoRepository.findById(grupoDTOs.getIdGrupo());
+        if (grupo.isEmpty()) {
+            return null;
+        }
+        Optional<Aluno> aluno = alunoRepository.findById(idUsuario);
+        if (aluno.isEmpty()) {
+            return null;
+        }
+        Grupo grupo1 = grupo.get();
+        if (grupo1.getAlunos() == null) {
+            return null;
+        }
+        grupo1.getAlunos().remove(aluno.get());
+        return grupoRepository.save(grupo1);
+    }
+
 }

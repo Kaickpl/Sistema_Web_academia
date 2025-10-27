@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.GrupoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.UsuarioDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Usuario;
 import org.springframework.data.domain.Page;
@@ -23,5 +24,6 @@ public interface GrupoService {
 
     public Grupo AddUsuarioGrupo (UUID idUsuario, GrupoDTOs grupoDTOs);
 
+    public Grupo removeUsuarioGrupo (UUID idUsuario, GrupoDTOs grupoDTOs);
 
 }

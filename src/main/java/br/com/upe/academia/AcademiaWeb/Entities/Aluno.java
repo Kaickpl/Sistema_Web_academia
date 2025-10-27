@@ -22,7 +22,7 @@ public class Aluno extends Usuario{
     private int saldoMoedas;
 
     @ManyToMany(mappedBy = "alunos")
-    @JsonIgnore
+    //aqui
     private List<Grupo> grupos = new ArrayList<>();
 
 
