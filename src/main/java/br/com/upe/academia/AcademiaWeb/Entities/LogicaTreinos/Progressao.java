@@ -22,7 +22,9 @@ public class Progressao {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idProgressao;
 
-    private UUID alunoId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_aluno")
+    private Aluno aluno;
 
     private String nomeExercicio;
 

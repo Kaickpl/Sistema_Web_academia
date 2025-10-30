@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -19,13 +19,17 @@ public class MedidasCorporais {
     @Id
     @GeneratedValue(strategy =  GenerationType.UUID)
     private UUID idMedidas;
+    private LocalDate data;
+    @PrePersist
+    protected void onCreate() {
+        if (data == null) {
+            data = LocalDate.now();
+        }
+    }
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_aluno")
     private Aluno aluno;
-
-    @OneToMany(mappedBy = "medidasCorporais", cascade = CascadeType.REMOVE)
-    private List<Avaliacao> avaliacoes;
 
     private Double braco;
     private Double abdomen;
