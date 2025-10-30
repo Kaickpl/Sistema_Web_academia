@@ -21,6 +21,8 @@ public class ConquistasDTOs {
     private String descricaoConquista;
     private int moedas;
 
+    //tentar tirar o idconquistas
+
     public ConquistasDTOs(UUID alunoId, String descricaoConquista, UUID idConquistas, String nomeConquista, int moedas) {
         this.alunoId = alunoId;
         this.descricaoConquista = descricaoConquista;

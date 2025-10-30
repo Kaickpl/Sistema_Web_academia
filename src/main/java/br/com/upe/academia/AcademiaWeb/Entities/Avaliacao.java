@@ -27,7 +27,7 @@ public class Avaliacao {
 
     @ManyToOne
     @JoinColumn(name = "idMedidas")
-    private MedidasCorporais MedidasCorporais;
+    private MedidasCorporais medidasCorporais;
 
     @ManyToOne
     @JoinColumn(name = "idPersonal")

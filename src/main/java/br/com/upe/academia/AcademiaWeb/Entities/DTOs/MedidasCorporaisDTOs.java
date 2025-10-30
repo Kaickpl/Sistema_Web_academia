@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 
 public class MedidasCorporaisDTOs {
-    private UUID idMedidas;
+    private UUID alunoId;
     private Double braco;
     private Double abdomen;
     private Double cintura;
@@ -28,7 +28,7 @@ public class MedidasCorporaisDTOs {
     private Double altura;
 
     public MedidasCorporaisDTOs(MedidasCorporais medidasCorporais) {
-        this.idMedidas = medidasCorporais.getIdMedidas();
+        this.alunoId = medidasCorporais.getAluno().getIdUsuario();
         this.braco = medidasCorporais.getBraco();
         this.abdomen = medidasCorporais.getAbdomen();
         this.cintura = medidasCorporais.getCintura();

@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface ProgressaoRepository extends JpaRepository<Progressao, UUID> {
-    List<Progressao> findByAlunoIdAndNomeExercicioOrderByDataAsc(UUID alunoId, String nomeExercicio);
+    List<Progressao> findByAlunoIdUsuarioAndNomeExercicioOrderByDataAsc(UUID idUsuario, String nomeExercicio);
 }
