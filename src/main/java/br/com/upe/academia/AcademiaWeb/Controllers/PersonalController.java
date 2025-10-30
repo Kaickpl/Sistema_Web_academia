@@ -69,35 +69,4 @@ public class PersonalController {
         }
         return ResponseEntity.ok(new PersonalResponseDTOs(personalExiste));
     }
-
-
-
-
-    //recebe e convert
-    private Personal convertToEntity(PersonalDTOs personalDTOs) {
-        Personal personal = new Personal();
-        personal.setIdUsuario(personalDTOs.getIdUsuario());
-        personal.setDataNascimento(personalDTOs.getDataNascimento());
-        personal.setNomeUsuario(personalDTOs.getNomeUsuario());
-        personal.setEmail(personalDTOs.getEmail());
-        personal.setSenha(personalDTOs.getSenha());
-        personal.setTelefone(personalDTOs.getTelefone());
-        personal.setTipo(Tipo.aluno);
-        personal.setCref(personalDTOs.getCref());
-        return personal;
-    }
-//recebe e convert
-    private PersonalDTOs convertToDTO(Personal personal) {
-        PersonalDTOs dto = new PersonalDTOs();
-        //dto.setIdUsuario(personal.getIdUsuario());
-        //dto.setDataNascimento(personal.getDataNascimento());
-        dto.setNomeUsuario(personal.getNomeUsuario());
-        dto.setEmail(personal.getEmail());
-        //dto.setSenha(personal.getSenha());
-        dto.setTelefone(personal.getTelefone());
-        //dto.setTipo(personal.getTipo());
-        dto.setCref(personal.getCref());
-        return dto;
-    }
-
 }

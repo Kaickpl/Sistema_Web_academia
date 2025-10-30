@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
@@ -79,8 +80,20 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Aluno TrocarSenha(String Email){
-        return null;
+    public Aluno TrocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
+        Optional<Aluno> emailExiste = alunoRepository.findByEmail(Email);
+        if (emailExiste.isEmpty()) {
+            return null;
+        }
+        if(!senhaDTOs.getNovaSenha().equals(senhaDTOs.getConfirmaSenha())){
+            return null;
+        }
+        if (senhaDTOs.getNovaSenha() ==  null || senhaDTOs.getNovaSenha().isEmpty()) {
+            return null;
+        }
+        Aluno alunoEncontrado = emailExiste.get();
+        alunoEncontrado.setSenha(senhaDTOs.getNovaSenha());
+        return alunoRepository.save(alunoEncontrado);
     }
 
     @Override

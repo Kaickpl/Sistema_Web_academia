@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
@@ -20,7 +21,7 @@ public interface AlunoService {
 
     public Page<Aluno> ListarAlunos(Pageable page);
 
-    public Aluno TrocarSenha(String senha);
+    public Aluno TrocarSenha(String Email, TrocaSenhaDTOs senhaDTOs);
 
     public Boolean ValidarGmail(String email);
 

@@ -3,6 +3,7 @@ package br.com.upe.academia.AcademiaWeb.Controllers;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,6 +67,14 @@ public class AlunoController {
         return ResponseEntity.ok(new AlunoResponseDTOs(alunoExistente));
     }
 
+    @PutMapping("/RecuperarSeha/{Email}")
+    public ResponseEntity<AlunoResponseDTOs> recuperarAluno(@PathVariable String Email, @RequestBody TrocaSenhaDTOs senhaDTOs) {
+        Aluno alunoExixste = alunoService.TrocarSenha(Email, senhaDTOs);
+        if (alunoExixste == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(new AlunoResponseDTOs(alunoExixste));
+    }
 
 
 
