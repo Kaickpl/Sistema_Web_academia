@@ -67,8 +67,19 @@ public class GrupoServiceImpl implements GrupoService {
     }
 
     @Override
-    public Grupo editarGrupo(Grupo Grupo) {
-        return null;
+    public Grupo editarGrupo(UUID id,GrupoDTOs grupoDTOs) {
+        Optional<Grupo> grupoEncontrado = grupoRepository.findById(id);
+        if(grupoEncontrado.isEmpty()) {
+            return null;
+        }
+        Grupo grupoExiste = grupoEncontrado.get();
+        if (grupoDTOs.getNomeGrupo() != null) {
+            grupoExiste.setNomeGrupo(grupoDTOs.getNomeGrupo());
+        }
+        if(grupoDTOs.getDescricaoGrupo() != null) {
+            grupoExiste.setDescricaoGrupo(grupoDTOs.getDescricaoGrupo());
+        }
+        return grupoRepository.save(grupoExiste);
     }
 
     @Override

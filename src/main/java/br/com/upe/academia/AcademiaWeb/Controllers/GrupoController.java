@@ -1,10 +1,12 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AddAlunoGrupoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.GrupoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
+import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.GrupoService;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import jakarta.persistence.Entity;
@@ -28,6 +30,9 @@ public class GrupoController {
 
     @Autowired
     private PersonalRepository  personalRepository;
+
+    @Autowired
+    private AlunoService alunoService;
 
     @PostMapping
     public ResponseEntity<GrupoDTOs> criarGrupo(@RequestBody Grupo grupo) {
@@ -55,23 +60,21 @@ public class GrupoController {
         return ResponseEntity.ok(grupo);
         }
 
-    @PutMapping("/grupos/{grupoId}/alunos/{idAluno}")
-    public ResponseEntity<GrupoDTOs> addAluno(@PathVariable UUID grupoId, @PathVariable UUID idAluno) {
-
-        GrupoDTOs grupoDTO = new GrupoDTOs();
-        grupoDTO.setIdGrupo(grupoId);
-
-        Grupo grupoAtualizado = grupoService.AddUsuarioGrupo(idAluno, grupoDTO);
-        if (grupoAtualizado == null) {
-            return ResponseEntity.notFound().build();
-    }
-        GrupoDTOs grupoDTOsnovo = new GrupoDTOs(grupoAtualizado);
-        return ResponseEntity.ok(grupoDTOsnovo);
-    }
-
     @GetMapping("/ListarTodos")
     public ResponseEntity<Page<GrupoDTOs>> listarTodos(@PageableDefault(size = 5)  Pageable pageable) {
         return ResponseEntity.ok(grupoService.buscarGrupos(pageable).map(GrupoDTOs::new));
+    }
+
+    @PutMapping("/AddAluno/{grupoId}")
+    public ResponseEntity<GrupoDTOs> AddAluno(@PathVariable UUID grupoId, @RequestBody UUID id) {
+        GrupoDTOs grupoDTOs = new GrupoDTOs();
+        grupoDTOs.setIdGrupo(grupoId);
+        Grupo grupoAtualizado = grupoService.AddUsuarioGrupo(id,grupoDTOs);
+        if (grupoAtualizado == null) {
+            return ResponseEntity.notFound().build();
+        }
+        GrupoDTOs grupoDTOsAtualizado = new GrupoDTOs(grupoAtualizado);
+        return ResponseEntity.status(201).body(grupoDTOsAtualizado);
     }
 
     @PutMapping("/DeletarAluno/{grupoId}/{idAluno}")
@@ -83,6 +86,14 @@ public class GrupoController {
             return ResponseEntity.notFound().build();
         }
         GrupoDTOs grupoDTOs = new GrupoDTOs(grupoAtualizado);
+        return ResponseEntity.ok(grupoDTOs);
+    }
+    @PutMapping("/EditarGrupo/{id}")
+    public ResponseEntity<GrupoDTOs> editarGrupo(@PathVariable UUID id, @RequestBody GrupoDTOs grupoDTOs) {
+        Grupo grupo = grupoService.editarGrupo(id, grupoDTOs);
+        if (grupo == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(grupoDTOs);
     }
 

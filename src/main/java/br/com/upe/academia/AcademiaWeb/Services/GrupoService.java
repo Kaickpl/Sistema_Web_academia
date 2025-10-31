@@ -16,7 +16,7 @@ public interface GrupoService {
 
     public Boolean removerGrupo(UUID id);
 
-    public Grupo editarGrupo(Grupo Grupo);
+    public Grupo editarGrupo(UUID id, GrupoDTOs grupoDTOs);
 
     public Page<Grupo> buscarGrupos(Pageable page);
 

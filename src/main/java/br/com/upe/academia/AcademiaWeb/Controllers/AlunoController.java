@@ -68,7 +68,7 @@ public class AlunoController {
     }
 
     @PutMapping("/RecuperarSeha/{Email}")
-    public ResponseEntity<AlunoResponseDTOs> recuperarAluno(@PathVariable String Email, @RequestBody TrocaSenhaDTOs senhaDTOs) {
+    public ResponseEntity<AlunoResponseDTOs> recuperarSenha(@PathVariable String Email, @RequestBody TrocaSenhaDTOs senhaDTOs) {
         Aluno alunoExixste = alunoService.TrocarSenha(Email, senhaDTOs);
         if (alunoExixste == null) {
             return ResponseEntity.badRequest().build();

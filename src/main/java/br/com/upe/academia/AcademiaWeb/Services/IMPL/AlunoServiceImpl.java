@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class AlunoServiceImpl implements AlunoService {
@@ -22,6 +24,7 @@ public class AlunoServiceImpl implements AlunoService {
     AlunoRepository alunoRepository;
 
     public boolean validaremail(String email) {
+
         return alunoRepository.findByEmail(email).isPresent();
     }
 
@@ -106,9 +109,12 @@ public class AlunoServiceImpl implements AlunoService {
     public Boolean ValidarGmail(String email) {
         if (email == null || email.isEmpty()) {
             return false;
-        }//replace verificar se so tem gmail
-        return email.toLowerCase().contains("@gmail.com") || email.toLowerCase().contains("@upe.br");
+        }
+        Pattern p = Pattern.compile("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$");
+        Matcher m = p.matcher(email);
+        return m.matches();
     }
+
 
 
     @Override
