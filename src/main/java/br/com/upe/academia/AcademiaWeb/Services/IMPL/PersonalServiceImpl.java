@@ -128,7 +128,8 @@ public class PersonalServiceImpl implements PersonalService {
         if (personalExiste.isEmpty()) {
             return null;
         }
-        if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isEmpty()) {
+        if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank()
+            || senhaDTOs.getConfirmaSenha() == null|| senhaDTOs.getConfirmaSenha().isBlank()) {
             return null;
         }
         if(!senhaDTOs.getNovaSenha().equals(senhaDTOs.getConfirmaSenha())) {
