@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 
@@ -118,6 +120,26 @@ public class PersonalServiceImpl implements PersonalService {
     @Override
     public List<Personal> buscarPersonalNome(String nome) {
         return personalRepository.findByNomeUsuarioContaining(nome);
-
     }
+
+    @Override
+    public Personal TrocaSenha(UUID id, TrocaSenhaDTOs senhaDTOs){
+        Optional<Personal> personalExiste = personalRepository.findById(id);
+        if (personalExiste.isEmpty()) {
+            return null;
+        }
+        if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isEmpty()) {
+            return null;
+        }
+        if(!senhaDTOs.getNovaSenha().equals(senhaDTOs.getConfirmaSenha())) {
+            return null;
+        }
+        if (senhaDTOs.getConfirmaSenha().equals(personalExiste.get().getSenha())) {
+            return null;
+        }
+        Personal personal = personalExiste.get();
+        personal.setSenha(senhaDTOs.getConfirmaSenha());
+        return personalRepository.save(personal);
+    }
+
 }

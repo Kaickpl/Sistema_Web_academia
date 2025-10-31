@@ -4,6 +4,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalResponseDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequestMapping("/api/personal")
@@ -68,5 +70,13 @@ public class PersonalController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(new PersonalResponseDTOs(personalExiste));
+    }
+    @PutMapping("/RecuperarSenha/{id}")
+    public ResponseEntity<PersonalResponseDTOs> atualizarSenha(@PathVariable UUID id, @RequestBody TrocaSenhaDTOs senhaDTOs) {
+      Personal personal = personalService.TrocaSenha(id, senhaDTOs);
+      if (personal == null) {
+          return ResponseEntity.badRequest().build();
+      }
+      return ResponseEntity.ok(new PersonalResponseDTOs(personal));
     }
 }

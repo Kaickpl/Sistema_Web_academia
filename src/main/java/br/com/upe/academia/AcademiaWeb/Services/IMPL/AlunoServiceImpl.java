@@ -92,7 +92,7 @@ public class AlunoServiceImpl implements AlunoService {
             return null;
         }
         Aluno alunoEncontrado = emailExiste.get();
-        alunoEncontrado.setSenha(senhaDTOs.getNovaSenha());
+        alunoEncontrado.setSenha(senhaDTOs.getConfirmaSenha());
         return alunoRepository.save(alunoEncontrado);
     }
 
