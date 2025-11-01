@@ -3,6 +3,8 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
+import br.com.upe.academia.AcademiaWeb.Exceptions.MedidaInvalidaException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
@@ -27,8 +29,25 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
 
     @Override
     public MedidasCorporais registrarMedidas(MedidasCorporaisDTOs medidasCorporaisDTOs) {
-        MedidasCorporais novasMedidas = new MedidasCorporais();
         Aluno aluno = alunoRepository.findByIdUsuario(medidasCorporaisDTOs.getAlunoId());
+        if (aluno == null){
+            throw new UsuarioNaoEncontradoException();
+        }
+        //dps ver a excessão de se colocar em outro formato
+        validarMedida(medidasCorporaisDTOs.getBraco(), "braço");
+        validarMedida(medidasCorporaisDTOs.getAbdomen(), "abdômen");
+        validarMedida(medidasCorporaisDTOs.getCintura(), "cintura");
+        validarMedida(medidasCorporaisDTOs.getPeito(), "peito");
+        validarMedida(medidasCorporaisDTOs.getQuadril(), "quadril");
+        validarMedida(medidasCorporaisDTOs.getCoxa(), "coxa");
+        validarMedida(medidasCorporaisDTOs.getOmbro(), "ombro");
+        validarMedida(medidasCorporaisDTOs.getMassaMagra(), "massa magra");
+        validarMedida(medidasCorporaisDTOs.getGordura(), "percentual de gordura");
+        validarMedida(medidasCorporaisDTOs.getPercentualAgua(), "percentual de água");
+        validarMedida(medidasCorporaisDTOs.getPeso(), "peso");
+        validarMedida(medidasCorporaisDTOs.getAltura(), "altura");
+
+        MedidasCorporais novasMedidas = new MedidasCorporais();
         novasMedidas.setAluno(aluno);
         novasMedidas.setBraco(medidasCorporaisDTOs.getBraco());
         novasMedidas.setAbdomen(medidasCorporaisDTOs.getAbdomen());
@@ -43,5 +62,11 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
         novasMedidas.setPeso(medidasCorporaisDTOs.getPeso());
         novasMedidas.setAltura(medidasCorporaisDTOs.getAltura());
         return medidasCorporaisRepository.save(novasMedidas);
+    }
+
+    public void validarMedida(Double valor, String nomeCampo){
+        if (valor <= 0){
+            throw new MedidaInvalidaException("A medida de " + nomeCampo + " deve ser maior que zero");
+        }
     }
 }

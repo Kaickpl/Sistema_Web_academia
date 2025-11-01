@@ -4,6 +4,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExceptionResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import jakarta.persistence.ElementCollection;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,6 +45,12 @@ public class RestExceptionHandler {
     @ExceptionHandler(OperacaoNaoPermitidaException.class)
     public ResponseEntity<ExceptionResponseDTO> handleOperacaoNaoPermitida(OperacaoNaoPermitidaException ex, HttpServletRequest request) {
         ExceptionResponseDTO  exceptionResponseDTO = new ExceptionResponseDTO(ex.getMessage(), 403, request.getRequestURI());
+        return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
+    }
+
+    @ExceptionHandler(MedidaInvalidaException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleMedidaInvalidaException(MedidaInvalidaException ex, HttpServletRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(ex.getMessage(), 400, request.getRequestURI());
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
 }
