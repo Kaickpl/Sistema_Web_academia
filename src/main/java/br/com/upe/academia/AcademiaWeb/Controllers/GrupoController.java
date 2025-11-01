@@ -44,6 +44,7 @@ public class GrupoController {
 
         return ResponseEntity.status(201).body(grupoDTOs);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> removerGrupo(@PathVariable UUID id) {
         Boolean deleted = grupoService.removerGrupo(id);
@@ -88,6 +89,7 @@ public class GrupoController {
         GrupoDTOs grupoDTOs = new GrupoDTOs(grupoAtualizado);
         return ResponseEntity.ok(grupoDTOs);
     }
+
     @PutMapping("/EditarGrupo/{id}")
     public ResponseEntity<GrupoDTOs> editarGrupo(@PathVariable UUID id, @RequestBody GrupoDTOs grupoDTOs) {
         Grupo grupo = grupoService.editarGrupo(id, grupoDTOs);
