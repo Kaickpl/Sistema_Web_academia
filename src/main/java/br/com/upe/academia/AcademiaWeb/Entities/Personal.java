@@ -19,7 +19,7 @@ import java.util.UUID;
 public class Personal extends Usuario{
     private String cref;
 
-    @OneToMany(mappedBy = "personal")
+    @OneToMany(mappedBy = "personal",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Grupo> grupos;
 
