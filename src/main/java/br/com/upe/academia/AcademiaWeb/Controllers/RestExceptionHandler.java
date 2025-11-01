@@ -46,4 +46,8 @@ public class RestExceptionHandler {
         ExceptionResponseDTO  exceptionResponseDTO = new ExceptionResponseDTO(ex.getMessage(), 403, request.getRequestURI());
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
+    @ExceptionHandler(ValorNuloNaoPermitidoException.class)
+    public ResponseEntity<String> handleValorNuloNaoPermitidoException(ValorNuloNaoPermitidoException ex, HttpServletRequest request) {
+        return ResponseEntity.status(400).body(ex.getMessage());
+    }
 }

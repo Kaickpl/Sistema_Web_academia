@@ -74,12 +74,15 @@ public class AlunoServiceImpl implements AlunoService {
             if (alunoRepository.findByEmail(alunoDTOs.getEmail()).isPresent()) {
                 throw new UsuarioExistenteException("Usuário já cadastrado com esse email: "+ alunoDTOs.getEmail());
             }
-            if (this.ValidarEmail(alunoDTOs.getEmail()) == false) {
+            if (!this.ValidarEmail(alunoDTOs.getEmail())) {
                 throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
             }
             alunoEncontrado.setEmail(alunoDTOs.getEmail());
         }
         if (alunoDTOs.getNomeUsuario() != null) {
+            if (alunoDTOs.getNomeUsuario().isBlank()) {
+                throw new ValorNuloNaoPermitidoException("O campo 'nome de usuário' não pode ser vazio ou nulo.");
+            }
             alunoEncontrado.setNomeUsuario(alunoDTOs.getNomeUsuario());
         }
         if (alunoDTOs.getTelefone() != null) {
