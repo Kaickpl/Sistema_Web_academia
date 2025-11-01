@@ -13,7 +13,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/progressao")
-public class ProgressaoController {
+public class
+ProgressaoController {
     @Autowired
     private ProgressaoService progressaoService;
 

@@ -1,7 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
-import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 @Service
 
 public class PersonalServiceImpl implements PersonalService {
@@ -36,6 +36,9 @@ public class PersonalServiceImpl implements PersonalService {
         if (personalDTOs.getCref() == null || personalDTOs.getCref().isEmpty()) {
             return null;
         }
+        if (validarGmail(personalDTOs.getEmail())== false) {
+            return  null;
+        }
         Personal personal = new Personal();
         personal.setNomeUsuario(personalDTOs.getNomeUsuario());
         personal.setDataNascimento(personalDTOs.getDataNascimento());
@@ -52,42 +55,51 @@ public class PersonalServiceImpl implements PersonalService {
     public boolean validarEmail(String email) {
         return personalRepository.findByEmail(email).isPresent();
     }
+
     @Override
     public boolean validarCref(String cref) {
         return personalRepository.findByCref(cref).isEmpty();
     }
 
+    @Override
+    public Boolean validarGmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+        return email.toLowerCase().contains("@gmail.com")||email.toLowerCase().contains("@upe.br");
+
+    }
 
     @Override
-    public Personal alterarPersonal(String cref, Personal personal) {
-        // Verifica se o personal existe pelo CREF
-        Personal personalExiste = personalRepository.findByCref(cref)
-                .orElseThrow(() -> new IllegalArgumentException("Personal não encontrado!"));
-
-        // Verifica se o email foi alterado e se já existe outro igual
-        if (personal.getEmail() != null && !personalExiste.getEmail().equals(personal.getEmail())) {
-            if (validarEmail(personal.getEmail())) {
-                throw new IllegalArgumentException("Já existe um personal com esse email!");
+    public Personal alterarPersonal(String cref, PersonalDTOs personalDTOs) {
+        Optional<Personal> crefExiste = personalRepository.findByCref(cref);
+       if (crefExiste.isEmpty()) {
+           return null;
+       }
+       Personal personalEncontrado = crefExiste.get();
+        if (personalDTOs.getEmail() != null && !personalDTOs.getEmail().equals(personalEncontrado.getEmail())) {
+            if (validarEmail(personalDTOs.getEmail())) {
+                return null;
             }
-            personalExiste.setEmail(personal.getEmail());
-        }
-        // Verifica se o CREF foi alterado e se já existe outro igual
-        if (personal.getCref() != null && !personalExiste.getCref().equals(personal.getCref())) {
-            if (validarCref(personal.getCref())) {
-                throw new IllegalArgumentException("Já existe um personal com esse CREF!");
+            if(validarGmail(personalDTOs.getEmail())==false) {
+                return null;
             }
-            personalExiste.setCref(personal.getCref());
+            personalEncontrado.setEmail(personalDTOs.getEmail());
         }
-        // Atualiza nome de usuário, se informado
-        if (personal.getNomeUsuario() != null) {
-            personalExiste.setNomeUsuario(personal.getNomeUsuario());
+        if (personalDTOs.getCref() != null && !personalDTOs.getCref().equals(personalEncontrado.getCref())) {
+            if (!validarCref(personalDTOs.getCref())){
+                return null;
+            }
+            personalEncontrado.setCref(personalDTOs.getCref());
         }
-        // Atualiza telefone, se informado
-        if (personal.getTelefone() != null) {
-            personalExiste.setTelefone(personal.getTelefone());
+        if (personalDTOs.getNomeUsuario() != null) {
+            personalEncontrado.setNomeUsuario(personalDTOs.getNomeUsuario());
         }
-        // Salva e retorna o personal atualizado
-        return personalRepository.save(personalExiste);
+        if (personalDTOs.getTelefone() != null) {
+            personalEncontrado.setTelefone(personalDTOs.getTelefone());
+        }
+        Personal personalAtualizado = personalRepository.save(personalEncontrado);
+        return personalRepository.save(personalAtualizado);
     }
 
     @Override
@@ -108,6 +120,27 @@ public class PersonalServiceImpl implements PersonalService {
     @Override
     public List<Personal> buscarPersonalNome(String nome) {
         return personalRepository.findByNomeUsuarioContaining(nome);
-
     }
+
+    @Override
+    public Personal TrocaSenha(UUID id, TrocaSenhaDTOs senhaDTOs){
+        Optional<Personal> personalExiste = personalRepository.findById(id);
+        if (personalExiste.isEmpty()) {
+            return null;
+        }
+        if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank()
+            || senhaDTOs.getConfirmaSenha() == null|| senhaDTOs.getConfirmaSenha().isBlank()) {
+            return null;
+        }
+        if(!senhaDTOs.getNovaSenha().equals(senhaDTOs.getConfirmaSenha())) {
+            return null;
+        }
+        if (senhaDTOs.getConfirmaSenha().equals(personalExiste.get().getSenha())) {
+            return null;
+        }
+        Personal personal = personalExiste.get();
+        personal.setSenha(senhaDTOs.getConfirmaSenha());
+        return personalRepository.save(personal);
+    }
+
 }

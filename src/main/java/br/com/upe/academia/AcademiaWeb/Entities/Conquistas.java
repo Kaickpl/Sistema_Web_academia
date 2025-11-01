@@ -20,7 +20,7 @@ public class Conquistas {
     private String nomeConquista;
     private String descricaoConquista;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_aluno")
     private Aluno aluno;
 

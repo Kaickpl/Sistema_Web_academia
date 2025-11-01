@@ -1,7 +1,10 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalResponseDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
@@ -10,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequestMapping("/api/personal")
@@ -21,12 +25,13 @@ public class PersonalController {
 
 
     @PostMapping
-    public ResponseEntity<Personal> CadastroPersonal(@RequestBody PersonalDTOs personalDTOs){
+    public ResponseEntity<PersonalResponseDTOs> CadastroPersonal(@RequestBody PersonalDTOs personalDTOs){
         Personal personal = personalService.cadastrarPersonal(personalDTOs);
         if (personal == null){
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(personal);
+        PersonalResponseDTOs dto = new PersonalResponseDTOs(personal);
+        return ResponseEntity.ok(dto);
 
     }
     @DeleteMapping("/{cref}")
@@ -59,41 +64,19 @@ public class PersonalController {
     }
 
     @PutMapping("/{cref}")
-    public ResponseEntity<PersonalDTOs> atualizarPersonal(@PathVariable String cref, @RequestBody PersonalDTOs personalDTOs) {
-        Personal personal = convertToEntity(personalDTOs);
-        Personal personalAtualizado = personalService.alterarPersonal(cref, personal);
-        PersonalDTOs personalAtualizadoDTO = convertToDTO(personalAtualizado);
-        return ResponseEntity.status(200).body(personalAtualizadoDTO);
+    public ResponseEntity<PersonalResponseDTOs> atualizarPersonal(@PathVariable String cref, @RequestBody PersonalDTOs personalDTOs) {
+        Personal personalExiste = personalService.alterarPersonal(cref, personalDTOs);
+        if (personalExiste == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(new PersonalResponseDTOs(personalExiste));
     }
-
-
-
-
-    //recebe e convert
-    private Personal convertToEntity(PersonalDTOs personalDTOs) {
-        Personal personal = new Personal();
-        personal.setIdUsuario(personalDTOs.getIdUsuario());
-        personal.setDataNascimento(personalDTOs.getDataNascimento());
-        personal.setNomeUsuario(personalDTOs.getNomeUsuario());
-        personal.setEmail(personalDTOs.getEmail());
-        personal.setSenha(personalDTOs.getSenha());
-        personal.setTelefone(personalDTOs.getTelefone());
-        personal.setTipo(Tipo.aluno);
-        personal.setCref(personalDTOs.getCref());
-        return personal;
+    @PutMapping("/RecuperarSenha/{id}")
+    public ResponseEntity<PersonalResponseDTOs> atualizarSenha(@PathVariable UUID id, @RequestBody TrocaSenhaDTOs senhaDTOs) {
+      Personal personal = personalService.TrocaSenha(id, senhaDTOs);
+      if (personal == null) {
+          return ResponseEntity.badRequest().build();
+      }
+      return ResponseEntity.ok(new PersonalResponseDTOs(personal));
     }
-//recebe e convert
-    private PersonalDTOs convertToDTO(Personal personal) {
-        PersonalDTOs dto = new PersonalDTOs();
-        //dto.setIdUsuario(personal.getIdUsuario());
-        //dto.setDataNascimento(personal.getDataNascimento());
-        dto.setNomeUsuario(personal.getNomeUsuario());
-        dto.setEmail(personal.getEmail());
-        //dto.setSenha(personal.getSenha());
-        dto.setTelefone(personal.getTelefone());
-        //dto.setTipo(personal.getTipo());
-        dto.setCref(personal.getCref());
-        return dto;
-    }
-
 }

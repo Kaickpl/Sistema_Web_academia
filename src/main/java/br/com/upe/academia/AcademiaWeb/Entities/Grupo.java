@@ -24,7 +24,7 @@ public class Grupo {
     private String nomeGrupo;
     private String DescricaoGrupo;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "personal_id")
     private Personal personal;
 
