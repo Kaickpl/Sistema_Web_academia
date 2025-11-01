@@ -14,7 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 public class RestExceptionHandler {
     @ExceptionHandler(UsuarioExistenteException.class)
     public ResponseEntity<ExceptionResponseDTO> handleUsuarioExistenteException(UsuarioExistenteException ex, HttpServletRequest request) {
-        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(ex.getMessage(), 400, request.getRequestURI());
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(ex.getMessage(), 409, request.getRequestURI());
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
 

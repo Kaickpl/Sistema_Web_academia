@@ -15,7 +15,7 @@ public interface AlunoService {
 
     public Aluno alterarAluno(UUID id, AlunoDTOs alunoDTOs);
 
-    public boolean removerAluno(UUID ID);
+    public void removerAluno(UUID ID);
 
     public List<Aluno> buscaraluno(String nomeUsuario);
 
@@ -23,7 +23,7 @@ public interface AlunoService {
 
     public Aluno TrocarSenha(String Email, TrocaSenhaDTOs senhaDTOs);
 
-    public Boolean ValidarGmail(String email);
+    public Boolean ValidarEmail(String email);
 
 }
 
