@@ -66,7 +66,7 @@ public class AlunoServiceImpl implements AlunoService {
     public Aluno alterarAluno(UUID id, AlunoDTOs alunoDTOs) {
         Optional<Aluno> idExiste = alunoRepository.findById(id);
         if (idExiste.isEmpty()) {
-            throw new UsuarioNaoEncontradoException("Usuario com ID: "+ id + " não encontrado. Tente novamente.");
+            throw new InformacaoNaoEncontradoException("Usuario com ID: "+ id + " não encontrado. Tente novamente.");
         }
         Aluno alunoEncontrado = idExiste.get();
         if (alunoDTOs.getEmail() != null && !alunoDTOs.getEmail().equals(alunoEncontrado.getEmail())) {
@@ -105,7 +105,7 @@ public class AlunoServiceImpl implements AlunoService {
     public Aluno TrocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
         Optional<Aluno> alunoExiste = alunoRepository.findByEmail(Email);
         if (alunoExiste.isEmpty()) {
-            throw new UsuarioNaoEncontradoException("Nenhum aluno com esse email: "+ Email);
+            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse email: "+ Email);
         }
 
         if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank() ||
@@ -137,7 +137,7 @@ public class AlunoServiceImpl implements AlunoService {
     @Override
     public void removerAluno(UUID id) {
         if (!alunoRepository.existsById(id)) {
-            throw new UsuarioNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + id);
+            throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + id);
         }
         alunoRepository.deleteById(id);
     }
@@ -149,7 +149,7 @@ public class AlunoServiceImpl implements AlunoService {
         }
         List<Aluno> alunos = alunoRepository.findByNomeUsuarioContaining(nome);
         if (alunos.isEmpty()){
-            throw new UsuarioNaoEncontradoException("Nenhum aluno com esse nome: " + nome);
+            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse nome: " + nome);
         }
         return alunos;
     }
@@ -158,7 +158,7 @@ public class AlunoServiceImpl implements AlunoService {
     public Page<Aluno> ListarAlunos(Pageable page) {
         Page<Aluno> alunos = alunoRepository.findAll(page);
         if  (alunos.isEmpty()) {
-            throw new UsuarioNaoEncontradoException("Nenhum aluno cadastrado foi encontrado.");
+            throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado foi encontrado.");
         }
         return alunoRepository.findAll(page);
     }

@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,7 +117,7 @@ public class PersonalServiceImpl implements PersonalService {
     @Transactional
     public void deletarPersonal(String cref) {
         if(!personalRepository.existsByCref(cref)){
-           throw new UsuarioNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + cref);
+           throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + cref);
 
         }
         personalRepository.deleteByCref(cref);
@@ -131,7 +130,7 @@ public class PersonalServiceImpl implements PersonalService {
         }
         List<Personal> personais = personalRepository.findByNomeUsuarioContaining(nome);
         if (personais.isEmpty()) {
-            throw new UsuarioNaoEncontradoException("Nenhum personal com esse nome: " + nome);
+            throw new InformacaoNaoEncontradoException("Nenhum personal com esse nome: " + nome);
         }
         return personais;
     }
@@ -140,7 +139,7 @@ public class PersonalServiceImpl implements PersonalService {
     public Personal TrocaSenha(String email, TrocaSenhaDTOs senhaDTOs){
         Optional<Personal> personalExiste = personalRepository.findByEmail(email);
         if (personalExiste.isEmpty()) {
-            throw new UsuarioNaoEncontradoException("Nenhum personal com esse email: " + email);
+            throw new InformacaoNaoEncontradoException("Nenhum personal com esse email: " + email);
 
         }
         if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank()

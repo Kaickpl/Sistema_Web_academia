@@ -35,12 +35,9 @@ public class PersonalController {
 
     }
     @DeleteMapping("/{cref}")
-    public ResponseEntity<Boolean> deletarPersonal (@PathVariable String cref){
-        Boolean deletado = personalService.deletarPersonal(cref);
-        if (deletado) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.status(404).body(false);
+    public ResponseEntity<Void> deletarPersonal (@PathVariable String cref){
+      personalService.deletarPersonal(cref);
+      return ResponseEntity.ok().build();
     }
 
     @GetMapping("/buscar")
@@ -72,8 +69,8 @@ public class PersonalController {
         return ResponseEntity.ok(new PersonalResponseDTOs(personalExiste));
     }
     @PutMapping("/RecuperarSenha/{id}")
-    public ResponseEntity<PersonalResponseDTOs> atualizarSenha(@PathVariable UUID id, @RequestBody TrocaSenhaDTOs senhaDTOs) {
-      Personal personal = personalService.TrocaSenha(id, senhaDTOs);
+    public ResponseEntity<PersonalResponseDTOs> atualizarSenha(@PathVariable String email, @RequestBody TrocaSenhaDTOs senhaDTOs) {
+      Personal personal = personalService.TrocaSenha(email, senhaDTOs);
       if (personal == null) {
           return ResponseEntity.badRequest().build();
       }

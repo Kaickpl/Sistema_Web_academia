@@ -2,13 +2,10 @@ package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExceptionResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Exceptions.*;
-import jakarta.persistence.ElementCollection;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
@@ -23,8 +20,8 @@ public class RestExceptionHandler {
         return ResponseEntity.status(400).body(ex.getMessage());
     }
 
-    @ExceptionHandler(UsuarioNaoEncontradoException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleUsuarioNaoEncontradoException(UsuarioNaoEncontradoException ex, HttpServletRequest request) {
+    @ExceptionHandler(InformacaoNaoEncontradoException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleUsuarioNaoEncontradoException(InformacaoNaoEncontradoException ex, HttpServletRequest request) {
         ExceptionResponseDTO  exceptionResponseDTO = new ExceptionResponseDTO(ex.getMessage(), 400, request.getRequestURI());
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
