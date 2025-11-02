@@ -46,7 +46,7 @@ public class AlunoServiceImpl implements AlunoService {
         if (alunoDTOs.getSenha() == null || alunoDTOs.getSenha().isBlank()) {
             throw new CampoObrigatorioException("O campo de senha é obrigatório.");
         }
-        if (this.ValidarEmail(alunoDTOs.getEmail()) == false) {
+        if (!this.ValidarEmail(alunoDTOs.getEmail())) {
             throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
 
         }

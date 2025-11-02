@@ -11,11 +11,10 @@ public interface PersonalService {
 
     public Personal cadastrarPersonal(PersonalDTOs personalDTOs);
 
-    public boolean existeEmail(String email);
 
     public Personal alterarPersonal(String cref, PersonalDTOs personalDTOs);
 
-    public Boolean deletarPersonal(String cref);
+    public void deletarPersonal(String cref);
 
     public Personal buscarPersonal(String cref);
 

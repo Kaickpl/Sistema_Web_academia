@@ -50,4 +50,10 @@ public class RestExceptionHandler {
     public ResponseEntity<String> handleValorNuloNaoPermitidoException(ValorNuloNaoPermitidoException ex, HttpServletRequest request) {
         return ResponseEntity.status(400).body(ex.getMessage());
     }
+
+    @ExceptionHandler(CrefInvalidoException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleCrefInvalidoException(CrefInvalidoException ex, HttpServletRequest request) {
+        ExceptionResponseDTO   exceptionResponseDTO = new ExceptionResponseDTO(ex.getMessage(), 400, request.getRequestURI());
+        return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
+    }
 }
