@@ -4,6 +4,10 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
+import br.com.upe.academia.AcademiaWeb.Exceptions.CampoObrigatorioException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.CrefInvalidoException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.EmailInvalidoException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioExistenteException;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 
@@ -25,19 +31,28 @@ public class PersonalServiceImpl implements PersonalService {
     public Personal cadastrarPersonal(PersonalDTOs personalDTOs) {
         personalDTOs.setTipo(Tipo.personalTrainer);
         if(personalRepository.findByEmail(personalDTOs.getEmail()).isPresent() ){
-            return null;
+            throw new UsuarioExistenteException("Usuario já cadastrado com  este email: "+ personalDTOs.getEmail());
+        }
+        if(personalDTOs.getEmail() == null || personalDTOs.getEmail().isBlank()) {
+            throw new CampoObrigatorioException("O campo de e-mail é obrigatório.");
         }
         if(personalRepository.findByCref(personalDTOs.getCref()).isPresent() ){
-            return null;
-        }
-        if (personalDTOs.getSenha() == null || personalDTOs.getSenha().isEmpty()) {
-            return null;
+            throw new UsuarioExistenteException("Usuário já cadastrado com este CREF: "+ personalDTOs.getCref());
         }
         if (personalDTOs.getCref() == null || personalDTOs.getCref().isEmpty()) {
-            return null;
+            throw new CampoObrigatorioException("O campo de CREF é obrigatório.");
         }
-        if (validarGmail(personalDTOs.getEmail())== false) {
-            return  null;
+        if (!validarCref(personalDTOs.getCref())) {
+            throw new CrefInvalidoException("O CREF informado é inválido. Use o formato correto, por exemplo: 12345-G/PE.");
+        }
+        if (personalDTOs.getSenha() == null || personalDTOs.getSenha().isBlank()) {
+            throw new CampoObrigatorioException("O campo de senha é obrigatório.");
+        }
+        if (personalDTOs.getNomeUsuario() == null || personalDTOs.getNomeUsuario().isBlank()) {
+            throw new CampoObrigatorioException("O campo de nome de usuário é obrigatório.");
+        }
+        if (!validarEmail(personalDTOs.getEmail())) {
+            throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
         }
         Personal personal = new Personal();
         personal.setNomeUsuario(personalDTOs.getNomeUsuario());
@@ -52,22 +67,30 @@ public class PersonalServiceImpl implements PersonalService {
     }
 
     @Override
-    public boolean validarEmail(String email) {
+    public boolean existeEmail(String email) {
         return personalRepository.findByEmail(email).isPresent();
     }
 
     @Override
-    public boolean validarCref(String cref) {
+    public boolean existeCref(String cref) {
         return personalRepository.findByCref(cref).isEmpty();
     }
 
     @Override
-    public Boolean validarGmail(String email) {
+    public Boolean validarCref(String cref) {
+        Pattern p = Pattern.compile("^(CREF\\s*)?\\d{4,6}-[A-Z]/[A-Z]{2}$");
+        Matcher m = p.matcher(cref);
+        return m.matches();
+    }
+
+    @Override
+    public Boolean validarEmail(String email) {
         if (email == null || email.isEmpty()) {
             return false;
         }
-        return email.toLowerCase().contains("@gmail.com")||email.toLowerCase().contains("@upe.br");
-
+        Pattern p = Pattern.compile("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$");
+        Matcher m = p.matcher(email);
+        return m.matches();
     }
 
     @Override
@@ -78,16 +101,16 @@ public class PersonalServiceImpl implements PersonalService {
        }
        Personal personalEncontrado = crefExiste.get();
         if (personalDTOs.getEmail() != null && !personalDTOs.getEmail().equals(personalEncontrado.getEmail())) {
-            if (validarEmail(personalDTOs.getEmail())) {
+            if (existeEmail(personalDTOs.getEmail())) {
                 return null;
             }
-            if(validarGmail(personalDTOs.getEmail())==false) {
+            if(validarEmail(personalDTOs.getEmail())==false) {
                 return null;
             }
             personalEncontrado.setEmail(personalDTOs.getEmail());
         }
         if (personalDTOs.getCref() != null && !personalDTOs.getCref().equals(personalEncontrado.getCref())) {
-            if (!validarCref(personalDTOs.getCref())){
+            if (!existeCref(personalDTOs.getCref())){
                 return null;
             }
             personalEncontrado.setCref(personalDTOs.getCref());

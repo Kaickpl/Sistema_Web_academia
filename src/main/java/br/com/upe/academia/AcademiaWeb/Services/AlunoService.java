@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface AlunoService {
     public Aluno cadastrarAluno(AlunoDTOs alunoDTOs);
 
-    public boolean validaremail(String email);
+    public boolean existeEmail(String email);
 
     public Aluno alterarAluno(UUID id, AlunoDTOs alunoDTOs);
 

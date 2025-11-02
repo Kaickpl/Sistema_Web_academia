@@ -24,7 +24,7 @@ public class AlunoServiceImpl implements AlunoService {
     @Autowired
     AlunoRepository alunoRepository;
 
-    public boolean validaremail(String email) {
+    public boolean existeEmail(String email) {
 
         return alunoRepository.findByEmail(email).isPresent();
     }
