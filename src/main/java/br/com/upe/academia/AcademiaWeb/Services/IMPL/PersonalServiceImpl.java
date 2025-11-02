@@ -126,24 +126,34 @@ public class PersonalServiceImpl implements PersonalService {
 
     @Override
     public List<Personal> buscarPersonalNome(String nome) {
-        return personalRepository.findByNomeUsuarioContaining(nome);
+        if (nome == null || nome.isBlank()) {
+            throw new CampoObrigatorioException("O campo de nome para busca é obrigatório.");
+        }
+        List<Personal> personais = personalRepository.findByNomeUsuarioContaining(nome);
+        if (personais.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("Nenhum personal com esse nome: " + nome);
+        }
+        return personais;
     }
 
     @Override
-    public Personal TrocaSenha(UUID id, TrocaSenhaDTOs senhaDTOs){
-        Optional<Personal> personalExiste = personalRepository.findById(id);
+    public Personal TrocaSenha(String email, TrocaSenhaDTOs senhaDTOs){
+        Optional<Personal> personalExiste = personalRepository.findByEmail(email);
         if (personalExiste.isEmpty()) {
-            return null;
+            throw new UsuarioNaoEncontradoException("Nenhum personal com esse email: " + email);
+
         }
         if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank()
             || senhaDTOs.getConfirmaSenha() == null|| senhaDTOs.getConfirmaSenha().isBlank()) {
-            return null;
+            throw new CampoObrigatorioException("Os campos de senha e confirmação de senha são obrigatórios.");
+
         }
         if(!senhaDTOs.getNovaSenha().equals(senhaDTOs.getConfirmaSenha())) {
-            return null;
+            throw new OperacaoNaoPermitidaException("As senhas informadas não conferem.");
         }
         if (senhaDTOs.getConfirmaSenha().equals(personalExiste.get().getSenha())) {
-            return null;
+            throw new OperacaoNaoPermitidaException("A nova senha não pode ser igual a atual.");
+
         }
         Personal personal = personalExiste.get();
         personal.setSenha(senhaDTOs.getConfirmaSenha());
@@ -154,7 +164,6 @@ public class PersonalServiceImpl implements PersonalService {
     public boolean existeCref(String cref) {
         return personalRepository.findByCref(cref).isPresent();
     }
-
     @Override
     public Boolean validarCref(String cref) {
         Pattern p = Pattern.compile("^(CREF\\s*)?\\d{4,6}-[A-Z]/[A-Z]{2}$");
@@ -175,4 +184,5 @@ public class PersonalServiceImpl implements PersonalService {
     public Personal buscarPersonal(String cref) {
         return personalRepository.findByCref(cref).orElse(null) ;
     }
+
 }
