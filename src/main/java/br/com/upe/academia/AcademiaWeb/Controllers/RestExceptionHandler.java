@@ -18,7 +18,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(CampoObrigatorioException.class)
-    public ResponseEntity<String> handleCampoObrigatorioException(CampoObrigatorioException ex, HttpServletRequest request) {
+    public ResponseEntity<String> handleCampoObrigatorioException(CampoObrigatorioException ex) {
         return ResponseEntity.status(400).body(ex.getMessage());
     }
 
@@ -46,7 +46,7 @@ public class RestExceptionHandler {
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
     @ExceptionHandler(ValorNuloNaoPermitidoException.class)
-    public ResponseEntity<String> handleValorNuloNaoPermitidoException(ValorNuloNaoPermitidoException ex, HttpServletRequest request) {
+    public ResponseEntity<String> handleValorNuloNaoPermitidoException(ValorNuloNaoPermitidoException ex) {
         return ResponseEntity.status(400).body(ex.getMessage());
     }
 
