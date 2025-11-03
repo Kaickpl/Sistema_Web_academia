@@ -12,6 +12,6 @@ import java.util.UUID;
 public interface GrupoRepository extends JpaRepository<Grupo, UUID> {
 
     List<Grupo> findByPersonal(Personal personal);
-    List<Grupo> findByNomeGrupoContainingIgnoreCase(String Grupo);
+    List<Grupo> findByNomeGrupoContainingIgnoreCase(String nomeGrupo);
 
 }

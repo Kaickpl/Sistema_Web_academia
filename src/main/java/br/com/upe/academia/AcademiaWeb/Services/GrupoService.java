@@ -14,7 +14,7 @@ public interface GrupoService {
 
     public Grupo CriarGrupo(Grupo Grupo);
 
-    public Boolean removerGrupo(UUID id);
+    public void removerGrupo(UUID id);
 
     public Grupo editarGrupo(UUID id, GrupoDTOs grupoDTOs);
 
