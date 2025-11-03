@@ -65,14 +65,6 @@ public class RestExceptionHandler {
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
 
-    @ExceptionHandler (HttpMessageNotReadableException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleTipoErrado(HttpMessageNotReadableException ex, HttpServletRequest request) {
-        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(
-                "Erro de formato: Verifique se todos os campos numéricos foram enviados como número.",
-                400, request.getRequestURI()
-        );
-        return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
-    }
     @ExceptionHandler(ValorNuloNaoPermitidoException.class)
     public ResponseEntity<String> handleValorNuloNaoPermitidoException(ValorNuloNaoPermitidoException ex) {
         return ResponseEntity.status(400).body(ex.getMessage());
