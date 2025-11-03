@@ -22,14 +22,14 @@ public class AvaliacaoDTOs {
     private LocalDate dataSolicitacao;
     private LocalDate dataAvaliacao;
     private String objetivoAvaliacao;
-    public AvaliacaoDTOs(Avaliacao Avaliacao) {
-        this.alunoId = Avaliacao.getAluno().getIdUsuario();
-        this.personalId = Avaliacao.getPersonal().getIdUsuario();
-        this.medidasId = Avaliacao.getMedidasCorporais().getIdMedidas();
-        this.avaliacaoId = Avaliacao.getIdAvaliacao();
-        this.dataSolicitacao = Avaliacao.getDataSolicitacao();
-        this.dataAvaliacao = Avaliacao.getDataAvaliacao();
-        this.objetivoAvaliacao = Avaliacao.getObjetivoAvaliacao();
+    public AvaliacaoDTOs(Avaliacao avaliacao) {
+        this.alunoId = avaliacao.getAluno().getIdUsuario();
+        this.personalId = avaliacao.getPersonal().getIdUsuario();
+        this.medidasId = avaliacao.getMedidasCorporais().getIdMedidas();
+        this.avaliacaoId = avaliacao.getIdAvaliacao();
+        this.dataSolicitacao = avaliacao.getDataSolicitacao();
+        this.dataAvaliacao = avaliacao.getDataAvaliacao();
+        this.objetivoAvaliacao = avaliacao.getObjetivoAvaliacao();
 
     }
 }
