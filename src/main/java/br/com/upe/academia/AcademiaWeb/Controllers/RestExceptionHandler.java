@@ -61,7 +61,7 @@ public class RestExceptionHandler {
     @ExceptionHandler (NullPointerException.class)
     public ResponseEntity<ExceptionResponseDTO> handleCampoVazio(NullPointerException ex, HttpServletRequest request) {
         ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO("Erro de campo vazio: Verifique se todos os campos obrigatórios foram devidamente preenchidos.",
-                500, request.getRequestURI());
+                400, request.getRequestURI());
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
 
