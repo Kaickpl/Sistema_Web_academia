@@ -3,8 +3,8 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.MedidaInvalidaException;
-import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
@@ -31,7 +31,7 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
     public MedidasCorporais registrarMedidas(MedidasCorporaisDTOs medidasCorporaisDTOs) {
         Aluno aluno = alunoRepository.findByIdUsuario(medidasCorporaisDTOs.getAlunoId());
         if (aluno == null){
-            throw new UsuarioNaoEncontradoException();
+            throw new InformacaoNaoEncontradoException();
         }
         //dps ver a excessão de se colocar em outro formato
         validarMedida(medidasCorporaisDTOs.getBraco(), "braço");
