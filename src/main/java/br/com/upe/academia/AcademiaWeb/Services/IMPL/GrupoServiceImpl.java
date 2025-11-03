@@ -36,7 +36,7 @@ public class GrupoServiceImpl implements GrupoService {
 
     @Override
     public Grupo CriarGrupo(Grupo grupo) {
-        if (grupo.getPersonal() == null || grupo.getPersonal().getIdUsuario() == null) {
+        if (grupo.getPersonal() == null || grupo.getPersonal().getIdUsuario() == null)  {
             throw new CampoObrigatorioException("O personal deve ser informado");
         }
         if (grupo.getNomeGrupo() == null || grupo.getNomeGrupo().isBlank()) {
@@ -47,7 +47,7 @@ public class GrupoServiceImpl implements GrupoService {
         }
         Optional<Personal> personal = personalRepository.findById(grupo.getPersonal().getIdUsuario());
         if (personal.isEmpty()) {
-            throw new InformacaoNaoEncontradoException("O personal informado, não foi encontrado.");
+            throw new InformacaoNaoEncontradoException("O personal informado não foi encontrado.");
         }
         if (grupo.getAlunos() == null) {
             grupo.setAlunos(new ArrayList<>());
@@ -119,7 +119,7 @@ public class GrupoServiceImpl implements GrupoService {
     public Grupo AddUsuarioGrupo(UUID idUsuario, GrupoDTOs grupoDTOs) {
         Optional<Grupo> grupo = grupoRepository.findById(grupoDTOs.getIdGrupo());
         if (grupo.isEmpty()) {
-            return null;
+            throw new InformacaoNaoEncontradoException("Grupo com esse ID: " + grupoDTOs.getIdGrupo() + " não encontrado.");
         }
         Grupo grupo1 = grupo.get();
         if (grupo1.getAlunos() == null) {
@@ -127,10 +127,10 @@ public class GrupoServiceImpl implements GrupoService {
         }
         Optional<Aluno> aluno = alunoRepository.findById(idUsuario);
         if (aluno.isEmpty()) {
-            return null;
+            throw new InformacaoNaoEncontradoException("Aluno com esse ID: " + grupoDTOs.getAlunoResponseGrupos() + " não encontrado.");
         }
         if (grupo1.getAlunos().contains(aluno.get())) {
-            return grupo1;
+            throw new OperacaoNaoPermitidaException("Aluno já adcionado ao grupo");
         }
         grupo1.getAlunos().add(aluno.get());
         return  grupoRepository.save(grupo1);
@@ -140,15 +140,15 @@ public class GrupoServiceImpl implements GrupoService {
     public Grupo removeUsuarioGrupo(UUID idUsuario, GrupoDTOs grupoDTOs) {
         Optional<Grupo> grupo = grupoRepository.findById(grupoDTOs.getIdGrupo());
         if (grupo.isEmpty()) {
-            return null;
+            throw new InformacaoNaoEncontradoException("Grupo com esse ID: " + grupoDTOs.getIdGrupo() + "não encontrado.");
         }
         Optional<Aluno> aluno = alunoRepository.findById(idUsuario);
         if (aluno.isEmpty()) {
-            return null;
+            throw new InformacaoNaoEncontradoException("Aluno com esse ID: " +  grupoDTOs.getAlunoResponseGrupos() + "não encontrado.");
         }
         Grupo grupo1 = grupo.get();
         if (grupo1.getAlunos() == null) {
-            return null;
+            throw new InformacaoNaoEncontradoException("Aluno não percentece a esse grupo");
         }
         grupo1.getAlunos().remove(aluno.get());
         return grupoRepository.save(grupo1);

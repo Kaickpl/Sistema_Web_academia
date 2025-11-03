@@ -46,13 +46,9 @@ public class GrupoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> removerGrupo(@PathVariable UUID id) {
-        Boolean deleted = grupoService.removerGrupo(id);
-
-        if (deleted) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.status(404).body(false);
+    public ResponseEntity<Void> removerGrupo(@PathVariable UUID id) {
+        grupoService.removerGrupo(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/BuscarPorNome")
