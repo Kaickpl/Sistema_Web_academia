@@ -18,9 +18,6 @@ public class SerieMapper {
         Serie serie = new Serie();
 
         serie.setIdSerie(dto.getIdSerie());
-        serie.setNumeroDeRepeticoes(dto.getNumeroDeRepeticoes());
-        serie.setPesoDaSerie(dto.getPesoDaSerie());
-        serie.setConcluida(dto.isConcluida());
 
         UUID idExercicio = dto.getIdExercicio();
         if (idExercicio != null) {

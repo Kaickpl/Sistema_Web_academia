@@ -14,21 +14,13 @@ import java.util.UUID;
 
 public class SerieDTO {
     private UUID idSerie;
-    private Integer numeroDeRepeticoes;
-    private Float pesoDaSerie;
-    private boolean isConcluida = false;
     private UUID idExercicio;
-    private Float volumeSerie;
 
     public SerieDTO(Serie serie) {
         this.idSerie = serie.getIdSerie();
-        this.numeroDeRepeticoes = serie.getNumeroDeRepeticoes();
-        this.pesoDaSerie = serie.getPesoDaSerie();
-        this.isConcluida = serie.isConcluida();
 
         if (serie.getExercicio() != null) {
             this.idExercicio = serie.getExercicio().getIdExercicio();
         }
-        this.volumeSerie = serie.getVolumeSerie();
     }
 }

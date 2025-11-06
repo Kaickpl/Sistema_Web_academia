@@ -6,13 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
 public class SerieSessao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long idSerieSessao;
+    private UUID idSerieSessao;
     private double peso;
     private Integer numeroDeRepeticoes;
 

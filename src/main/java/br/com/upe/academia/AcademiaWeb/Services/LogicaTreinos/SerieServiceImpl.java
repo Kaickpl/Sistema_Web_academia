@@ -34,9 +34,6 @@ public class SerieServiceImpl implements SerieService {
     @Override
     public Serie atualizarSerie(Serie serie) {
         Serie serieAtt = buscarSerie(serie.getIdSerie());
-        serieAtt.setPesoDaSerie(serie.getPesoDaSerie());
-        serieAtt.setNumeroDeRepeticoes(serie.getNumeroDeRepeticoes());
-        serieAtt.setConcluida(serie.isConcluida());
         return this.serieRepository.save(serieAtt);
     }
 

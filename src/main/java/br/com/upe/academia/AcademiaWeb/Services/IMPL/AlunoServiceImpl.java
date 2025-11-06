@@ -2,15 +2,20 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoTreinoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
+import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,6 +27,10 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Autowired
     AlunoRepository alunoRepository;
+    @Autowired
+    private AlunoService alunoService;
+    @Autowired
+    private TreinoService treinoService;
 
     public boolean validaremail(String email) {
 
@@ -42,7 +51,7 @@ public class AlunoServiceImpl implements AlunoService {
         if (alunoDTOs.getSenha() == null || alunoDTOs.getSenha().isEmpty()) {
             return null;
         }
-        if (ValidarGmail(alunoDTOs.getEmail()) == false) {
+        if (validarGmail(alunoDTOs.getEmail()) == false) {
             return null;
 
         }
@@ -57,6 +66,7 @@ public class AlunoServiceImpl implements AlunoService {
         aluno.setSaldoMoedas(alunoDTOs.getSaldoMoedas());
         return alunoRepository.save(aluno);
     }
+
     @Override
     public Aluno alterarAluno(UUID id, AlunoDTOs alunoDTOs) {
         Optional<Aluno> idExiste = alunoRepository.findById(id);
@@ -68,7 +78,7 @@ public class AlunoServiceImpl implements AlunoService {
             if (validaremail(alunoDTOs.getEmail())) {
                 return null;
             }
-            if (ValidarGmail(alunoDTOs.getEmail()) == false) {
+            if (validarGmail(alunoDTOs.getEmail()) == false) {
                 return null;
             }
             alunoEncontrado.setEmail(alunoDTOs.getEmail());
@@ -83,7 +93,7 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Aluno TrocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
+    public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
         Optional<Aluno> alunoExiste = alunoRepository.findByEmail(Email);
         if (alunoExiste.isEmpty()) {
             return null;
@@ -106,7 +116,7 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Boolean ValidarGmail(String email) {
+    public Boolean validarGmail(String email) {
         if (email == null || email.isEmpty()) {
             return false;
         }
@@ -115,7 +125,22 @@ public class AlunoServiceImpl implements AlunoService {
         return m.matches();
     }
 
+    @Override
+    public List<Treino> listarTreinos(UUID idAluno) {
+        Aluno aluno  = alunoService.buscarAlunoPorId(idAluno);
+        return aluno.getTreinosAtribuidos();
+    }
 
+    @Override
+    public List<Treino> atribuirTreinoAluno(UUID idAluno, UUID idTreino) {
+        Aluno aluno = alunoService.buscarAlunoPorId(idAluno);
+        Treino treino = treinoService.buscarTreino(idTreino);
+        List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
+        treinosAtuais.add(treino);
+        aluno.setTreinosAtribuidos(treinosAtuais);
+        alunoRepository.save(aluno);
+        return treinosAtuais;
+    }
 
     @Override
     public boolean removerAluno(UUID id) {
@@ -127,14 +152,18 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public List<Aluno> buscaraluno(String nome) {
+    public List<Aluno> buscarAlunoPorNome(String nome) {
         return alunoRepository.findByNomeUsuarioContaining(nome);
     }
 
     @Override
-    public Page<Aluno> ListarAlunos(Pageable page) {
-        return alunoRepository.findAll(page);
+    public Aluno buscarAlunoPorId(UUID idAluno) {
+        return alunoRepository.findByIdUsuario(idAluno);
     }
 
+    @Override
+    public Page<Aluno> listarAlunos(Pageable page) {
+        return alunoRepository.findAll(page);
+    }
 }
 

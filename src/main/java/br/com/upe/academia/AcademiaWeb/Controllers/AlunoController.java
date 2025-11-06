@@ -45,7 +45,7 @@ public class AlunoController {
 
     @GetMapping("/buscar")
     public ResponseEntity<List<AlunoResponseDTOs>> buscaraluno(@RequestParam String nome) {
-        List<AlunoResponseDTOs> alunos = alunoService.buscaraluno(nome).stream().map(AlunoResponseDTOs::new).collect(Collectors.toList());
+        List<AlunoResponseDTOs> alunos = alunoService.buscarAlunoPorNome(nome).stream().map(AlunoResponseDTOs::new).collect(Collectors.toList());
         if (alunos != null) {
             return ResponseEntity.status(200).body(alunos);
         }
@@ -54,7 +54,7 @@ public class AlunoController {
 
     @GetMapping("/buscarTodos")
     public ResponseEntity<Page<AlunoResponseDTOs>> listar(@PageableDefault(size = 2)Pageable page) {
-        return ResponseEntity.ok(alunoService.ListarAlunos(page).map(AlunoResponseDTOs::new));
+        return ResponseEntity.ok(alunoService.listarAlunos(page).map(AlunoResponseDTOs::new));
     }
 
     @PutMapping("/{id}")
@@ -69,20 +69,10 @@ public class AlunoController {
 
     @PutMapping("/RecuperarSeha/{Email}")
     public ResponseEntity<AlunoResponseDTOs> recuperarSenha(@PathVariable String Email, @RequestBody TrocaSenhaDTOs senhaDTOs) {
-        Aluno alunoExixste = alunoService.TrocarSenha(Email, senhaDTOs);
+        Aluno alunoExixste = alunoService.trocarSenha(Email, senhaDTOs);
         if (alunoExixste == null) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(new AlunoResponseDTOs(alunoExixste));
     }
-
-
-
-
-
-
-
-
-
-
 }

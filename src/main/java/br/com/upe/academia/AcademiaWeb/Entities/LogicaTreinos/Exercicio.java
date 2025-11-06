@@ -28,17 +28,9 @@ public class Exercicio {
     @OneToMany(mappedBy = "exercicio", cascade = CascadeType.ALL)
     private List<Serie> series;
 
-    private boolean isConcluido() {
-        if(this.series == null || series.isEmpty()) {return false;}
-        return this.series.stream().allMatch(Serie::isConcluida);
-    }
 
     @ManyToOne
     @JoinColumn(name = "treino_id")
     @JsonIgnore
     private Treino treino;
-
-    public Boolean getIsConcluido() {
-        return isConcluido();
-    }
 }

@@ -25,7 +25,6 @@ public class ExercicioDTO {
     @JsonSerialize(using = DurationSerializer.class)
     private Duration tempoDeDescanso;
     private UUID idTreino;
-    private Boolean isConcluido;
 
     public ExercicioDTO(Exercicio exercicio) {
         this.idExercicio = exercicio.getIdExercicio();
@@ -37,7 +36,7 @@ public class ExercicioDTO {
             this.idTreino = exercicio.getTreino().getIdTreino();
         }
 
-        this.isConcluido = exercicio.getIsConcluido();
+
     }
 
 }

@@ -1,12 +1,13 @@
 package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class ExercicioSessao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long idExercicioSessao;
+    private UUID idExercicioSessao;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treino_id")

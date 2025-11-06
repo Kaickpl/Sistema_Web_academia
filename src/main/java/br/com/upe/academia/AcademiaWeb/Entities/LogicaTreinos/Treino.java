@@ -18,7 +18,6 @@ public class Treino {
     private UUID idTreino;
     private Duration duracao;
     private String nome;
-    private boolean isConcluido = false;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
