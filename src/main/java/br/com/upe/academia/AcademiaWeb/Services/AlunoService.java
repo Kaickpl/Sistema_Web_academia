@@ -12,11 +12,11 @@ import java.util.UUID;
 public interface AlunoService {
     public Aluno cadastrarAluno(AlunoDTOs alunoDTOs);
 
-    public boolean validaremail(String email);
+    public boolean existeEmail(String email);
 
     public Aluno alterarAluno(UUID id, AlunoDTOs alunoDTOs);
 
-    public boolean removerAluno(UUID ID);
+    public void removerAluno(UUID ID);
 
     public List<Aluno> buscarAlunoPorNome(String nomeUsuario);
 
@@ -26,7 +26,7 @@ public interface AlunoService {
 
     public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs);
 
-    public Boolean validarGmail(String email);
+    public Boolean validarEmail(String email);
 
     public List<Treino> listarTreinos(UUID idAluno);
 

@@ -35,12 +35,9 @@ public class AlunoController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deletarAluno(@PathVariable UUID id) {
-        boolean deletado = alunoService.removerAluno(id);
-        if (deletado) {
-           return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.status(404).body(false);
+    public ResponseEntity<Void> deletarAluno(@PathVariable UUID id) {
+        alunoService.removerAluno(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/buscar")

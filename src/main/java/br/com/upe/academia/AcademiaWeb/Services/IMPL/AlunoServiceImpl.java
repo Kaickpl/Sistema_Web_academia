@@ -1,12 +1,10 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoTreinoDTO;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
-import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
+import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
@@ -32,7 +30,7 @@ public class AlunoServiceImpl implements AlunoService {
     @Autowired
     private TreinoService treinoService;
 
-    public boolean validaremail(String email) {
+    public boolean existeEmail(String email) {
 
         return alunoRepository.findByEmail(email).isPresent();
     }
@@ -42,17 +40,20 @@ public class AlunoServiceImpl implements AlunoService {
         alunoDTOs.setTipo(Tipo.aluno);
 
         if (alunoRepository.findByEmail(alunoDTOs.getEmail()).isPresent()) {
-            return null;
+            throw new UsuarioExistenteException("Usuário já cadastrado com este email: "+ alunoDTOs.getEmail());
+        }
+        if(alunoDTOs.getEmail() == null || alunoDTOs.getEmail().isBlank()) {
+            throw new CampoObrigatorioException("O campo de e-mail é obrigatório.");
         }
 
-        if (alunoDTOs.getNomeUsuario() == null || alunoDTOs.getNomeUsuario().isEmpty()) {
-            return null;
+        if (alunoDTOs.getNomeUsuario() == null || alunoDTOs.getNomeUsuario().isBlank()) {
+            throw new CampoObrigatorioException("O campo de nome de usuário é obrigatório.");
         }
-        if (alunoDTOs.getSenha() == null || alunoDTOs.getSenha().isEmpty()) {
-            return null;
+        if (alunoDTOs.getSenha() == null || alunoDTOs.getSenha().isBlank()) {
+            throw new CampoObrigatorioException("O campo de senha é obrigatório.");
         }
-        if (validarGmail(alunoDTOs.getEmail()) == false) {
-            return null;
+        if (!this.validarEmail(alunoDTOs.getEmail())) {
+            throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
 
         }
 
@@ -71,24 +72,38 @@ public class AlunoServiceImpl implements AlunoService {
     public Aluno alterarAluno(UUID id, AlunoDTOs alunoDTOs) {
         Optional<Aluno> idExiste = alunoRepository.findById(id);
         if (idExiste.isEmpty()) {
-            return null;
+            throw new InformacaoNaoEncontradoException("Usuario com ID: "+ id + " não encontrado. Tente novamente.");
         }
         Aluno alunoEncontrado = idExiste.get();
         if (alunoDTOs.getEmail() != null && !alunoDTOs.getEmail().equals(alunoEncontrado.getEmail())) {
-            if (validaremail(alunoDTOs.getEmail())) {
-                return null;
+
+            if (alunoRepository.findByEmail(alunoDTOs.getEmail()).isPresent()) {
+                throw new UsuarioExistenteException("Usuário já cadastrado com esse email: "+ alunoDTOs.getEmail());
             }
-            if (validarGmail(alunoDTOs.getEmail()) == false) {
+            if (validarEmail(alunoDTOs.getEmail()) == false) {
                 return null;
             }
             alunoEncontrado.setEmail(alunoDTOs.getEmail());
         }
         if (alunoDTOs.getNomeUsuario() != null) {
+            if (alunoDTOs.getNomeUsuario().isBlank()) {
+                throw new ValorNuloNaoPermitidoException("O campo 'nome de usuário' não pode ser vazio ou nulo.");
+            }
             alunoEncontrado.setNomeUsuario(alunoDTOs.getNomeUsuario());
         }
         if (alunoDTOs.getTelefone() != null) {
             alunoEncontrado.setTelefone(alunoDTOs.getTelefone());
         }
+        if (alunoDTOs.getDataNascimento() != null) {
+            if (alunoEncontrado.getDataNascimento()!= null){
+                throw new OperacaoNaoPermitidaException("A data de nascimento já foi definida e não pode ser modificada.");
+            }
+             alunoEncontrado.setDataNascimento(alunoDTOs.getDataNascimento());
+        }
+        if (alunoDTOs.getEmail() == null && alunoDTOs.getNomeUsuario() == null && alunoDTOs.getTelefone() == null) {
+            throw new OperacaoNaoPermitidaException("Nenhuma informação foi enviada para atualização.");
+        }
+
         return alunoRepository.save(alunoEncontrado);
     }
 
@@ -96,19 +111,19 @@ public class AlunoServiceImpl implements AlunoService {
     public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
         Optional<Aluno> alunoExiste = alunoRepository.findByEmail(Email);
         if (alunoExiste.isEmpty()) {
-            return null;
+            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse email: "+ Email);
         }
 
         if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank() ||
             senhaDTOs.getConfirmaSenha() == null || senhaDTOs.getConfirmaSenha().isBlank()) {
-            return null;
+            throw new CampoObrigatorioException("Os campos de senha e confirmação de senha são obrigatórios.");
 
         }if(!senhaDTOs.getNovaSenha().equals(senhaDTOs.getConfirmaSenha())){
-            return null;
+            throw new OperacaoNaoPermitidaException("As senhas informadas não conferem.");
         }
 
         if (senhaDTOs.getNovaSenha().equals(alunoExiste.get().getSenha())) {
-            return null;
+            throw new OperacaoNaoPermitidaException("A nova senha não pode ser igual a atual.");
         }
         Aluno alunoEncontrado = alunoExiste.get();
         alunoEncontrado.setSenha(senhaDTOs.getConfirmaSenha());
@@ -116,7 +131,7 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Boolean validarGmail(String email) {
+    public Boolean validarEmail(String email) {
         if (email == null || email.isEmpty()) {
             return false;
         }
@@ -143,27 +158,39 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public boolean removerAluno(UUID id) {
-        if(alunoRepository.existsById(id)){
-            alunoRepository.deleteById(id);
-            return true;
+    public void removerAluno(UUID id) {
+        if (!alunoRepository.existsById(id)) {
+            throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + id);
         }
-        return false;
+        alunoRepository.deleteById(id);
     }
 
     @Override
     public List<Aluno> buscarAlunoPorNome(String nome) {
-        return alunoRepository.findByNomeUsuarioContaining(nome);
+        if (nome == null || nome.isBlank()) {
+            throw new CampoObrigatorioException("O campo de nome para busca é obrigatório.");
+        }
+        List<Aluno> alunos = alunoRepository.findByNomeUsuarioContaining(nome);
+        if (alunos.isEmpty()){
+            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse nome: " + nome);
+        }
+        return alunos;
     }
+
 
     @Override
     public Aluno buscarAlunoPorId(UUID idAluno) {
-        return alunoRepository.findByIdUsuario(idAluno);
+        return alunoRepository.findById(idAluno).orElse(null);
     }
 
     @Override
     public Page<Aluno> listarAlunos(Pageable page) {
+        Page<Aluno> alunos = alunoRepository.findAll(page);
+        if  (alunos.isEmpty()) {
+            throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado foi encontrado.");
+        }
         return alunoRepository.findAll(page);
     }
+
 }
 

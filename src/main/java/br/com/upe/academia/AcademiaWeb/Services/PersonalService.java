@@ -1,6 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
-import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
@@ -12,21 +11,22 @@ public interface PersonalService {
 
     public Personal cadastrarPersonal(PersonalDTOs personalDTOs);
 
-    public boolean validarEmail(String email);
 
     public Personal alterarPersonal(String cref, PersonalDTOs personalDTOs);
 
-    public Boolean deletarPersonal(String cref);
+    public void deletarPersonal(String cref);
 
     public Personal buscarPersonal(String cref);
 
     public List<Personal> buscarPersonalNome(String nomeUsuario);
 
-    public boolean validarCref(String cref);
+    public boolean existeCref(String cref);
 
-    public Boolean validarGmail(String email);
+    public Boolean validarEmail(String email);
 
-    public Personal TrocaSenha(UUID id, TrocaSenhaDTOs senhaDTOs);
+    public Personal TrocaSenha(String email, TrocaSenhaDTOs senhaDTOs);
+
+    public Boolean validarCref(String cref);
 
 
 }

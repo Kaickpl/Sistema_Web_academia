@@ -14,7 +14,6 @@ import java.util.UUID;
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, UUID> {
     Aluno findByIdUsuario(UUID idUsuario);
-
     Optional<Aluno> findByEmail(String email);
     List<Aluno> findByNomeUsuarioContaining(String NomeUsuario);
     @Query("SELECT a FROM Aluno a JOIN a.grupos g WHERE g = :grupo")
