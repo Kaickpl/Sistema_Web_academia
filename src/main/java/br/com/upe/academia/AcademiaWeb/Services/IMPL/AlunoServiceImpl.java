@@ -25,8 +25,7 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Autowired
     AlunoRepository alunoRepository;
-    @Autowired
-    private AlunoService alunoService;
+
     @Autowired
     private TreinoService treinoService;
 
@@ -142,16 +141,27 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     public List<Treino> listarTreinos(UUID idAluno) {
-        Aluno aluno  = alunoService.buscarAlunoPorId(idAluno);
+        Aluno aluno  = this.buscarAlunoPorId(idAluno);
         return aluno.getTreinosAtribuidos();
     }
 
     @Override
     public List<Treino> atribuirTreinoAluno(UUID idAluno, UUID idTreino) {
-        Aluno aluno = alunoService.buscarAlunoPorId(idAluno);
+        Aluno aluno = this.buscarAlunoPorId(idAluno);
         Treino treino = treinoService.buscarTreino(idTreino);
         List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
         treinosAtuais.add(treino);
+        aluno.setTreinosAtribuidos(treinosAtuais);
+        alunoRepository.save(aluno);
+        return treinosAtuais;
+    }
+
+    @Override
+    public List<Treino> removerTreinoAluno(UUID idAluno, UUID idTreino) {
+        Aluno aluno = this.buscarAlunoPorId(idAluno);
+        Treino treino = treinoService.buscarTreino(idTreino);
+        List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
+        treinosAtuais.remove(treino);
         aluno.setTreinosAtribuidos(treinosAtuais);
         alunoRepository.save(aluno);
         return treinosAtuais;
@@ -176,7 +186,6 @@ public class AlunoServiceImpl implements AlunoService {
         }
         return alunos;
     }
-
 
     @Override
     public Aluno buscarAlunoPorId(UUID idAluno) {

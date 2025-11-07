@@ -19,6 +19,9 @@ public class ExecutavelCriarExercicio implements Executavel{
 
     @Override
     public void executar() {
+        if(this.exercicio.getIdExercicio() != null) {
+            this.exercicio.setIdExercicio(null);
+        }
         this.exercicioCriado = exercicioService.adicionarExercicio(exercicio);
     }
 

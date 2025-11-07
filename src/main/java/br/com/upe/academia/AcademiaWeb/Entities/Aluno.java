@@ -20,7 +20,6 @@ public class Aluno extends Usuario{
     private int saldoMoedas;
 
     @ManyToMany(mappedBy = "alunos")
-    //aqui
     private List<Grupo> grupos = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

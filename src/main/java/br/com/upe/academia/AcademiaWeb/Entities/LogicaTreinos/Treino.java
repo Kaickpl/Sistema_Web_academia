@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,5 +26,5 @@ public class Treino {
             joinColumns = @JoinColumn(name = "Treino_id") ,
             inverseJoinColumns = @JoinColumn(name = "Exercicio_id")
     )
-    private List<Exercicio> exercicios;
+    private List<Exercicio> exercicios = new ArrayList<>();
     }

@@ -20,14 +20,7 @@ public class ExercicioMapper {
         exercicio.setIdExercicio(dto.getIdExercicio());
         exercicio.setNomeExercicio(dto.getNomeExercicio());
         exercicio.setDescricaoExercicio(dto.getDescricaoExercicio());
-        exercicio.setTempoDeDescanso(dto.getTempoDeDescanso());
-
-        UUID idTreino = dto.getIdTreino();
-        if(idTreino != null){
-            Treino treino = new Treino();
-            treino.setIdTreino(idTreino);
-            exercicio.setTreino(treino);
-        }
+        exercicio.setTempoDeDescanso(dto.getTempoDeDescansoBase());
 
         return exercicio;
     }

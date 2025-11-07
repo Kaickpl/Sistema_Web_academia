@@ -15,4 +15,5 @@ public interface ExercicioService {
     public Exercicio adicionarExercicio(Exercicio exercicio);
     public Exercicio alterarExercicio(Exercicio exercicio);
     public void removerExercicio(UUID idExercicio);
+    public void restaurarLigacoesTreino(UUID idExercicio, List<Treino> treinosParaReligar);
 }

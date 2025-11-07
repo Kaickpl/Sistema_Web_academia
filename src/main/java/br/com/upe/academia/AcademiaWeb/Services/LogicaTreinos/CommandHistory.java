@@ -28,7 +28,7 @@ public class CommandHistory {
         if (!reDo.isEmpty()) {
             Executavel lastExecutavel = reDo.pop();
             lastExecutavel.executar();
-            reDo.push(lastExecutavel);
+            this.unDo.push(lastExecutavel);
         }
     }
 

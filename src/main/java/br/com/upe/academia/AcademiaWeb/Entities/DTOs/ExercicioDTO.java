@@ -23,19 +23,13 @@ public class ExercicioDTO {
     private String descricaoExercicio;
     @JsonDeserialize(using = DurationDeserializer.class)
     @JsonSerialize(using = DurationSerializer.class)
-    private Duration tempoDeDescanso;
-    private UUID idTreino;
+    private Duration tempoDeDescansoBase;
 
     public ExercicioDTO(Exercicio exercicio) {
         this.idExercicio = exercicio.getIdExercicio();
         this.nomeExercicio = exercicio.getNomeExercicio();
         this.descricaoExercicio = exercicio.getDescricaoExercicio();
-        this.tempoDeDescanso = exercicio.getTempoDeDescanso();
-
-        if (exercicio.getTreino() != null) {
-            this.idTreino = exercicio.getTreino().getIdTreino();
-        }
-
+        this.tempoDeDescansoBase = exercicio.getTempoDeDescanso();
 
     }
 
