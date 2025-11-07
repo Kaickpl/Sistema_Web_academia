@@ -2,19 +2,14 @@ package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExceptionResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Exceptions.*;
-import jakarta.persistence.ElementCollection;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 @RestControllerAdvice
 public class RestExceptionHandler {
     @ExceptionHandler(UsuarioExistenteException.class)
@@ -52,8 +47,8 @@ public class RestExceptionHandler {
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
 
-    @ExceptionHandler(MedidaInvalidaException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleMedidaInvalidaException(MedidaInvalidaException ex, HttpServletRequest request) {
+    @ExceptionHandler(ValorInvalidoException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleMedidaInvalidaException(ValorInvalidoException ex, HttpServletRequest request) {
         ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(ex.getMessage(), 400, request.getRequestURI());
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
@@ -75,13 +70,14 @@ public class RestExceptionHandler {
         ExceptionResponseDTO   exceptionResponseDTO = new ExceptionResponseDTO(ex.getMessage(), 400, request.getRequestURI());
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionResponseDTO> handleJsonParseError(HttpMessageNotReadableException ex, HttpServletRequest request) {
         ExceptionResponseDTO exceptionResponseDTO;
 
         if (ex.getCause() instanceof com.fasterxml.jackson.databind.exc.InvalidFormatException) {
             exceptionResponseDTO = new ExceptionResponseDTO(
-                    "Formato inválido: o campo 'idUsuario' deve ser um UUID válido (ex: 550e8400-e29b-41d4-a716-446655440000)",
+                    "Erro: algum dos campos está com o formato inválido",
                     400,
                     request.getRequestURI()
             );
@@ -90,6 +86,30 @@ public class RestExceptionHandler {
         exceptionResponseDTO = new ExceptionResponseDTO(
                 "Erro ao ler o corpo da requisição. Verifique o formato JSON.",
                 400,
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponseDTO);
+    }
+
+    @ExceptionHandler(UsuarioNaoEncontradoException.class)
+    public ResponseEntity<ExceptionResponseDTO> usuarioNaoEncontradoException(UsuarioNaoEncontradoException ex, HttpServletRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(
+                "Usuário não encontrado",
+                404,
+                request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponseDTO);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request){
+        String causa = "";
+        if (ex.getRootCause() != null){
+            causa = ex.getRootCause().getMessage();
+        } else {
+            causa = "Violação de integridade de dados (verifique os campos obrigatórios).";
+        }
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO("Erro de dados no banco: " + causa,
+                HttpStatus.BAD_REQUEST.value(),
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponseDTO);

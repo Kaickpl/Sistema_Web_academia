@@ -23,13 +23,9 @@ public class ConquistasController {
     }
 
     @PostMapping
-    public ResponseEntity<Conquistas> registrarConquistas(@RequestBody ConquistasDTOs conquistasDTOs){
-        Conquistas novaConquista = conquistasService.registrarConquista(
-                conquistasDTOs.getAlunoId(),
-                conquistasDTOs.getNomeConquista(),
-                conquistasDTOs.getDescricaoConquista(),
-                conquistasDTOs.getMoedas()
-        );
-        return new ResponseEntity<>(novaConquista, HttpStatus.CREATED);
+    public ResponseEntity<ConquistasDTOs> registrarConquistas(@RequestBody ConquistasDTOs conquistasDTOs){
+        Conquistas novaConquista = conquistasService.registrarConquista(conquistasDTOs);
+        ConquistasDTOs dto = new ConquistasDTOs(novaConquista);
+        return ResponseEntity.ok(dto);
     }
 }

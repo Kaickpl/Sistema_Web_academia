@@ -17,7 +17,9 @@ public class Conquistas {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idConquistas;
+    @Column(nullable = false)
     private String nomeConquista;
+    @Column(nullable = false)
     private String descricaoConquista;
 
     @ManyToOne(cascade = CascadeType.ALL)

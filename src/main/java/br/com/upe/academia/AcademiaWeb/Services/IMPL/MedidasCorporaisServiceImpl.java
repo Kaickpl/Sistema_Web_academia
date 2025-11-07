@@ -3,8 +3,8 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
-import br.com.upe.academia.AcademiaWeb.Exceptions.MedidaInvalidaException;
-import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioExistenteException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
@@ -31,9 +31,8 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
     public MedidasCorporais registrarMedidas(MedidasCorporaisDTOs medidasCorporaisDTOs) {
         Aluno aluno = alunoRepository.findByIdUsuario(medidasCorporaisDTOs.getAlunoId());
         if (aluno == null){
-            throw new UsuarioExistenteException();
+            throw new UsuarioNaoEncontradoException();
         }
-        //dps ver a excessão de se colocar em outro formato
         validarMedida(medidasCorporaisDTOs.getBraco(), "braço");
         validarMedida(medidasCorporaisDTOs.getAbdomen(), "abdômen");
         validarMedida(medidasCorporaisDTOs.getCintura(), "cintura");
@@ -66,7 +65,7 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
 
     public void validarMedida(Double valor, String nomeCampo){
         if (valor <= 0){
-            throw new MedidaInvalidaException("A medida de " + nomeCampo + " deve ser maior que zero");
+            throw new ValorInvalidoException("A medida de " + nomeCampo + " deve ser maior que zero");
         }
     }
 }
