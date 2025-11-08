@@ -5,7 +5,6 @@ import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioRepository;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;

@@ -168,6 +168,13 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
+    public Treino buscarTreinoUnico(UUID idAluno ,UUID idTreino) {
+        Aluno  aluno = this.buscarAlunoPorId(idAluno);
+        Treino treinoEncontrado = aluno.getTreinosAtribuidos().stream().filter(t -> t.getIdTreino().equals(idTreino)).findFirst().get();
+        return treinoEncontrado;
+    }
+
+    @Override
     public void removerAluno(UUID id) {
         if (!alunoRepository.existsById(id)) {
             throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + id);
