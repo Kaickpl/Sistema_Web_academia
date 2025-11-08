@@ -25,9 +25,9 @@ public class Progressao {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_aluno")
     private Aluno aluno;
-
+    @Column(nullable = false)
     private String nomeExercicio;
-
+    @Column(nullable = false)
     private int peso;
 
     private LocalDate data;
