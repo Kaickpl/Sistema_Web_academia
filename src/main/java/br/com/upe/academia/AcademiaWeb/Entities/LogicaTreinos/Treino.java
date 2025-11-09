@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,9 +19,12 @@ public class Treino {
     private UUID idTreino;
     private Duration duracao;
     private String nome;
-    private boolean isConcluido = false;
 
-    @OneToMany(mappedBy = "treino", cascade = CascadeType.ALL)
-    private List<Exercicio> exercicio;
-
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "Treino_Exercicio",
+            joinColumns = @JoinColumn(name = "Treino_id") ,
+            inverseJoinColumns = @JoinColumn(name = "Exercicio_id")
+    )
+    private List<Exercicio> exercicios = new ArrayList<>();
     }

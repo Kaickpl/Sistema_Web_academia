@@ -16,6 +16,7 @@ public class TreinoServiceImpl implements TreinoService {
     @Autowired
     TreinoRepository treinoRepository;
 
+    // MUDAR O TRATAMENTO DE ERRO
     public Treino buscarTreino(UUID idTreino){
         Optional<Treino> treino = treinoRepository.findById(idTreino);
         return treino.orElseThrow(() -> new RuntimeException("Treino não encontrado"));
@@ -32,7 +33,6 @@ public class TreinoServiceImpl implements TreinoService {
     public Treino atualizarTreino(Treino treino){
         Treino treinoAtualizado = buscarTreino(treino.getIdTreino());
         treinoAtualizado.setNome(treino.getNome());
-        treinoAtualizado.setConcluido(treino.isConcluido());
         treinoAtualizado.setDuracao(treino.getDuracao());
         return this.treinoRepository.save(treinoAtualizado);
     }

@@ -1,8 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Entities;
 
-
-import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +20,14 @@ public class Aluno extends Usuario{
     private int saldoMoedas;
 
     @ManyToMany(mappedBy = "alunos")
-    //aqui
     private List<Grupo> grupos = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "aluno_treinos",
+            joinColumns = @JoinColumn(name = "aluno_id"),
+            inverseJoinColumns = @JoinColumn(name = "treino_id")
+    )
+    private List<Treino> treinosAtribuidos = new ArrayList<>();
 
 }

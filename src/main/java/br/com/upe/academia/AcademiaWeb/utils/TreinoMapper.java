@@ -18,7 +18,6 @@ public class TreinoMapper {
 
         treino.setNome(treinoDTO.getNome());
         treino.setDuracao(treinoDTO.getDuracao());
-        treino.setConcluido(treinoDTO.isConcluido());
         return treino;
     }
 
@@ -30,7 +29,6 @@ public class TreinoMapper {
         treinoDTO.setIdTreino(treino.getIdTreino());
         treinoDTO.setNome(treino.getNome());
         treinoDTO.setDuracao(treino.getDuracao());
-        treinoDTO.setConcluido(treino.isConcluido());
         return treinoDTO;
     }
 

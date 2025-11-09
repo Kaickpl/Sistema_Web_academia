@@ -1,5 +1,4 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
-
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +24,5 @@ public class AlunoResponseDTOs  {
         this.email = aluno.getEmail();
         this.telefone = aluno.getTelefone();
         this.saldoMoedas = aluno.getSaldoMoedas();
-
-
     }
 }

@@ -19,6 +19,9 @@ public class ExecutavelCriarSerie implements Executavel {
 
     @Override
     public void executar() {
+        if (this.serie.getExercicio() != null){
+            this.serie.setIdSerie(null);
+        }
         this.serieCriada = serieService.adicionarSerie(serie);
     }
 

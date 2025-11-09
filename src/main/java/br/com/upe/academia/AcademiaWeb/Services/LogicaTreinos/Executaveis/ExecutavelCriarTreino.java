@@ -17,6 +17,9 @@ public class ExecutavelCriarTreino implements Executavel{
 
     @Override
     public void executar() {
+        if (this.treino.getIdTreino() != null) {
+            this.treino.setIdTreino(null);
+        }
         this.treinoCriado = treinoService.criarTreino(treino);
     }
 

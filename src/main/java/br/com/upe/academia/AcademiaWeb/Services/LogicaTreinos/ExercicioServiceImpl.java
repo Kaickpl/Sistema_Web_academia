@@ -1,12 +1,12 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
-
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioRepository;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,6 +31,11 @@ public class ExercicioServiceImpl implements ExercicioService {
     @Transactional
     @Override
     public Exercicio adicionarExercicio(Exercicio exercicio) {
+        if(exercicio.getSeries() != null){
+            for(Serie serie : exercicio.getSeries()){
+                serie.setExercicio(exercicio);
+            }
+        }
         return this.exercicioRepository.save(exercicio);
     }
 
@@ -47,5 +52,15 @@ public class ExercicioServiceImpl implements ExercicioService {
     @Override
     public void removerExercicio(UUID idExercicio) {
         exercicioRepository.deleteById(idExercicio);
+    }
+
+    @Override
+    @Transactional
+    public void restaurarLigacoesTreino(UUID idExercicio, List<Treino> treinosParaReligar) {
+        Exercicio exercicio =  buscarExercicio(idExercicio);
+        for(Treino treino : treinosParaReligar){
+            exercicio.getTreinos().add(treino);
+        }
+        this.exercicioRepository.save(exercicio);
     }
 }
