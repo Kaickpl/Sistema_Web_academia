@@ -23,8 +23,9 @@ public class MedidasCorporaisController {
     }
 
     @PostMapping
-    public ResponseEntity<MedidasCorporais> registrarMedidasCorporais(@RequestBody MedidasCorporaisDTOs medidasCorporaisDTOs){
+    public ResponseEntity<MedidasCorporaisDTOs> registrarMedidasCorporais(@RequestBody MedidasCorporaisDTOs medidasCorporaisDTOs){
         MedidasCorporais novasMedidas = medidasCorporaisService.registrarMedidas(medidasCorporaisDTOs);
-        return ResponseEntity.status(201).body(novasMedidas);
+        MedidasCorporaisDTOs dto = new MedidasCorporaisDTOs(novasMedidas);
+        return ResponseEntity.ok(dto);
     }
 }

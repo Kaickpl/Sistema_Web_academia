@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Progressao;
 import org.springframework.stereotype.Service;
 
@@ -11,5 +12,5 @@ import java.util.UUID;
 public interface ProgressaoService {
     Progressao salvaCarga(ProgressaoDTOs progressaoDTOs);
 
-    List<Progressao> getHistoricoCarga(UUID alunoId, String nomeExercicico);
+    List<ProgressaoResponseDTOs> getHistoricoCarga(UUID alunoId, String nomeExercicio);
 }

@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Progressao;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-@Service
-public class
+import java.util.stream.Collectors;
 
-ProgressaoServiceImpl implements ProgressaoService{
+@Service
+public class ProgressaoServiceImpl implements ProgressaoService{
 
     @Autowired
     ProgressaoRepository progressaoRepository;
@@ -42,10 +43,16 @@ ProgressaoServiceImpl implements ProgressaoService{
     }
 
     @Override
-    public List<Progressao> getHistoricoCarga(UUID alunoId, String nomeExercicico) {
+    public List<ProgressaoResponseDTOs> getHistoricoCarga(UUID alunoId, String nomeExercicio) {
         if (alunoRepository.findByIdUsuario(alunoId) == null){
             throw new UsuarioNaoEncontradoException();
         }
-        return progressaoRepository.findByAlunoIdUsuarioAndNomeExercicioOrderByDataAsc(alunoId, nomeExercicico);
+
+        List<Progressao> progressoes = progressaoRepository
+                .findByAluno_IdUsuarioAndNomeExercicioOrderByDataAsc(alunoId, nomeExercicio);
+
+        return progressoes.stream()
+                .map(ProgressaoResponseDTOs::new) // Usa o construtor do DTO
+                .collect(Collectors.toList());
     }
 }
