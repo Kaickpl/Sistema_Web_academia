@@ -25,7 +25,8 @@ public class ExecutavelDeletarTreino implements Executavel {
     @Override
     public void desfazer() {
         if (this.treinoDeletado != null) {
-            this.treinoService.criarTreino(treinoDeletado);
+            this.treinoDeletado.setIdTreino(null);
+            this.treinoDeletado = treinoService.criarTreino(treinoDeletado);
         }
     }
 }

@@ -3,6 +3,7 @@ package br.com.upe.academia.AcademiaWeb.Services;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
@@ -17,13 +18,22 @@ public interface AlunoService {
 
     public void removerAluno(UUID ID);
 
-    public List<Aluno> buscaraluno(String nomeUsuario);
+    public List<Aluno> buscarAlunoPorNome(String nomeUsuario);
 
-    public Page<Aluno> ListarAlunos(Pageable page);
+    public Aluno buscarAlunoPorId(UUID idAluno);
 
-    public Aluno TrocarSenha(String Email, TrocaSenhaDTOs senhaDTOs);
+    public Page<Aluno> listarAlunos(Pageable page);
 
-    public Boolean ValidarEmail(String email);
+    public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs);
 
+    public Boolean validarEmail(String email);
+
+    public List<Treino> listarTreinos(UUID idAluno);
+
+    public List<Treino> atribuirTreinoAluno(UUID idAluno, UUID idTreino);
+
+    public List<Treino> removerTreinoAluno(UUID idAluno, UUID idTreino);
+
+    public Treino buscarTreinoUnico(UUID idAluno,UUID idTreino);
 }
 

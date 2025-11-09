@@ -23,12 +23,10 @@ public class TreinoDTO {
     @JsonSerialize(using = DurationSerializer.class)
     private Duration duracao;
     private String nome;
-    private boolean isConcluido = false;
 
     public TreinoDTO(Treino treino){
         this.idTreino = treino.getIdTreino();
         this.duracao = treino.getDuracao();
         this.nome = treino.getNome();
-        this.isConcluido = treino.isConcluido();
     }
 }

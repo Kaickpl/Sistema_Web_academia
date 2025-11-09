@@ -1,17 +1,19 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
+import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +25,9 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Autowired
     AlunoRepository alunoRepository;
+
+    @Autowired
+    private TreinoService treinoService;
 
     public boolean existeEmail(String email) {
 
@@ -46,7 +51,7 @@ public class AlunoServiceImpl implements AlunoService {
         if (alunoDTOs.getSenha() == null || alunoDTOs.getSenha().isBlank()) {
             throw new CampoObrigatorioException("O campo de senha é obrigatório.");
         }
-        if (!this.ValidarEmail(alunoDTOs.getEmail())) {
+        if (!this.validarEmail(alunoDTOs.getEmail())) {
             throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
 
         }
@@ -74,8 +79,8 @@ public class AlunoServiceImpl implements AlunoService {
             if (alunoRepository.findByEmail(alunoDTOs.getEmail()).isPresent()) {
                 throw new UsuarioExistenteException("Usuário já cadastrado com esse email: "+ alunoDTOs.getEmail());
             }
-            if (!this.ValidarEmail(alunoDTOs.getEmail())) {
-                throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
+            if (validarEmail(alunoDTOs.getEmail()) == false) {
+                return null;
             }
             alunoEncontrado.setEmail(alunoDTOs.getEmail());
         }
@@ -102,7 +107,7 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Aluno TrocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
+    public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
         Optional<Aluno> alunoExiste = alunoRepository.findByEmail(Email);
         if (alunoExiste.isEmpty()) {
             throw new InformacaoNaoEncontradoException("Nenhum aluno com esse email: "+ Email);
@@ -125,13 +130,48 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Boolean ValidarEmail(String email) {
+    public Boolean validarEmail(String email) {
         if (email == null || email.isEmpty()) {
             return false;
         }
         Pattern p = Pattern.compile("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$");
         Matcher m = p.matcher(email);
         return m.matches();
+    }
+
+    @Override
+    public List<Treino> listarTreinos(UUID idAluno) {
+        Aluno aluno  = this.buscarAlunoPorId(idAluno);
+        return aluno.getTreinosAtribuidos();
+    }
+
+    @Override
+    public List<Treino> atribuirTreinoAluno(UUID idAluno, UUID idTreino) {
+        Aluno aluno = this.buscarAlunoPorId(idAluno);
+        Treino treino = treinoService.buscarTreino(idTreino);
+        List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
+        treinosAtuais.add(treino);
+        aluno.setTreinosAtribuidos(treinosAtuais);
+        alunoRepository.save(aluno);
+        return treinosAtuais;
+    }
+
+    @Override
+    public List<Treino> removerTreinoAluno(UUID idAluno, UUID idTreino) {
+        Aluno aluno = this.buscarAlunoPorId(idAluno);
+        Treino treino = treinoService.buscarTreino(idTreino);
+        List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
+        treinosAtuais.remove(treino);
+        aluno.setTreinosAtribuidos(treinosAtuais);
+        alunoRepository.save(aluno);
+        return treinosAtuais;
+    }
+
+    @Override
+    public Treino buscarTreinoUnico(UUID idAluno ,UUID idTreino) {
+        Aluno  aluno = this.buscarAlunoPorId(idAluno);
+        Treino treinoEncontrado = aluno.getTreinosAtribuidos().stream().filter(t -> t.getIdTreino().equals(idTreino)).findFirst().get();
+        return treinoEncontrado;
     }
 
     @Override
@@ -143,7 +183,7 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public List<Aluno> buscaraluno(String nome) {
+    public List<Aluno> buscarAlunoPorNome(String nome) {
         if (nome == null || nome.isBlank()) {
             throw new CampoObrigatorioException("O campo de nome para busca é obrigatório.");
         }
@@ -155,7 +195,12 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Page<Aluno> ListarAlunos(Pageable page) {
+    public Aluno buscarAlunoPorId(UUID idAluno) {
+        return alunoRepository.findById(idAluno).orElse(null);
+    }
+
+    @Override
+    public Page<Aluno> listarAlunos(Pageable page) {
         Page<Aluno> alunos = alunoRepository.findAll(page);
         if  (alunos.isEmpty()) {
             throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado foi encontrado.");
