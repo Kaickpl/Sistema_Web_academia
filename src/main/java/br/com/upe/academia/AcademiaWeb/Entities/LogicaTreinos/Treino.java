@@ -27,4 +27,8 @@ public class Treino {
             inverseJoinColumns = @JoinColumn(name = "Exercicio_id")
     )
     private List<Exercicio> exercicios = new ArrayList<>();
+
+    @OneToMany(mappedBy = "treinoTemplate" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<TreinoSessao> treinoExecucoes;
+
     }

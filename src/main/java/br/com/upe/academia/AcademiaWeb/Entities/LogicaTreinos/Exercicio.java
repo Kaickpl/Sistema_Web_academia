@@ -37,4 +37,7 @@ public class Exercicio {
     @ManyToMany(mappedBy = "exercicios")
     private List<Treino> treinos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "exercicioTemplate", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ExercicioSessao> exerciciosExecucao = new ArrayList<>();
+
 }
