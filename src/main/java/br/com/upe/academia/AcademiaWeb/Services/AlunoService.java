@@ -35,5 +35,6 @@ public interface AlunoService {
     public List<Treino> removerTreinoAluno(UUID idAluno, UUID idTreino);
 
     public Treino buscarTreinoUnico(UUID idAluno,UUID idTreino);
+
 }
 

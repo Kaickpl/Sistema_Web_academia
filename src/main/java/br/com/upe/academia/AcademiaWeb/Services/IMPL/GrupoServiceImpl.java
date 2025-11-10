@@ -106,7 +106,7 @@ public class GrupoServiceImpl implements GrupoService {
     @Override
     public List<Grupo> buscarGrupo(String nomeGrupo) {
         if (nomeGrupo == null || nomeGrupo.isBlank()) {
-            throw new CampoObrigatorioException("O campo nome, para busca é obtigatório.");
+            throw new CampoObrigatorioException("O campo nome do Grupo, para busca é obtigatório.");
         }
         List<Grupo> grupos = grupoRepository.findByNomeGrupoContainingIgnoreCase(nomeGrupo);
         if (grupos.isEmpty()) {
@@ -153,5 +153,18 @@ public class GrupoServiceImpl implements GrupoService {
         grupo1.getAlunos().remove(aluno.get());
         return grupoRepository.save(grupo1);
     }
+
+    @Override
+    public  List<Aluno> BuscarAlunoGrupo(String nomeGrupo) {
+        if (nomeGrupo == null || nomeGrupo.isBlank()) {
+            throw new CampoObrigatorioException("O campo nome do Grupo, para busca é obtigatório.");
+        }
+        List<Aluno> alunos = alunoRepository.findByGrupo(nomeGrupo);
+        if  (alunos.isEmpty()) {
+            throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado nesse grupo");
+        }
+        return alunos;
+    }
+
 
 }
