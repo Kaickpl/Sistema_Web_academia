@@ -4,15 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.Instant;
 import java.util.UUID;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExercicioSessaoDTO {
-    private UUID idExercicioSessao;
+public class TreinoSessaoDTO {
     private UUID idTreinoSessao;
-    private UUID idExercicio;
-
+    private Instant dataTreinoSessao = Instant.now();
+    private Instant tempoFinalizacao;
+    private boolean concluido = false;
+    private UUID idAluno;
+    private UUID idTreinoTemplate;
 }

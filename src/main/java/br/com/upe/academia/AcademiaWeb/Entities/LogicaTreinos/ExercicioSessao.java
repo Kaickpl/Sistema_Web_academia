@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,14 +20,21 @@ public class ExercicioSessao {
     private UUID idExercicioSessao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "treinoExecucao_id")
+    @JoinColumn(name = "treinoExecucao_id", nullable = false)
     private TreinoSessao treinoExecucao;
 
     @OneToMany(mappedBy = "exercicioSessao",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<SerieSessao> seriesRealizadas;
+    private List<SerieSessao> seriesRealizadas =  new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercicioTemplate_id", nullable = false)
     private Exercicio exercicioTemplate;
 
+    public double volumeTotal(){
+        double volume = 0;
+        for(SerieSessao serieSessao : seriesRealizadas){
+            volume += serieSessao.getPesoTotal();
+        }
+        return volume;
+    }
 }
