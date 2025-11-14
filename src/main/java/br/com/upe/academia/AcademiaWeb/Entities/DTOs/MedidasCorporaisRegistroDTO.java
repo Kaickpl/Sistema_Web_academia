@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class MedidasCorporaisDTOs {
+public class MedidasCorporaisRegistroDTO {
     private UUID alunoId;
     private Double braco;
     private Double abdomen;
@@ -27,7 +27,7 @@ public class MedidasCorporaisDTOs {
     private Double peso;
     private Double altura;
 
-    public MedidasCorporaisDTOs(MedidasCorporais medidasCorporais) {
+    public MedidasCorporaisRegistroDTO(MedidasCorporais medidasCorporais) {
         this.alunoId = medidasCorporais.getAluno().getIdUsuario();
         this.braco = medidasCorporais.getBraco();
         this.abdomen = medidasCorporais.getAbdomen();

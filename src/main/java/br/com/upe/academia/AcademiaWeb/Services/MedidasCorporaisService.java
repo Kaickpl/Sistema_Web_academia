@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisRegistroDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Service
 public interface MedidasCorporaisService {
-    public List<MedidasCorporais> mostrarMedidasCorporais(UUID alunoId);
-    public MedidasCorporais registrarMedidas(MedidasCorporaisDTOs medidasCorporaisDTOs);
+    public List<MedidasCorporaisResponseDTO> mostrarHistoricoMedidasCorporais(UUID alunoId);
+    public MedidasCorporaisResponseDTO mostrarMedidasAtuais(UUID alunoId);
+    public MedidasCorporais registrarMedidas(MedidasCorporaisRegistroDTO medidasCorporaisDTOs);
 }

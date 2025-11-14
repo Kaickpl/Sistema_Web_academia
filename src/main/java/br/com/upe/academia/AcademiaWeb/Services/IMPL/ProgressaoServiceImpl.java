@@ -4,6 +4,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Progressao;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
@@ -54,5 +55,14 @@ public class ProgressaoServiceImpl implements ProgressaoService{
         return progressoes.stream()
                 .map(ProgressaoResponseDTOs::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProgressaoResponseDTOs getUltimaCarga(UUID alunoId, String nomeExercicio) {
+        Progressao ultimoRegistro = progressaoRepository.findTop1ByAluno_IdUsuarioAndNomeExercicioOrderByDataDesc(alunoId, nomeExercicio);
+        if (ultimoRegistro == null){
+            throw new InformacaoNaoEncontradoException("Aluno com Id: " + alunoId + "não tem nenhum registro de carga no exercício: " + nomeExercicio);
+        }
+        return new ProgressaoResponseDTOs(ultimoRegistro);
     }
 }

@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisRegistroDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +18,20 @@ public class MedidasCorporaisController {
     @Autowired
     private MedidasCorporaisService medidasCorporaisService;
 
+    @GetMapping("/historico/{alunoId}")
+    public List<MedidasCorporaisResponseDTO> ListarMedidasCorporais(@PathVariable UUID alunoId){
+        return medidasCorporaisService.mostrarHistoricoMedidasCorporais(alunoId);
+    }
+
     @GetMapping("/{alunoId}")
-    public List<MedidasCorporais> ListarMedidasCorporais(@PathVariable UUID alunoId){
-        return medidasCorporaisService.mostrarMedidasCorporais(alunoId);
+    public MedidasCorporaisResponseDTO mostrarMedidasAtuais(@PathVariable UUID alunoId){
+        return medidasCorporaisService.mostrarMedidasAtuais(alunoId);
     }
 
     @PostMapping
-    public ResponseEntity<MedidasCorporaisDTOs> registrarMedidasCorporais(@RequestBody MedidasCorporaisDTOs medidasCorporaisDTOs){
+    public ResponseEntity<MedidasCorporaisRegistroDTO> registrarMedidasCorporais(@RequestBody MedidasCorporaisRegistroDTO medidasCorporaisDTOs){
         MedidasCorporais novasMedidas = medidasCorporaisService.registrarMedidas(medidasCorporaisDTOs);
-        MedidasCorporaisDTOs dto = new MedidasCorporaisDTOs(novasMedidas);
-        return ResponseEntity.ok(dto);
+        MedidasCorporaisRegistroDTO dto = new MedidasCorporaisRegistroDTO(novasMedidas);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 }

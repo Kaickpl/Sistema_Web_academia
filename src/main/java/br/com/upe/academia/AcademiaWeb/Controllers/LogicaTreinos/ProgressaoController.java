@@ -23,6 +23,11 @@ public class ProgressaoController {
         return progressaoService.getHistoricoCarga(alunoId, exercicio);
     }
 
+    @GetMapping("/recente/{alunoId}")
+    public ProgressaoResponseDTOs getUltimoRegistro(@PathVariable UUID alunoId, @RequestParam String exercicio) {
+        return progressaoService.getUltimaCarga(alunoId, exercicio);
+    }
+
     @PostMapping
     public ResponseEntity<ProgressaoResponseDTOs> registrarCarga(@RequestBody ProgressaoDTOs progressaoDTOs) {
         Progressao novaProgressao = progressaoService.salvaCarga(progressaoDTOs);
