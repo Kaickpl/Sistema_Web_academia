@@ -9,4 +9,5 @@ import java.util.UUID;
 @Repository
 public interface ConquistasRepository extends JpaRepository<Conquistas, UUID> {
     List<Conquistas> findByAluno_IdUsuario(UUID idAluno);
+    boolean existsByAluno_IdUsuarioAndNomeConquista(UUID alunoIdUsuario, String nomeConquista);
 }

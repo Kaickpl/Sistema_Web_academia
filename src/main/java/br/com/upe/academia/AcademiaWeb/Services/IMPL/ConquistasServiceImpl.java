@@ -3,6 +3,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistasDTOs;
+import br.com.upe.academia.AcademiaWeb.Exceptions.ConquistaRegistradaException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioExistenteException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
@@ -32,6 +33,10 @@ public class ConquistasServiceImpl implements ConquistasService {
         }
         if (conquistasDTOs.getMoedas() <= 0){
             throw new ValorInvalidoException("O valor de moedas deve ser maior que zero");
+        }
+        boolean existeConquista = conquistasRepository.existsByAluno_IdUsuarioAndNomeConquista(conquistasDTOs.getAlunoId(), conquistasDTOs.getNomeConquista());
+        if (existeConquista){
+            throw new ConquistaRegistradaException(conquistasDTOs.getAlunoId(), conquistasDTOs.getNomeConquista());
         }
 
         int novoSaldo = aluno.getSaldoMoedas() + conquistasDTOs.getMoedas();
