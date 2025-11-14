@@ -1,5 +1,4 @@
 package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
-
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import jakarta.persistence.*;
 
@@ -22,8 +21,7 @@ public class TreinoSessao {
     @JoinColumn(name = "template_treino_id", nullable = false)
     private Treino treinoTemplate;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ExercicioSessao")
-    private List<ExercicioSessao> exercicioSessao;
+    @OneToMany(mappedBy = "treinoExecucao",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ExercicioSessao> exerciciosSessao;
 
 }

@@ -18,8 +18,7 @@ public class SerieSessao {
     private Integer numeroDeRepeticoes;
 
     public double getPesoTotal(){
-        double pesoTotal = (double) peso*numeroDeRepeticoes;
-        return pesoTotal;
+        return (double) peso*numeroDeRepeticoes;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
