@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistasDTOs;
 import br.com.upe.academia.AcademiaWeb.Services.ConquistasService;
@@ -29,8 +30,8 @@ public class ConquistasController {
     }
 
     @PostMapping
-    public ResponseEntity<ConquistasDTOs> registrarConquistas(@RequestBody ConquistasDTOs conquistasDTOs){
-        Conquistas novaConquista = conquistasService.registrarConquista(conquistasDTOs);
+    public ResponseEntity<ConquistasDTOs> registrarConquistas(@RequestBody ConquistaRegistroDTO registroDTO){
+        Conquistas novaConquista = conquistasService.registrarConquista(registroDTO);
         ConquistasDTOs dto = new ConquistasDTOs(novaConquista);
         return ResponseEntity.ok(dto);
     }

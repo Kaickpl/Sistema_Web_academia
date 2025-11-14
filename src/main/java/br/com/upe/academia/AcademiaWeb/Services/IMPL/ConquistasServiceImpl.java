@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistasDTOs;
 import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
@@ -27,7 +28,7 @@ public class ConquistasServiceImpl implements ConquistasService {
     AlunoRepository alunoRepository;
 
     @Override
-    public Conquistas registrarConquista(ConquistasDTOs conquistasDTOs) {
+    public Conquistas registrarConquista(ConquistaRegistroDTO conquistasDTOs) {
 
         Aluno aluno = alunoRepository.findByIdUsuario(conquistasDTOs.getAlunoId());
         if (aluno == null){
@@ -42,6 +43,7 @@ public class ConquistasServiceImpl implements ConquistasService {
         Conquistas conquistas = new Conquistas(aluno, conquistasDTOs.getNomeConquista(), conquistasDTOs.getDescricaoConquista(), conquistasDTOs.getMoedas());
         return conquistasRepository.save(conquistas);
     }
+
 
     @Override
     public List<ConquistaResponseDTO> mostrarConquistas(UUID alunoId) {
