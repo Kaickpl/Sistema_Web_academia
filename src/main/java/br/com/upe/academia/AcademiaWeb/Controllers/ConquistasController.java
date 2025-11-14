@@ -1,6 +1,8 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaRegistroDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistasDTOs;
 import br.com.upe.academia.AcademiaWeb.Services.ConquistasService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +20,14 @@ public class ConquistasController {
     private ConquistasService conquistasService;
 
     @GetMapping("/{alunoId}")
-    public List<Conquistas> listarConquistas(@PathVariable UUID alunoId) {
+    public List<ConquistaResponseDTO> listarConquistas(@PathVariable UUID alunoId) {
         return conquistasService.mostrarConquistas(alunoId);
     }
 
     @PostMapping
-    public ResponseEntity<ConquistasDTOs> registrarConquistas(@RequestBody ConquistasDTOs conquistasDTOs){
-        Conquistas novaConquista = conquistasService.registrarConquista(conquistasDTOs);
-        ConquistasDTOs dto = new ConquistasDTOs(novaConquista);
+    public ResponseEntity<ConquistaRegistroDTO> registrarConquistas(@RequestBody ConquistaRegistroDTO conquistaRegistroDTO){
+        Conquistas novaConquista = conquistasService.registrarConquista(conquistaRegistroDTO);
+        ConquistaRegistroDTO dto = new ConquistaRegistroDTO(novaConquista);
         return ResponseEntity.ok(dto);
     }
 }

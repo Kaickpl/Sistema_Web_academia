@@ -52,7 +52,7 @@ public class ProgressaoServiceImpl implements ProgressaoService{
                 .findByAluno_IdUsuarioAndNomeExercicioOrderByDataAsc(alunoId, nomeExercicio);
 
         return progressoes.stream()
-                .map(ProgressaoResponseDTOs::new) // Usa o construtor do DTO
+                .map(ProgressaoResponseDTOs::new)
                 .collect(Collectors.toList());
     }
 }
