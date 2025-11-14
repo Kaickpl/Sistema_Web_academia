@@ -1,7 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistasDTOs;
 import br.com.upe.academia.AcademiaWeb.Services.ConquistasService;
@@ -24,10 +23,15 @@ public class ConquistasController {
         return conquistasService.mostrarConquistas(alunoId);
     }
 
+    @GetMapping("/recente/{alunoId}")
+    public ConquistaResponseDTO mostrarUltimaConquista(@PathVariable UUID alunoId){
+        return conquistasService.mostrarUltimaConquista(alunoId);
+    }
+
     @PostMapping
-    public ResponseEntity<ConquistaRegistroDTO> registrarConquistas(@RequestBody ConquistaRegistroDTO conquistaRegistroDTO){
-        Conquistas novaConquista = conquistasService.registrarConquista(conquistaRegistroDTO);
-        ConquistaRegistroDTO dto = new ConquistaRegistroDTO(novaConquista);
+    public ResponseEntity<ConquistasDTOs> registrarConquistas(@RequestBody ConquistasDTOs conquistasDTOs){
+        Conquistas novaConquista = conquistasService.registrarConquista(conquistasDTOs);
+        ConquistasDTOs dto = new ConquistasDTOs(novaConquista);
         return ResponseEntity.ok(dto);
     }
 }
