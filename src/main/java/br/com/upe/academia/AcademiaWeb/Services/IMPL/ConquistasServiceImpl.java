@@ -34,6 +34,11 @@ public class ConquistasServiceImpl implements ConquistasService {
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
+        boolean existeConquista = conquistasRepository.existsByAluno_IdUsuarioAndNomeConquista(conquistasDTOs.getAlunoId(), conquistasDTOs.getNomeConquista());
+        if (existeConquista){
+            return null;
+        }
+
         if (conquistasDTOs.getMoedas() <= 0){
             throw new ValorInvalidoException("O valor de moedas deve ser maior que zero");
         }
@@ -42,6 +47,8 @@ public class ConquistasServiceImpl implements ConquistasService {
         alunoRepository.save(aluno);
         Conquistas conquistas = new Conquistas(aluno, conquistasDTOs.getNomeConquista(), conquistasDTOs.getDescricaoConquista(), conquistasDTOs.getMoedas());
         return conquistasRepository.save(conquistas);
+
+
     }
 
 

@@ -28,11 +28,4 @@ public class ConquistasController {
     public ConquistaResponseDTO mostrarUltimaConquista(@PathVariable UUID alunoId){
         return conquistasService.mostrarUltimaConquista(alunoId);
     }
-
-    @PostMapping
-    public ResponseEntity<ConquistasDTOs> registrarConquistas(@RequestBody ConquistaRegistroDTO registroDTO){
-        Conquistas novaConquista = conquistasService.registrarConquista(registroDTO);
-        ConquistasDTOs dto = new ConquistasDTOs(novaConquista);
-        return ResponseEntity.ok(dto);
-    }
 }

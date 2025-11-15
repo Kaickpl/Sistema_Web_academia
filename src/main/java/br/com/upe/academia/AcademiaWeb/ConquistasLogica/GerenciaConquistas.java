@@ -17,6 +17,10 @@ public class GerenciaConquistas {
             ConquistasInterface conquistaLegpress = new Levantou200QuilosLegpress();
             contextoConquistas.setTipo(conquistaLegpress);
             contextoConquistas.registrar(progressaoDTOs.getAlunoId());
+        } else if (peso >= 50 && exercicio.equals("Supino inclinado")) {
+            ConquistasInterface conquistaSupinoInclinado = new Levantou50QuilosSupinoInclinado();
+            contextoConquistas.setTipo(conquistaSupinoInclinado);
+            contextoConquistas.registrar(progressaoDTOs.getAlunoId());
         }
     }
 }
