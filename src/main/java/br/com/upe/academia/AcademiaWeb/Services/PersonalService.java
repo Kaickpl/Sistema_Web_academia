@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public interface PersonalService {
     public Personal TrocaSenha(String email, TrocaSenhaDTOs senhaDTOs);
 
     public Boolean validarCref(String cref);
+
+    public List<Grupo> ListaGruposPersonal(UUID idPersonal);
 
 
 }
