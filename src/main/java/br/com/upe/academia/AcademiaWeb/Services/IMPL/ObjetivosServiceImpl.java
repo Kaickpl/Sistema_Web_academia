@@ -3,6 +3,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.Objetivos;
+import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.ObjetivosRepository;
 import br.com.upe.academia.AcademiaWeb.Services.ObjetivosService;
@@ -18,9 +19,19 @@ public class ObjetivosServiceImpl implements ObjetivosService {
 
     @Autowired
     AlunoRepository alunoRepository;
+    private Objetivos objetivos;
 
     @Override
     public Objetivos registrarObjetivo(ObjetivosDTO objetivosDto) {
+        Aluno aluno = alunoRepository.findByIdUsuario(objetivosDto.getAlunoId());
+        if (aluno == null){
+            throw new UsuarioNaoEncontradoException();
+        }
+        Objetivos objetivos = new Objetivos();
+        objetivos.setAluno(aluno);
+        objetivos.setCondicao(objetivos.getCondicao());
+        objetivos.setStatus(objetivos.getStatus());
+        objetivos.setValorAlvo(objetivos);
         return null;
     }
 
