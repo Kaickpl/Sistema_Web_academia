@@ -114,4 +114,14 @@ public class RestExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponseDTO);
     }
+
+    @ExceptionHandler(ConquistaRegistradaException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleConquistaRegistradaException(ConquistaRegistradaException ex, HttpServletRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(
+                ex.getMessage(),
+                400,
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
+    }
 }

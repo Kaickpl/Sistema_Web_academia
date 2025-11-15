@@ -2,7 +2,10 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaRegistroDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistasDTOs;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioExistenteException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ConquistasServiceImpl implements ConquistasService {
@@ -24,33 +28,46 @@ public class ConquistasServiceImpl implements ConquistasService {
     AlunoRepository alunoRepository;
 
     @Override
-    public Conquistas registrarConquista(ConquistasDTOs conquistasDTOs) {
+    public Conquistas registrarConquista(ConquistaRegistroDTO conquistasDTOs) {
 
         Aluno aluno = alunoRepository.findByIdUsuario(conquistasDTOs.getAlunoId());
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
+        boolean existeConquista = conquistasRepository.existsByAluno_IdUsuarioAndNomeConquista(conquistasDTOs.getAlunoId(), conquistasDTOs.getNomeConquista());
+        if (existeConquista){
+            return null;
+        }
+
         if (conquistasDTOs.getMoedas() <= 0){
             throw new ValorInvalidoException("O valor de moedas deve ser maior que zero");
         }
-
         int novoSaldo = aluno.getSaldoMoedas() + conquistasDTOs.getMoedas();
-
         aluno.setSaldoMoedas(novoSaldo);
-
         alunoRepository.save(aluno);
-
         Conquistas conquistas = new Conquistas(aluno, conquistasDTOs.getNomeConquista(), conquistasDTOs.getDescricaoConquista(), conquistasDTOs.getMoedas());
-
         return conquistasRepository.save(conquistas);
+
+
     }
 
+
     @Override
-    public List<Conquistas> mostrarConquistas(UUID alunoId) {
+    public List<ConquistaResponseDTO> mostrarConquistas(UUID alunoId) {
         Aluno aluno = alunoRepository.findByIdUsuario(alunoId);
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
-        return conquistasRepository.findByAluno_IdUsuario(alunoId);
+        List<Conquistas> conquistasList = conquistasRepository.findByAluno_IdUsuario(alunoId);
+        return conquistasList.stream().map(ConquistaResponseDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public ConquistaResponseDTO mostrarUltimaConquista(UUID alunoId) {
+        Conquistas ultimaConquista = conquistasRepository.findTop1ByAluno_IdUsuarioOrderByDataConquistaDesc(alunoId);
+        if (ultimaConquista == null) {
+            throw new InformacaoNaoEncontradoException("O usuário " + alunoId + " não possui nenhuma conquista registrada.");
+        }
+        return new ConquistaResponseDTO(ultimaConquista);
     }
 }

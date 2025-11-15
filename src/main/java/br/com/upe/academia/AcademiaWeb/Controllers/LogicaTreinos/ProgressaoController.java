@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Progressao;
 import br.com.upe.academia.AcademiaWeb.Services.ProgressaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +14,24 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/progressao")
-public class
-ProgressaoController {
+public class ProgressaoController {
     @Autowired
     private ProgressaoService progressaoService;
 
     @GetMapping("/historico/{alunoId}")
-    public List<Progressao> getHistorico(@PathVariable UUID alunoId, @RequestParam String exercicio) {
+    public List<ProgressaoResponseDTOs> getHistorico(@PathVariable UUID alunoId, @RequestParam String exercicio) {
         return progressaoService.getHistoricoCarga(alunoId, exercicio);
     }
 
+    @GetMapping("/recente/{alunoId}")
+    public ProgressaoResponseDTOs getUltimoRegistro(@PathVariable UUID alunoId, @RequestParam String exercicio) {
+        return progressaoService.getUltimaCarga(alunoId, exercicio);
+    }
+
     @PostMapping
-    public ResponseEntity<Progressao> registrarCarga(@RequestBody ProgressaoDTOs progressaoDTOs) {
+    public ResponseEntity<ProgressaoResponseDTOs> registrarCarga(@RequestBody ProgressaoDTOs progressaoDTOs) {
         Progressao novaProgressao = progressaoService.salvaCarga(progressaoDTOs);
-        return new ResponseEntity<>(novaProgressao, HttpStatus.CREATED);
+        ProgressaoResponseDTOs dto = new ProgressaoResponseDTOs(novaProgressao);
+        return ResponseEntity.ok(dto);
     }
 }

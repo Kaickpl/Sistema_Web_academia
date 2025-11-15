@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Repositories;
 
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Progressao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,5 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface ProgressaoRepository extends JpaRepository<Progressao, UUID> {
-    List<Progressao> findByAlunoIdUsuarioAndNomeExercicioOrderByDataAsc(UUID idUsuario, String nomeExercicio);
+    List<Progressao> findByAluno_IdUsuarioAndNomeExercicioOrderByDataAsc(UUID idUsuario, String nomeExercicio);
+
+    Progressao findTop1ByAluno_IdUsuarioAndNomeExercicioOrderByDataDesc(UUID alunoIdUsuario, String nomeExercicio);
 }
