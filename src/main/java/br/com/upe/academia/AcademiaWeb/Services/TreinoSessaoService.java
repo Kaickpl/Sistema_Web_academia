@@ -15,4 +15,6 @@ public interface TreinoSessaoService {
     public TreinoSessao fecharTreinoSessao(UUID idTreinoSessao);
 
     public void apagarTreinoSessao(UUID idTreinoSessao);
+
+    TreinoSessao recriarTreinoSessao(TreinoSessao sessaoAntiga);
 }

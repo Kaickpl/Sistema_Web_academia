@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
@@ -38,11 +39,11 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
     public TreinoSessao iniciarTreinoSessao(TreinoSessaoDTO treinoSessaoDTO) {
 
         Aluno aluno = alunoService.buscarAlunoPorId(treinoSessaoDTO.getIdAluno());
-        Treino treinoTemplate = treinoService.buscarTreino(treinoSessaoDTO.getIdTreinoSessao());
+        Treino treinoTemplate = treinoService.buscarTreino(treinoSessaoDTO.getIdTreinoTemplate());
 
         TreinoSessao treinoSessao = treinoSessaoMapper.toEntity(treinoSessaoDTO);
 
-        if(treinoSessao.getIdTreinoSessao()==null){
+        if(treinoSessao.getDataExecucao()==null){
             treinoSessao.setDataExecucao(Instant.now());
         }
 
@@ -67,5 +68,12 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
     public void apagarTreinoSessao(UUID idTreinoSessao) {
          this.buscarSessaoPorId(idTreinoSessao);
          treinoSessaoRepository.deleteById(idTreinoSessao);
+    }
+
+    @Override
+    public TreinoSessao recriarTreinoSessao(TreinoSessao sessaoAntiga){
+        sessaoAntiga.setIdTreinoSessao(null);
+        sessaoAntiga.setExerciciosSessao(new ArrayList<>());
+        return treinoSessaoRepository.save(sessaoAntiga);
     }
 }

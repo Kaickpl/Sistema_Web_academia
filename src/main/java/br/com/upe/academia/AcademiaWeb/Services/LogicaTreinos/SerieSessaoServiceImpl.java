@@ -16,9 +16,6 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
     private SerieSessaoRepository serieSessaoRepository;
 
     @Autowired
-    private ExercicioSessaoService exercicioSessaoService;
-
-    @Autowired
     private SerieSessaoMapper serieSessaoMapper;
 
     @Override
@@ -48,4 +45,10 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         serieAtt.setNumeroDeRepeticoes(serieSessaoDTO.getNumeroDeRepeticoes());
         return serieSessaoRepository.save(serieAtt);
     }
+
+    @Override
+    public SerieSessao salvarEntidade(SerieSessao serieSessao) {
+        return serieSessaoRepository.save(serieSessao);
+    }
+
 }

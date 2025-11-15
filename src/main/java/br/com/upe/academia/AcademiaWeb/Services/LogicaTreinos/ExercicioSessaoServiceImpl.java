@@ -1,39 +1,76 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioSessaoRepository;
+import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
+import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
+import br.com.upe.academia.AcademiaWeb.Services.TreinoSessaoService;
+import br.com.upe.academia.AcademiaWeb.utils.ExercicioSessaoMapper;
+import br.com.upe.academia.AcademiaWeb.utils.SerieSessaoMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-//ainda a implementar
 
 @Service
 public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
 
     @Autowired
-    ExercicioSessaoRepository exercicioSessaoRepository;
+    private ExercicioSessaoRepository exercicioSessaoRepository;
+    @Autowired
+    private ExercicioService exercicioService;
+    @Autowired
+    private TreinoSessaoService treinoSessaoService;
+    @Autowired
+    private ExercicioSessaoMapper exercicioSessaoMapper;
+    @Autowired
+    private SerieSessaoService serieSessaoService;
+    @Autowired
+    private SerieSessaoMapper serieSessaoMapper;
 
     @Override
     public ExercicioSessao buscarExercicioSessao(UUID id) {
-        return exercicioSessaoRepository.findById(id).orElse(null);
+        return exercicioSessaoRepository.findById(id).orElseThrow( () -> new RuntimeException("Execução de Exercicio não encontrada"));
     }
 
     @Override
     public List<SerieSessao> listarSeriesExecucao(UUID idExercicio) {
-        return List.of();
+        ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicio);
+        return new ArrayList<>(exercicioSessao.getSeriesRealizadas());
     }
 
     @Override
-    public ExercicioSessao salvarExercicioSessao(ExercicioSessao exerciciosessao) {
-        return null;
+    public ExercicioSessao reincerirSeries(List<SerieSessao> serieSessao, UUID idExercicio) {
+        ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicio);
+        exercicioSessao.setSeriesRealizadas(serieSessao);
+        for(SerieSessao series : serieSessao){
+            series.setExercicioSessao(exercicioSessao);
+            series.setIdSerieSessao(null);
+            serieSessaoService.salvarEntidade(series);
+        }
+        return exercicioSessaoRepository.save(exercicioSessao);
     }
 
     @Override
+    @Transactional
+    public ExercicioSessao salvarExercicioSessao(ExercicioSessaoDTO exerciciosessaoDTO) {
+        treinoSessaoService.buscarSessaoPorId(exerciciosessaoDTO.getIdTreinoSessao());
+        exercicioService.buscarExercicio(exerciciosessaoDTO.getIdExercicio());
+        ExercicioSessao exercicioSessao = exercicioSessaoMapper.toEntity(exerciciosessaoDTO);
+
+        return exercicioSessaoRepository.save(exercicioSessao);
+    }
+
+    @Override
+    @Transactional
     public void deletarExercicioSessao(UUID idExercicio) {
-
+        this.buscarExercicioSessao(idExercicio);
+        exercicioSessaoRepository.deleteById(idExercicio);
     }
+
 }

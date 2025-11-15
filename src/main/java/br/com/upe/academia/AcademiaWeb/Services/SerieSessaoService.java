@@ -16,4 +16,6 @@ public interface SerieSessaoService {
     public double calcularVolumeTotal(UUID idSerieSessao);
 
     public SerieSessao editarSerieSessao(SerieSessaoDTO serieSessaodto);
+
+    public SerieSessao salvarEntidade(SerieSessao serieSessao);
 }
