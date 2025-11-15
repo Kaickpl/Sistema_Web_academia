@@ -22,15 +22,24 @@ public class Progressao {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idProgressao;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_aluno")
     private Aluno aluno;
     @Column(nullable = false)
     private String nomeExercicio;
     @Column(nullable = false)
     private int peso;
+    @Column(nullable = false)
+    private int repeticoes;
 
     private LocalDate data;
+
+    public Progressao(Aluno aluno, String nomeExercicio, int peso, int repeticoes) {
+        this.aluno = aluno;
+        this.nomeExercicio = nomeExercicio;
+        this.peso = peso;
+        this.repeticoes = repeticoes;
+    }
 
     @PrePersist
     protected void onCreate() {

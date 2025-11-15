@@ -1,11 +1,12 @@
-package br.com.upe.academia.AcademiaWeb.ConquistasLogica;
+package br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas;
 
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.ConquistasInterface;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Services.ConquistasService;
 
 import java.util.UUID;
 
-public class Levantou200QuilosLegpress implements ConquistasInterface{
+public class Levantou200QuilosLegpress implements ConquistasInterface {
     ConquistasService service;
     @Override
     public ConquistaRegistroDTO concederConquista(UUID alunoId) {

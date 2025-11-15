@@ -34,4 +34,16 @@ public class ProgressaoController {
         ProgressaoResponseDTOs dto = new ProgressaoResponseDTOs(novaProgressao);
         return ResponseEntity.ok(dto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProgressaoResponseDTOs> atualizarProgressao(@RequestBody ProgressaoDTOs progressaoDTOs, @PathVariable UUID id) {
+        Progressao progressaoExistente = progressaoService.alterarProgressao(id, progressaoDTOs);
+        return ResponseEntity.ok(new ProgressaoResponseDTOs(progressaoExistente));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarProgressao(@PathVariable UUID id){
+        progressaoService.deletarProgressao(id);
+        return ResponseEntity.ok().build();
+    }
 }

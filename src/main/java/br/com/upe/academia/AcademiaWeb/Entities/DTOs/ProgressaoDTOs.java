@@ -12,12 +12,13 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+//tentar mudar o nome pra progressao reegistro
 public class ProgressaoDTOs {
     private UUID idProgressao;
     private UUID alunoId;
     private String nomeExercicio;
     private int peso;
+    private int repeticoes;
 
 
     public ProgressaoDTOs(Progressao progressao) {
@@ -25,5 +26,6 @@ public class ProgressaoDTOs {
         this.alunoId = progressao.getAluno().getIdUsuario();
         this.nomeExercicio = progressao.getNomeExercicio();
         this.peso = progressao.getPeso();
+        this.repeticoes = progressao.getRepeticoes();
     }
 }

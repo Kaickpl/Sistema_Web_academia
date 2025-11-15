@@ -14,4 +14,6 @@ public interface ProgressaoService {
 
     List<ProgressaoResponseDTOs> getHistoricoCarga(UUID alunoId, String nomeExercicio);
     ProgressaoResponseDTOs getUltimaCarga(UUID aluno, String nomeExercicio);
+    Progressao alterarProgressao(UUID id, ProgressaoDTOs progressaoDTOs);
+    void deletarProgressao(UUID id);
 }

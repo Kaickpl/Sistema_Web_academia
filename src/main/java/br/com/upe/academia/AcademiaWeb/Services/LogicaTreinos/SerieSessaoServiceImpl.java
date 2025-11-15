@@ -1,4 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
@@ -22,6 +23,9 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
     @Autowired
     private SessaoProgressaoResponseMapper  sessaoProgressaoResponseMapper;
 
+    @Autowired
+    private GerenciaConquistas gerenciaConquistas;
+
     @Override
     public SerieSessao buscarSerieSessao(UUID idSerieSessao) {
         return serieSessaoRepository.findById(idSerieSessao).orElseThrow(() -> new RuntimeException("Série de Sessão não encontrada."));
@@ -29,6 +33,8 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
 
     @Override
     public SerieSessao salvarSerieSessao(SerieSessaoDTO serieSessaoDTO) {
+        SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO = new SessaoProgressaoResponseDTO(serieSessaoDTO.getIdSerieSessao());
+        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO);
         return serieSessaoRepository.save(serieSessaoMapper.toEntity(serieSessaoDTO));
     }
 

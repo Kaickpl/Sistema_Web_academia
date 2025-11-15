@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,29 +31,19 @@ public class ProgressaoServiceImpl implements ProgressaoService{
 
     @Autowired
     GerenciaConquistas gerenciaConquistas;
-//    public ProgressaoServiceImpl(AlunoRepository alunoRepository,
-//                             ProgressaoRepository progressaoRepository,
-//                             GerenciaConquistas gerenciaConquistas) {
-//        this.alunoRepository = alunoRepository;
-//        this.progressaoRepository = progressaoRepository;
-//        this.gerenciaConquistas = gerenciaConquistas;
-//    }
+
 
     @Override
     public Progressao salvaCarga(ProgressaoDTOs progressaoDTOs) {
-        Progressao novaProgressao = new Progressao();
         Aluno aluno = alunoRepository.findByIdUsuario(progressaoDTOs.getAlunoId());
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
-
-        novaProgressao.setAluno(aluno);
-        novaProgressao.setNomeExercicio(progressaoDTOs.getNomeExercicio());
         if (progressaoDTOs.getPeso() <= 0){
             throw new ValorInvalidoException("O peso deve ser maior que zero.");
         }
-        novaProgressao.setPeso(progressaoDTOs.getPeso());
-        gerenciaConquistas.decisaoConquista(progressaoDTOs);
+        ///gerenciaConquistas.decisaoConquista(progressaoDTOs);
+        Progressao novaProgressao = new Progressao(aluno, progressaoDTOs.getNomeExercicio(), progressaoDTOs.getPeso(), progressaoDTOs.getRepeticoes());
 
         return progressaoRepository.save(novaProgressao);
     }
@@ -78,5 +69,35 @@ public class ProgressaoServiceImpl implements ProgressaoService{
             throw new InformacaoNaoEncontradoException("Aluno com Id: " + alunoId + "não tem nenhum registro de carga no exercício: " + nomeExercicio);
         }
         return new ProgressaoResponseDTOs(ultimoRegistro);
+    }
+
+    @Override
+    public Progressao alterarProgressao(UUID id, ProgressaoDTOs progressaoDTOs) {
+        Optional<Progressao> progressaoExiste = progressaoRepository.findById(id);
+        int peso = progressaoDTOs.getPeso();
+        int repeticoes = progressaoDTOs.getRepeticoes();
+        if (progressaoExiste.isEmpty()){
+            throw new InformacaoNaoEncontradoException("Não foi encontrada uma progressão com esse id");
+        }
+        Progressao progressao = progressaoExiste.get();
+        if (peso <= 0){
+            throw new ValorInvalidoException("O peso deve ser maior que zero");
+        }
+        if (repeticoes <= 0){
+            throw new ValorInvalidoException("As repetições dever ser mais que zero");
+        }
+        progressao.setNomeExercicio(progressaoDTOs.getNomeExercicio());
+        progressao.setPeso(progressaoDTOs.getPeso());
+        progressao.setRepeticoes(progressaoDTOs.getRepeticoes());
+
+        return progressaoRepository.save(progressao);
+    }
+
+    @Override
+    public void deletarProgressao(UUID id) {
+        if (!progressaoRepository.existsById(id)){
+            throw new InformacaoNaoEncontradoException("Não foi encontrada uma progressão com esse id");
+        }
+        progressaoRepository.deleteById(id);
     }
 }

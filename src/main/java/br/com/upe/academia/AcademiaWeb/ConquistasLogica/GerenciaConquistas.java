@@ -1,6 +1,8 @@
 package br.com.upe.academia.AcademiaWeb.ConquistasLogica;
 
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoDTOs;
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas.Levantou200QuilosLegpress;
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas.Levantou50QuilosSupinoInclinado;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -9,18 +11,18 @@ public class GerenciaConquistas {
     public GerenciaConquistas(Contexto contexto){
         this.contextoConquistas = contexto;
     }
-    public void decisaoConquista(ProgressaoDTOs progressaoDTOs){
-        int peso = progressaoDTOs.getPeso();
-        String exercicio = progressaoDTOs.getNomeExercicio();
+    public void decisaoConquista(SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO){
+        double peso = sessaoProgressaoResponseDTO.getPeso();
+        String exercicio = sessaoProgressaoResponseDTO.getExercicioTemplate().getNomeExercicio();
 
         if (peso >= 200 && exercicio.equals("Legpress")){
             ConquistasInterface conquistaLegpress = new Levantou200QuilosLegpress();
             contextoConquistas.setTipo(conquistaLegpress);
-            contextoConquistas.registrar(progressaoDTOs.getAlunoId());
+            contextoConquistas.registrar(sessaoProgressaoResponseDTO.getAlunoId());
         } else if (peso >= 50 && exercicio.equals("Supino inclinado")) {
             ConquistasInterface conquistaSupinoInclinado = new Levantou50QuilosSupinoInclinado();
             contextoConquistas.setTipo(conquistaSupinoInclinado);
-            contextoConquistas.registrar(progressaoDTOs.getAlunoId());
+            contextoConquistas.registrar(sessaoProgressaoResponseDTO.getAlunoId());
         }
     }
 }
