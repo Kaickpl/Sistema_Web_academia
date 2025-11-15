@@ -1,9 +1,12 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Contexto;
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Progressao;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
@@ -25,6 +28,16 @@ public class ProgressaoServiceImpl implements ProgressaoService{
     @Autowired
     AlunoRepository alunoRepository;
 
+    @Autowired
+    GerenciaConquistas gerenciaConquistas;
+//    public ProgressaoServiceImpl(AlunoRepository alunoRepository,
+//                             ProgressaoRepository progressaoRepository,
+//                             GerenciaConquistas gerenciaConquistas) {
+//        this.alunoRepository = alunoRepository;
+//        this.progressaoRepository = progressaoRepository;
+//        this.gerenciaConquistas = gerenciaConquistas;
+//    }
+
     @Override
     public Progressao salvaCarga(ProgressaoDTOs progressaoDTOs) {
         Progressao novaProgressao = new Progressao();
@@ -39,6 +52,8 @@ public class ProgressaoServiceImpl implements ProgressaoService{
             throw new ValorInvalidoException("O peso deve ser maior que zero.");
         }
         novaProgressao.setPeso(progressaoDTOs.getPeso());
+        gerenciaConquistas.decisaoConquista(progressaoDTOs);
+
         return progressaoRepository.save(novaProgressao);
     }
 
@@ -52,7 +67,16 @@ public class ProgressaoServiceImpl implements ProgressaoService{
                 .findByAluno_IdUsuarioAndNomeExercicioOrderByDataAsc(alunoId, nomeExercicio);
 
         return progressoes.stream()
-                .map(ProgressaoResponseDTOs::new) // Usa o construtor do DTO
+                .map(ProgressaoResponseDTOs::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProgressaoResponseDTOs getUltimaCarga(UUID alunoId, String nomeExercicio) {
+        Progressao ultimoRegistro = progressaoRepository.findTop1ByAluno_IdUsuarioAndNomeExercicioOrderByDataDesc(alunoId, nomeExercicio);
+        if (ultimoRegistro == null){
+            throw new InformacaoNaoEncontradoException("Aluno com Id: " + alunoId + "não tem nenhum registro de carga no exercício: " + nomeExercicio);
+        }
+        return new ProgressaoResponseDTOs(ultimoRegistro);
     }
 }

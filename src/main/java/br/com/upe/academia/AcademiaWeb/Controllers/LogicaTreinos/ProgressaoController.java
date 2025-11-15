@@ -14,14 +14,18 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/progressao")
-public class
-ProgressaoController {
+public class ProgressaoController {
     @Autowired
     private ProgressaoService progressaoService;
 
     @GetMapping("/historico/{alunoId}")
     public List<ProgressaoResponseDTOs> getHistorico(@PathVariable UUID alunoId, @RequestParam String exercicio) {
         return progressaoService.getHistoricoCarga(alunoId, exercicio);
+    }
+
+    @GetMapping("/recente/{alunoId}")
+    public ProgressaoResponseDTOs getUltimoRegistro(@PathVariable UUID alunoId, @RequestParam String exercicio) {
+        return progressaoService.getUltimaCarga(alunoId, exercicio);
     }
 
     @PostMapping

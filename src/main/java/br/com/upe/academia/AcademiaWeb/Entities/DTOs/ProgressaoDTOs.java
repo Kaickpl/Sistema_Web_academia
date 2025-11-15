@@ -18,7 +18,6 @@ public class ProgressaoDTOs {
     private UUID alunoId;
     private String nomeExercicio;
     private int peso;
-    //private LocalDate data;
 
 
     public ProgressaoDTOs(Progressao progressao) {
