@@ -8,8 +8,6 @@ import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
 import java.util.List;
 import java.util.UUID;
 
-// mexer aqui pra implementar o redo colocando junto as series filhas
-
 public class ExecutavelCriarExercicioSessao implements Executavel{
     private ExercicioSessao exercicioSessao;
     private ExercicioSessaoDTO exercicioSessaoDTO;
@@ -26,13 +24,13 @@ public class ExecutavelCriarExercicioSessao implements Executavel{
     public void executar() {
         this.exercicioSessao = exercicioSessaoService.salvarExercicioSessao(exercicioSessaoDTO);
         this.idExercicioSessao = exercicioSessao.getIdExercicioSessao();
-        this.seriesSalvas = this.exercicioSessao.getSeriesRealizadas();
     }
 
     @Override
     public void desfazer() {
         if(this.idExercicioSessao != null){
-            exercicioSessaoService.deletarExercicioSessao(idExercicioSessao);
+            this.seriesSalvas = this.exercicioSessao.getSeriesRealizadas();
+            exercicioSessaoService.deletarExercicioSessao(this.idExercicioSessao);
         }
     }
 }

@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface SerieSessaoService {
     public SerieSessao editarSerieSessao(SerieSessaoDTO serieSessaodto);
 
     public SerieSessao salvarEntidade(SerieSessao serieSessao);
+
+    public SessaoProgressaoResponseDTO buscarRegistroProgressao(UUID idSerieSessao);
 }

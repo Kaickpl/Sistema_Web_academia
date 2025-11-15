@@ -8,7 +8,7 @@ import java.util.UUID;
 @NoArgsConstructor
 
 public class SerieSessaoDTO {
-    private UUID serieSessaoId;
+    private UUID idSerieSessao;
     private double peso;
     private Integer numeroDeRepeticoes;
     private UUID idExercicioSessao;

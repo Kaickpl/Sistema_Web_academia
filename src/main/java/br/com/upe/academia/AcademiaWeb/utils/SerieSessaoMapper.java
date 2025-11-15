@@ -26,7 +26,7 @@ public class SerieSessaoMapper {
         if (serieSessao == null) return null;
 
         SerieSessaoDTO serieSessaoDTO = new SerieSessaoDTO();
-        serieSessaoDTO.setSerieSessaoId(serieSessao.getIdSerieSessao());
+        serieSessaoDTO.setIdSerieSessao(serieSessao.getIdSerieSessao());
         serieSessaoDTO.setPeso(serieSessao.getPeso());
         serieSessaoDTO.setNumeroDeRepeticoes(serieSessao.getNumeroDeRepeticoes());
         serieSessaoDTO.setIdExercicioSessao(serieSessao.getExercicioSessao().getIdExercicioSessao());
