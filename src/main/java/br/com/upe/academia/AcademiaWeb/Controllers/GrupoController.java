@@ -91,8 +91,14 @@ public class GrupoController {
         }
         return ResponseEntity.ok(grupoDTOs);
     }
+    @GetMapping("/ListarAlunosGrupo")
+    public ResponseEntity<AlunoEmGrupoDTOsResponse> listarAlunosGrupo(@RequestParam String nomeGrupo) {
+        Grupo grupo = grupoService.BuscarAlunoGrupo(nomeGrupo);
 
+        AlunoEmGrupoDTOsResponse aln = new AlunoEmGrupoDTOsResponse(grupo);
 
+        return ResponseEntity.ok(aln);
+    }
 
 }
 

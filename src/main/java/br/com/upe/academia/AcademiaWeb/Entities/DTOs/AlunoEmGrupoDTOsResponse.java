@@ -21,7 +21,10 @@ public class AlunoEmGrupoDTOsResponse {
 
     public AlunoEmGrupoDTOsResponse(Grupo grupo) {
         this.nomeGrupo = grupo.getNomeGrupo();
-        this.alunoResponseGrupos = new ArrayList<>();
+        this.alunoResponseGrupos = grupo.getAlunos()
+                .stream()
+                .map(AlunoResponseGrupoDTOs::new)
+                .toList();
     }
 
 }

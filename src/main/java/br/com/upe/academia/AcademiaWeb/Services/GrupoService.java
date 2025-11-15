@@ -27,6 +27,6 @@ public interface GrupoService {
 
     public Grupo removeUsuarioGrupo (UUID idUsuario, GrupoDTOs grupoDTOs);
 
-    public List<Aluno> BuscarAlunoGrupo(String nomeGrupo);
+    public Grupo BuscarAlunoGrupo(String nomeGrupo);
 
 }

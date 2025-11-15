@@ -39,6 +39,9 @@ public class GrupoServiceImpl implements GrupoService {
         if (grupo.getPersonal() == null || grupo.getPersonal().getIdUsuario() == null)  {
             throw new CampoObrigatorioException("O personal deve ser informado");
         }
+        if (grupoRepository.findByNomeGrupoIgnoreCase(grupo.getNomeGrupo()).isPresent()){
+            throw new OperacaoNaoPermitidaException("Nome do grupo já usado. Tente novamente.");
+        }
         if (grupo.getNomeGrupo() == null || grupo.getNomeGrupo().isBlank()) {
             throw new CampoObrigatorioException("O nome do grupo deve ser informado");
         }
@@ -155,15 +158,20 @@ public class GrupoServiceImpl implements GrupoService {
     }
 
     @Override
-    public  List<Aluno> BuscarAlunoGrupo(String nomeGrupo) {
+    public Grupo BuscarAlunoGrupo(String nomeGrupo) {
+
         if (nomeGrupo == null || nomeGrupo.isBlank()) {
             throw new CampoObrigatorioException("O campo nome do Grupo, para busca é obtigatório.");
         }
-        List<Aluno> alunos = alunoRepository.findByGrupo(nomeGrupo);
+        Grupo grupo = grupoRepository.findByNomeGrupo(nomeGrupo);
+        if (grupo == null) {
+            throw new InformacaoNaoEncontradoException("Nenhum Grupo encontrado.");
+        }
+        List<Aluno> alunos = grupo.getAlunos();
         if  (alunos.isEmpty()) {
             throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado nesse grupo");
         }
-        return alunos;
+        return grupo;
     }
 
 
