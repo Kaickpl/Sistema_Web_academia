@@ -1,4 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
@@ -20,6 +21,7 @@ public class SessaoProgressaoResponseDTO {
     private Integer numeroDeRepeticoes;
     private Exercicio exercicioTemplate;
     private double pesoTotal;
+    private UUID alunoId;
     @Autowired
     private SerieSessaoService serieSessaoService;
 
@@ -29,5 +31,6 @@ public class SessaoProgressaoResponseDTO {
         this.numeroDeRepeticoes = serieSessao.getNumeroDeRepeticoes();
         this.exercicioTemplate = serieSessao.getExercicioSessao().getExercicioTemplate();
         this.pesoTotal = serieSessao.getPesoTotal();
+        this.alunoId = serieSessao.getExercicioSessao().getTreinoExecucao().getAluno().getIdUsuario();
     }
 }
