@@ -33,7 +33,6 @@ public class TreinoServiceImpl implements TreinoService {
     public Treino atualizarTreino(Treino treino){
         Treino treinoAtualizado = buscarTreino(treino.getIdTreino());
         treinoAtualizado.setNome(treino.getNome());
-        treinoAtualizado.setDuracao(treino.getDuracao());
         return this.treinoRepository.save(treinoAtualizado);
     }
 

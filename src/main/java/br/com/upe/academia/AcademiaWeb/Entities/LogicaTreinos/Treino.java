@@ -17,7 +17,6 @@ public class Treino {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idTreino;
-    private Duration duracao;
     private String nome;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

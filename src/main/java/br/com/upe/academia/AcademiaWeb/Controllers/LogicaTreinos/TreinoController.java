@@ -1,7 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
-
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoDTO;
-import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;

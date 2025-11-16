@@ -45,7 +45,7 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     }
 
     @Override
-    public ExercicioSessao reincerirSeries(List<SerieSessao> serieSessao, UUID idExercicio) {
+    public ExercicioSessao reinserirSeries(List<SerieSessao> serieSessao, UUID idExercicio) {
         ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicio);
         exercicioSessao.setSeriesRealizadas(serieSessao);
         for(SerieSessao series : serieSessao){

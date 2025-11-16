@@ -1,11 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.Instant;
 import java.util.UUID;
 
 @Setter
@@ -14,9 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TreinoSessaoDTO {
     private UUID idTreinoSessao;
-    private Instant dataTreinoSessao = Instant.now();
-    private Instant tempoFinalizacao;
-    private boolean concluido = false;
     private UUID idAluno;
+    @NonNull
     private UUID idTreinoTemplate;
 }

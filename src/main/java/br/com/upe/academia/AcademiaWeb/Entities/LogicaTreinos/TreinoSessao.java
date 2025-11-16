@@ -21,9 +21,9 @@ public class TreinoSessao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idTreinoSessao;
-    private Instant dataExecucao = Instant.now();
+    private Instant dataExecucao;
     private Instant tempoFinalizacao;
-    private boolean concluido = false;
+    private boolean concluido;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aluno_id", nullable = false)
@@ -42,5 +42,4 @@ public class TreinoSessao {
         }
         return java.time.Duration.ZERO;
     }
-
 }

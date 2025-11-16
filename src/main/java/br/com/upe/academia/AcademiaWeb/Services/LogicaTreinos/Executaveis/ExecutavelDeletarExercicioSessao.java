@@ -37,7 +37,7 @@ public class ExecutavelDeletarExercicioSessao implements Executavel{
             this.sessaoDeletada.setSeriesRealizadas(new ArrayList<>());
             this.sessaoDeletada = exercicioSessaoService.salvarExercicioSessao(exercicioSessaoMapper.toDTO(this.sessaoDeletada));
             if(!this.seriesSessoesSalvas.isEmpty()){
-                exercicioSessaoService.reincerirSeries(seriesSessoesSalvas, this.sessaoDeletada.getIdExercicioSessao());
+                exercicioSessaoService.reinserirSeries(seriesSessoesSalvas, this.sessaoDeletada.getIdExercicioSessao());
             }
         }
     }

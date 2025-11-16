@@ -15,7 +15,7 @@ public interface ExercicioSessaoService {
 
     public List<SerieSessao> listarSeriesExecucao(UUID idExercicio);
 
-    ExercicioSessao reincerirSeries(List<SerieSessao> serieSessao, UUID idExercicio);
+    ExercicioSessao reinserirSeries(List<SerieSessao> serieSessao, UUID idExercicio);
 
     public ExercicioSessao salvarExercicioSessao(ExercicioSessaoDTO exerciciosessaoDTO);
 
