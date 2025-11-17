@@ -3,6 +3,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
+import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -168,6 +170,19 @@ public class PersonalServiceImpl implements PersonalService {
         Pattern p = Pattern.compile("^(CREF\\s*)?\\d{4,6}-[A-Z]/[A-Z]{2}$");
         Matcher m = p.matcher(cref);
         return m.matches();
+    }
+
+    @Override
+    public List<Grupo> ListaGruposPersonal(UUID idPersonal) {
+        Optional<Personal> personal = personalRepository.findById(idPersonal);
+        if (personal.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("Nenhum personal com esse ID: " + idPersonal);
+        }
+        List<Grupo> grupos = personal.get().getGrupos();
+        if (grupos.isEmpty()) {
+            throw new OperacaoNaoPermitidaException("Personal não possui grupos.");
+        }
+        return grupos;
     }
 
     @Override

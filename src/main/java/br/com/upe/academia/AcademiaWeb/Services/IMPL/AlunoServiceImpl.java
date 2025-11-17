@@ -3,6 +3,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
+import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
@@ -172,6 +173,19 @@ public class AlunoServiceImpl implements AlunoService {
         Aluno  aluno = this.buscarAlunoPorId(idAluno);
         Treino treinoEncontrado = aluno.getTreinosAtribuidos().stream().filter(t -> t.getIdTreino().equals(idTreino)).findFirst().get();
         return treinoEncontrado;
+    }
+
+    @Override
+    public List<Grupo> ListarGruposAluno(UUID idAluno) {
+        Optional<Aluno> aluno = alunoRepository.findById(idAluno);
+        if (aluno.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + idAluno);
+        }
+        List<Grupo> grupos = aluno.get().getGrupos();
+        if (grupos == null || grupos.isEmpty()) {
+            throw new OperacaoNaoPermitidaException("Aluno não está em nenhum grupo");
+        }
+        return grupos;
     }
 
     @Override
