@@ -22,16 +22,6 @@ public class PersonalController {
     private PersonalService  personalService;
 
 
-    @PostMapping
-    public ResponseEntity<PersonalResponseDTOs> CadastroPersonal(@RequestBody PersonalDTOs personalDTOs){
-        Personal personal = personalService.cadastrarPersonal(personalDTOs);
-        if (personal == null){
-            return ResponseEntity.badRequest().build();
-        }
-        PersonalResponseDTOs dto = new PersonalResponseDTOs(personal);
-        return ResponseEntity.ok(dto);
-
-    }
     @DeleteMapping("/{cref}")
     public ResponseEntity<Void> deletarPersonal (@PathVariable String cref){
       personalService.deletarPersonal(cref);
