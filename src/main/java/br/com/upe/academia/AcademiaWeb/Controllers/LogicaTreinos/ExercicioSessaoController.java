@@ -56,7 +56,7 @@ public class ExercicioSessaoController {
     @PutMapping("/{idExercicioSessao}")
     public ResponseEntity<ExercicioSessaoResponseDTO> adicionarComentario(@PathVariable UUID idExercicioSessao, @RequestBody ComentarioDTO comentarioDTO){
         ExercicioSessao exercicioReff = exercicioSessaoService.buscarExercicioSessao(idExercicioSessao);
-        exercicioReff.setComentario(comentarioDTO.getComentario());
+        exercicioSessaoService.adicionarComentario(idExercicioSessao, comentarioDTO.getComentario());
         ExercicioSessaoResponseDTO dto = exercicioSessaoMapper.toReponseDTO(exercicioReff);
         return ResponseEntity.ok(dto);
     }

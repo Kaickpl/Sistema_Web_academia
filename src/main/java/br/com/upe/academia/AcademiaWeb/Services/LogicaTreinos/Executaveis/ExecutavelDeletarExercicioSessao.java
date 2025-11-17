@@ -53,6 +53,8 @@ public class ExecutavelDeletarExercicioSessao implements Executavel{
         SerieSessao copia = new SerieSessao();
         copia.setPeso(original.getPeso());
         copia.setNumeroDeRepeticoes(original.getNumeroDeRepeticoes());
+        copia.setIdSerieSessao(null);
+        copia.setExercicioSessao(original.getExercicioSessao());
         return copia;
     }
 }
