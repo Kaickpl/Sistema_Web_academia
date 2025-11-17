@@ -48,13 +48,12 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     @Override
     public ExercicioSessao reinserirSeries(List<SerieSessao> serieSessao, UUID idExercicio) {
         ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicio);
-        exercicioSessao.setSeriesRealizadas(serieSessao);
         for(SerieSessao series : serieSessao){
-            series.setExercicioSessao(exercicioSessao);
             series.setIdSerieSessao(null);
+            series.setExercicioSessao(exercicioSessao);
             serieSessaoService.salvarEntidade(series);
         }
-        return exercicioSessaoRepository.save(exercicioSessao);
+        return exercicioSessao;
     }
 
     @Override

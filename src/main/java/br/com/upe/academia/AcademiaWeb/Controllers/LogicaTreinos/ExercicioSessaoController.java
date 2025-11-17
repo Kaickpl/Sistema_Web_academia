@@ -5,6 +5,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
+import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelAddComentarioExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelCriarExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelDeletarExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.utils.ExercicioSessaoMapper;
@@ -55,9 +56,10 @@ public class ExercicioSessaoController {
 
     @PutMapping("/{idExercicioSessao}")
     public ResponseEntity<ExercicioSessaoResponseDTO> adicionarComentario(@PathVariable UUID idExercicioSessao, @RequestBody ComentarioDTO comentarioDTO){
-        ExercicioSessao exercicioReff = exercicioSessaoService.buscarExercicioSessao(idExercicioSessao);
-        exercicioReff.setComentario(comentarioDTO.getComentario());
-        ExercicioSessaoResponseDTO dto = exercicioSessaoMapper.toReponseDTO(exercicioReff);
+        ExecutavelAddComentarioExercicioSessao comandoAddComentario = new ExecutavelAddComentarioExercicioSessao(this.exercicioSessaoService, idExercicioSessao, comentarioDTO);
+        commandHistory.execute(comandoAddComentario);
+        ExercicioSessao exercicioSessao = exercicioSessaoService.buscarExercicioSessao(idExercicioSessao);
+        ExercicioSessaoResponseDTO dto = exercicioSessaoMapper.toReponseDTO(exercicioSessao);
         return ResponseEntity.ok(dto);
     }
 }

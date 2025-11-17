@@ -21,6 +21,7 @@ public class TreinoSessao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idTreinoSessao;
+    private String comentario;
     private Instant dataExecucao;
     private Instant tempoFinalizacao;
     private boolean concluido;

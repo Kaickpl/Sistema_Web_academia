@@ -58,4 +58,5 @@ public class TreinoSessaoController {
         TreinoSessaoResponseGetDTO dtoResponse = treinoSessaoMapper.toResponseGetDTO(treinoSessao);
         return ResponseEntity.ok(dtoResponse);
     }
+
 }

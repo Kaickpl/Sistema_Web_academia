@@ -16,5 +16,7 @@ public interface TreinoSessaoService {
 
     public void apagarTreinoSessao(UUID idTreinoSessao);
 
-    TreinoSessao recriarTreinoSessao(TreinoSessao sessaoAntiga);
+    public TreinoSessao recriarTreinoSessao(TreinoSessao sessaoAntiga);
+
+    public void adicionarComentario(UUID idTreinoSessao, String comentario);
 }
