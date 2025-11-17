@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.*;
+import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Repositories.TreinoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
@@ -9,6 +10,7 @@ import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelAtribuirTreinoAluno;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelRemoverTreinoAluno;
 import br.com.upe.academia.AcademiaWeb.utils.TreinoMapper;
+import org.hibernate.dialect.unique.CreateTableUniqueDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -113,5 +115,14 @@ public class AlunoController {
         commandHistory.execute(executavelRemoverTreinoAluno);
         return ResponseEntity.status(200).build();
     }
-
+    @GetMapping("ListarGruposAluno/{idAluno}")
+    public ResponseEntity<List<GruposDoAlunoDTOs>>ListaGruposAluno(@PathVariable UUID idAluno){
+        List<Grupo> grupo = alunoService.ListarGruposAluno(idAluno);
+        if (grupo.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        List<GruposDoAlunoDTOs> gda = grupo.stream().map(GruposDoAlunoDTOs::new)
+                .toList();
+        return ResponseEntity.ok(gda);
+    }
     }

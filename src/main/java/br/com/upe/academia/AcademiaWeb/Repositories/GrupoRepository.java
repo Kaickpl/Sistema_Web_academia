@@ -6,6 +6,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -13,5 +14,8 @@ public interface GrupoRepository extends JpaRepository<Grupo, UUID> {
 
     List<Grupo> findByPersonal(Personal personal);
     List<Grupo> findByNomeGrupoContainingIgnoreCase(String nomeGrupo);
+    Grupo findByNomeGrupo(String nomeGrupo);
+    Optional<Grupo> findByNomeGrupoIgnoreCase(String nomeGrupo);
+
 
 }
