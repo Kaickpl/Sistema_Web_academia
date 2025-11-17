@@ -13,6 +13,7 @@ import java.util.UUID;
 @Service
 public interface ConquistasService {
     public Conquistas registrarConquista(ConquistaRegistroDTO conquistaRegistroDTO);
+    public Conquistas registrarConquistaObjetivo(ConquistaRegistroDTO conquistaRegistroDTO);
     public List<ConquistaResponseDTO> mostrarConquistas(UUID alunoId);
     public ConquistaResponseDTO mostrarUltimaConquista(UUID alunoId);
 }

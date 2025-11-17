@@ -51,6 +51,22 @@ public class ConquistasServiceImpl implements ConquistasService {
 
     }
 
+    @Override
+    public Conquistas registrarConquistaObjetivo(ConquistaRegistroDTO conquistaRegistroDTO) {
+        Aluno aluno = alunoRepository.findByIdUsuario(conquistaRegistroDTO.getAlunoId());
+        if (aluno == null){
+            throw new UsuarioNaoEncontradoException();
+        }
+        if (conquistaRegistroDTO.getMoedas() <= 0){
+            throw new ValorInvalidoException("O valor de moedas deve ser maior que zero");
+        }
+        int novoSaldo = aluno.getSaldoMoedas() + conquistaRegistroDTO.getMoedas();
+        aluno.setSaldoMoedas(novoSaldo);
+        alunoRepository.save(aluno);
+        Conquistas conquistas = new Conquistas(aluno, conquistaRegistroDTO.getNomeConquista(), conquistaRegistroDTO.getDescricaoConquista(), conquistaRegistroDTO.getMoedas());
+        return conquistasRepository.save(conquistas);
+    }
+
 
     @Override
     public List<ConquistaResponseDTO> mostrarConquistas(UUID alunoId) {

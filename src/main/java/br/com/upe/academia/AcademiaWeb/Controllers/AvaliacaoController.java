@@ -53,6 +53,7 @@ public class AvaliacaoController {
     @PutMapping("/{idAvaliacao}")
     public ResponseEntity<?> atualizarData(@RequestBody AvaliacaoDTOs avaliacaoDTOs, @PathVariable UUID idAvaliacao){
         Avaliacao avaliacaoExiste = avaliacaoService.buscarPorId(idAvaliacao);
+        //tirar issoe por no service
         if (avaliacaoExiste == null) {
             return ResponseEntity.status(404).body("Avaliação não encontrada");
         }

@@ -25,7 +25,7 @@ public class Objetivos {
     @Column(nullable = false)
     private double valorAlvo;
     @Column(nullable = false)
-    private String condicao;
+    private double valorAtual;
     @Column(nullable = false)
-    private String status;
+    private boolean concluido;
 }

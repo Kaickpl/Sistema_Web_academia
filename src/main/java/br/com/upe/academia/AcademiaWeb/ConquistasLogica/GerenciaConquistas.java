@@ -1,9 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.ConquistasLogica;
 
-import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas.Formiguinha;
-import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas.Levantou200QuilosLegpress;
-import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas.Levantou50QuilosSupinoInclinado;
-import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas.Resistencia;
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas.*;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +41,11 @@ public class GerenciaConquistas {
             contextoConquistas.setTipo(conquistasFormiguinha);
             contextoConquistas.registrar(idAluno);
         }
+    }
+
+    public void decisaoConquistaObjetivo(UUID idUsuario) {
+        ConquistasInterface conquistaObjetivo = new AtingiuObjetivo();
+        contextoConquistas.setTipo(conquistaObjetivo);
+        contextoConquistas.registrarConquistaObjetivo(idUsuario);
     }
 }

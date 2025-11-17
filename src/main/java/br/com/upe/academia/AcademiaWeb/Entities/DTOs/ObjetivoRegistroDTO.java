@@ -7,20 +7,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
-
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ObjetivosDTO {
-    private UUID idObjetivo;
+@NoArgsConstructor
+public class ObjetivoRegistroDTO {
     private UUID alunoId;
     private String tipoMedida;
     private double valorAlvo;
     private double valorAtual;
     private boolean concluido;
-    public ObjetivosDTO(Objetivos objetivos){
-        this.idObjetivo = objetivos.getIdObjetivo();
+    public ObjetivoRegistroDTO(Objetivos objetivos){
         this.alunoId = objetivos.getAluno().getIdUsuario();
         this.tipoMedida = objetivos.getTipoMedida();
         this.valorAlvo = objetivos.getValorAlvo();

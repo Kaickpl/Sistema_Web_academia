@@ -4,12 +4,15 @@ import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
+import br.com.upe.academia.AcademiaWeb.Entities.Objetivos;
 import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
+import br.com.upe.academia.AcademiaWeb.Repositories.ObjetivosRepository;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
+import org.hibernate.type.descriptor.java.ObjectJavaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,9 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
 
     @Autowired
     AlunoRepository alunoRepository;
+
+    @Autowired
+    ObjetivosRepository objetivosRepository;
 
     @Override
     public List<MedidasCorporaisResponseDTO> mostrarHistoricoMedidasCorporais(UUID alunoId) {
@@ -75,7 +81,9 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
         novasMedidas.setPercentualAgua(medidasCorporaisDTOs.getPercentualAgua());
         novasMedidas.setPeso(medidasCorporaisDTOs.getPeso());
         novasMedidas.setAltura(medidasCorporaisDTOs.getAltura());
-        return medidasCorporaisRepository.save(novasMedidas);
+        MedidasCorporais medidasSalvas = medidasCorporaisRepository.save(novasMedidas);
+        atualizarObjetivosAluno(novasMedidas);
+        return medidasSalvas;
     }
 
     public void validarMedida(Double valor, String nomeCampo){
@@ -83,4 +91,44 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
             throw new ValorInvalidoException("A medida de " + nomeCampo + " deve ser maior que zero");
         }
     }
-}
+
+    public void atualizarObjetivosAluno(MedidasCorporais medidasCorporais){
+        UUID alunoId = medidasCorporais.getAluno().getIdUsuario();
+        List<String> tiposDeMedida = List.of("peso", "braco", "cintura", "abdomen", "peito", "quadril", "coxa", "ombro", "massaMagra", "gordura", "percentualAgua", "altura");
+        for (String tipo : tiposDeMedida) {
+            Double novoValor = getValorMedida(medidasCorporais, tipo);
+
+            if (novoValor != null && novoValor > 0){
+                List<Objetivos> objetivosParaAtualizar = objetivosRepository.findAllByAluno_IdUsuarioAndTipoMedidaAndConcluido(alunoId, tipo, false);
+                for (Objetivos objetivo : objetivosParaAtualizar){
+                    boolean ehPraDiminuir = objetivo.getValorAlvo() < objetivo.getValorAtual();
+                    objetivo.setValorAtual(novoValor);
+                    boolean concluido;
+                    if (ehPraDiminuir){
+                        concluido = novoValor <= objetivo.getValorAlvo();
+                    } else {
+                        concluido = novoValor >= objetivo.getValorAlvo();
+                    }
+                    objetivo.setConcluido(concluido);
+                    objetivosRepository.save(objetivo);
+                }
+            }
+        }
+    }
+    private Double getValorMedida(MedidasCorporais medidas, String tipo) {
+        switch (tipo.toLowerCase()) {
+            case "peso": return medidas.getPeso();
+            case "braco": return medidas.getBraco();
+            case "abdomen": return medidas.getAbdomen();
+            case "cintura": return medidas.getCintura();
+            case "peito": return medidas.getPeito();
+            case "quadril": return medidas.getQuadril();
+            case "coxa": return medidas.getCoxa();
+            case "ombro": return medidas.getOmbro();
+            case "massaMagra": return medidas.getMassaMagra();
+            case "gordura": return medidas.getGordura();
+            case "percentualAgua": return medidas.getPercentualAgua();
+            case "altura": return medidas.getAltura();
+            default: return null;
+        }
+}}
