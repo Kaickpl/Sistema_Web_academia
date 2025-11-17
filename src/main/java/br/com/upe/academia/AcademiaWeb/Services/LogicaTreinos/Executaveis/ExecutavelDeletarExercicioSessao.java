@@ -25,9 +25,16 @@ public class ExecutavelDeletarExercicioSessao implements Executavel{
 
     @Override
     public void executar() {
-        this.sessaoDeletada = exercicioSessaoService.buscarExercicioSessao(this.idExercicioSessao);
+        UUID idParaBuscar;
+        if(this.sessaoDeletada == null){
+            idParaBuscar = this.idExercicioSessao;
+        }
+        else{
+            idParaBuscar = this.sessaoDeletada.getIdExercicioSessao();
+        }
+        this.sessaoDeletada = exercicioSessaoService.buscarExercicioSessao(idParaBuscar);
         this.seriesSessoesSalvas = sessaoDeletada.getSeriesRealizadas().stream().map(this::clonarSerieSessao).collect(Collectors.toList());
-        exercicioSessaoService.deletarExercicioSessao(this.idExercicioSessao);
+        exercicioSessaoService.deletarExercicioSessao(sessaoDeletada.getIdExercicioSessao());
     }
 
     @Override
@@ -37,7 +44,7 @@ public class ExecutavelDeletarExercicioSessao implements Executavel{
             this.sessaoDeletada.setSeriesRealizadas(new ArrayList<>());
             this.sessaoDeletada = exercicioSessaoService.salvarExercicioSessao(exercicioSessaoMapper.toDTO(this.sessaoDeletada));
             if(!this.seriesSessoesSalvas.isEmpty()){
-                exercicioSessaoService.reincerirSeries(seriesSessoesSalvas, this.sessaoDeletada.getIdExercicioSessao());
+                exercicioSessaoService.reinserirSeries(seriesSessoesSalvas, this.sessaoDeletada.getIdExercicioSessao());
             }
         }
     }
@@ -46,6 +53,8 @@ public class ExecutavelDeletarExercicioSessao implements Executavel{
         SerieSessao copia = new SerieSessao();
         copia.setPeso(original.getPeso());
         copia.setNumeroDeRepeticoes(original.getNumeroDeRepeticoes());
+        copia.setIdSerieSessao(null);
+        copia.setExercicioSessao(original.getExercicioSessao());
         return copia;
     }
 }

@@ -3,9 +3,13 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 public class ExecutavelCriarSerieSessao implements Executavel{
     private SerieSessao serieSessaoCriada;
     private SerieSessaoService serieSessaoService;

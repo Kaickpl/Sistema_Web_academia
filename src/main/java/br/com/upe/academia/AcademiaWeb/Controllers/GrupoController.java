@@ -1,5 +1,9 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoEmGrupoDTOsResponse;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseGrupoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.GrupoDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
@@ -87,7 +91,14 @@ public class GrupoController {
         }
         return ResponseEntity.ok(grupoDTOs);
     }
+    @GetMapping("/ListarAlunosGrupo")
+    public ResponseEntity<AlunoEmGrupoDTOsResponse> listarAlunosGrupo(@RequestParam String nomeGrupo) {
+        Grupo grupo = grupoService.BuscarAlunoGrupo(nomeGrupo);
 
+        AlunoEmGrupoDTOsResponse aln = new AlunoEmGrupoDTOsResponse(grupo);
+
+        return ResponseEntity.ok(aln);
+    }
 
 }
 

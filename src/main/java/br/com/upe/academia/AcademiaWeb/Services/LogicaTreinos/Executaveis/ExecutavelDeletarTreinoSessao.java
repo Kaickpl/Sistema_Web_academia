@@ -8,7 +8,6 @@ public class ExecutavelDeletarTreinoSessao implements Executavel {
     private TreinoSessaoService treinoSessaoService;
     private TreinoSessao treinoSessaoDeletada;
     private UUID idTreinoSessao;
-    private TreinoSessaoMapper treinoSessaoMapper;
 
     public ExecutavelDeletarTreinoSessao(TreinoSessaoService treinoSessaoService, UUID idTreinoSessao) {
         this.treinoSessaoService = treinoSessaoService;
@@ -17,7 +16,13 @@ public class ExecutavelDeletarTreinoSessao implements Executavel {
 
     @Override
     public void executar() {
-        treinoSessaoDeletada = treinoSessaoService.buscarSessaoPorId(this.idTreinoSessao);
+        UUID idParaBuscar;
+        if(this.treinoSessaoDeletada == null) {
+            idParaBuscar = this.idTreinoSessao;
+        } else {
+            idParaBuscar = this.treinoSessaoDeletada.getIdTreinoSessao();
+        }
+        this.treinoSessaoDeletada = treinoSessaoService.buscarSessaoPorId(this.idTreinoSessao);
         treinoSessaoService.apagarTreinoSessao(idTreinoSessao);
     }
 
@@ -26,6 +31,7 @@ public class ExecutavelDeletarTreinoSessao implements Executavel {
         if(this.treinoSessaoDeletada != null){
             this.treinoSessaoDeletada.setIdTreinoSessao(null);
             this.treinoSessaoDeletada = treinoSessaoService.recriarTreinoSessao(this.treinoSessaoDeletada);
+            this.idTreinoSessao = treinoSessaoDeletada.getIdTreinoSessao();
         }
     }
 }

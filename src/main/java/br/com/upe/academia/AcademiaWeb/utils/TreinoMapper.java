@@ -17,7 +17,6 @@ public class TreinoMapper {
         Treino treino = new Treino();
 
         treino.setNome(treinoDTO.getNome());
-        treino.setDuracao(treinoDTO.getDuracao());
         return treino;
     }
 
@@ -28,7 +27,6 @@ public class TreinoMapper {
 
         treinoDTO.setIdTreino(treino.getIdTreino());
         treinoDTO.setNome(treino.getNome());
-        treinoDTO.setDuracao(treino.getDuracao());
         return treinoDTO;
     }
 

@@ -1,4 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ComentarioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
@@ -45,15 +46,14 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     }
 
     @Override
-    public ExercicioSessao reincerirSeries(List<SerieSessao> serieSessao, UUID idExercicio) {
+    public ExercicioSessao reinserirSeries(List<SerieSessao> serieSessao, UUID idExercicio) {
         ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicio);
-        exercicioSessao.setSeriesRealizadas(serieSessao);
         for(SerieSessao series : serieSessao){
-            series.setExercicioSessao(exercicioSessao);
             series.setIdSerieSessao(null);
+            series.setExercicioSessao(exercicioSessao);
             serieSessaoService.salvarEntidade(series);
         }
-        return exercicioSessaoRepository.save(exercicioSessao);
+        return exercicioSessao;
     }
 
     @Override
@@ -71,6 +71,13 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     public void deletarExercicioSessao(UUID idExercicio) {
         this.buscarExercicioSessao(idExercicio);
         exercicioSessaoRepository.deleteById(idExercicio);
+    }
+
+    @Override
+    public ExercicioSessao adicionarComentario(UUID idExercicioSessao, String comentario) {
+        ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicioSessao);
+        exercicioSessao.setComentario(comentario);
+        return exercicioSessaoRepository.save(exercicioSessao);
     }
 
 }

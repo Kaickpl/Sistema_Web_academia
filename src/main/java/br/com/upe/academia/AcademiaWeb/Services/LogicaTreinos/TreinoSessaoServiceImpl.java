@@ -73,7 +73,13 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
     @Override
     public TreinoSessao recriarTreinoSessao(TreinoSessao sessaoAntiga){
         sessaoAntiga.setIdTreinoSessao(null);
-        sessaoAntiga.setExerciciosSessao(new ArrayList<>());
+        sessaoAntiga.setExerciciosRealizados(new ArrayList<>());
         return treinoSessaoRepository.save(sessaoAntiga);
+    }
+
+    @Override
+    public void adicionarComentario(UUID idTreinoSessao, String comentario) {
+        TreinoSessao treino = this.buscarSessaoPorId(idTreinoSessao);
+        treino.setComentario(comentario);
     }
 }

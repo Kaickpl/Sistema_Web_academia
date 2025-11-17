@@ -1,11 +1,9 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalResponseDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.*;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
+import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +73,15 @@ public class PersonalController {
           return ResponseEntity.badRequest().build();
       }
       return ResponseEntity.ok(new PersonalResponseDTOs(personal));
+    }
+    @GetMapping("/ListarGruposPersonal/{idPersonal}")
+    public ResponseEntity<List<GrupoDTOs>> ListarGruposPersonal(@PathVariable UUID idPersonal) {
+            List<Grupo> grupo = personalService.ListaGruposPersonal(idPersonal);
+            if (grupo.isEmpty()){
+                return ResponseEntity.badRequest().build();
+            }
+            List<GrupoDTOs> gda = grupo.stream().map(GrupoDTOs::new)
+                    .toList();
+            return ResponseEntity.ok(gda);
     }
 }

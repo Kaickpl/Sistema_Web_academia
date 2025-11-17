@@ -18,6 +18,7 @@ public class ExercicioSessao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idExercicioSessao;
+    private String comentario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treinoExecucao_id", nullable = false)

@@ -21,9 +21,10 @@ public class TreinoSessao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idTreinoSessao;
-    private Instant dataExecucao = Instant.now();
+    private String comentario;
+    private Instant dataExecucao;
     private Instant tempoFinalizacao;
-    private boolean concluido = false;
+    private boolean concluido;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aluno_id", nullable = false)
@@ -34,7 +35,7 @@ public class TreinoSessao {
     private Treino treinoTemplate;
 
     @OneToMany(mappedBy = "treinoExecucao",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ExercicioSessao> exerciciosSessao = new ArrayList<>();
+    private List<ExercicioSessao> exerciciosRealizados = new ArrayList<>();
 
     public java.time.Duration getDuracaoTotal() {
         if (dataExecucao != null && tempoFinalizacao != null) {
@@ -42,5 +43,4 @@ public class TreinoSessao {
         }
         return java.time.Duration.ZERO;
     }
-
 }

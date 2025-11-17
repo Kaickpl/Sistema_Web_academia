@@ -4,10 +4,14 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
 
+@Getter
+@Setter
 public class ExecutavelCriarExercicioSessao implements Executavel{
     private ExercicioSessao exercicioSessao;
     private ExercicioSessaoDTO exercicioSessaoDTO;
@@ -22,6 +26,7 @@ public class ExecutavelCriarExercicioSessao implements Executavel{
 
     @Override
     public void executar() {
+        this.exercicioSessaoDTO.setIdExercicioSessao(null);
         this.exercicioSessao = exercicioSessaoService.salvarExercicioSessao(exercicioSessaoDTO);
         this.idExercicioSessao = exercicioSessao.getIdExercicioSessao();
     }
