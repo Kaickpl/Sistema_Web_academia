@@ -20,6 +20,7 @@ public class GerenciaConquistas {
         double peso = sessaoProgressaoResponseDTO.getPeso();
         String exercicio = sessaoProgressaoResponseDTO.getExercicioTemplate().getNomeExercicio();
         int repeticoes = sessaoProgressaoResponseDTO.getNumeroDeRepeticoes();
+        double volumeSerie = peso * repeticoes;
 
         if (peso >= 200 && exercicio.equals("Legpress")){
             ConquistasInterface conquistaLegpress = new Levantou200QuilosLegpress();
@@ -36,6 +37,10 @@ public class GerenciaConquistas {
         } else if (peso >= (pesoAluno*3)) {
             ConquistasInterface conquistasFormiguinha = new Formiguinha();
             contextoConquistas.setTipo(conquistasFormiguinha);
+            contextoConquistas.registrar(idAluno);
+        } else if (volumeSerie > 500) {
+            ConquistasInterface conquistaVolume500 = new Volume500();
+            contextoConquistas.setTipo(conquistaVolume500);
             contextoConquistas.registrar(idAluno);
         }
     }
