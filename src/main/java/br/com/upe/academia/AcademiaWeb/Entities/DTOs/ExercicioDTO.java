@@ -22,4 +22,5 @@ public class ExercicioDTO {
     private String tempoDescansoBase;
     private DurationManager durationManager;
 
+
 }

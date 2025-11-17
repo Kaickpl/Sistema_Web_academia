@@ -26,6 +26,7 @@ public class ExecutavelCriarExercicioSessao implements Executavel{
 
     @Override
     public void executar() {
+        this.exercicioSessaoDTO.setIdExercicioSessao(null);
         this.exercicioSessao = exercicioSessaoService.salvarExercicioSessao(exercicioSessaoDTO);
         this.idExercicioSessao = exercicioSessao.getIdExercicioSessao();
     }

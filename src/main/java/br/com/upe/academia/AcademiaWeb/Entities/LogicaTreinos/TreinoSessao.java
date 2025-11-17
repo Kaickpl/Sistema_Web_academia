@@ -34,7 +34,7 @@ public class TreinoSessao {
     private Treino treinoTemplate;
 
     @OneToMany(mappedBy = "treinoExecucao",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ExercicioSessao> exerciciosSessao = new ArrayList<>();
+    private List<ExercicioSessao> exerciciosRealizados = new ArrayList<>();
 
     public java.time.Duration getDuracaoTotal() {
         if (dataExecucao != null && tempoFinalizacao != null) {

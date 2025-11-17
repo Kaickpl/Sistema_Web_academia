@@ -1,5 +1,4 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis;
-
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
@@ -31,9 +30,8 @@ public class ExecutavelDeletarSerieSessao implements Executavel {
             this.serieSessao.setIdSerieSessao(null);
             SerieSessaoDTO dtoParaReinserir = serieSessaoMapper.toDTO(this.serieSessao);
             this.serieSessao = serieSessaoService.salvarSerieSessao(dtoParaReinserir);
+            this.serieSessaoId = this.serieSessao.getIdSerieSessao();
         }
     }
 
-
 }
-

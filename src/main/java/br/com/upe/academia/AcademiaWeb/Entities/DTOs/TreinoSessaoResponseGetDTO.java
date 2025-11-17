@@ -1,21 +1,22 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
 
-import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.Instant;
 import java.util.UUID;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExercicioSessaoDTO {
-    private UUID idExercicioSessao;
+public class TreinoSessaoResponseGetDTO {
     private UUID idTreinoSessao;
-    private UUID idExercicio;
-
+    private String dataExecucao;
+    private String NomeAluno;
+    private String treinoTemplate;
+    private boolean statusFechamento;
+    private String duration;
 }

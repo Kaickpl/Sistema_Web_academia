@@ -25,9 +25,16 @@ public class ExecutavelDeletarExercicioSessao implements Executavel{
 
     @Override
     public void executar() {
-        this.sessaoDeletada = exercicioSessaoService.buscarExercicioSessao(this.idExercicioSessao);
+        UUID idParaBuscar;
+        if(this.sessaoDeletada == null){
+            idParaBuscar = this.idExercicioSessao;
+        }
+        else{
+            idParaBuscar = this.sessaoDeletada.getIdExercicioSessao();
+        }
+        this.sessaoDeletada = exercicioSessaoService.buscarExercicioSessao(idParaBuscar);
         this.seriesSessoesSalvas = sessaoDeletada.getSeriesRealizadas().stream().map(this::clonarSerieSessao).collect(Collectors.toList());
-        exercicioSessaoService.deletarExercicioSessao(this.idExercicioSessao);
+        exercicioSessaoService.deletarExercicioSessao(sessaoDeletada.getIdExercicioSessao());
     }
 
     @Override

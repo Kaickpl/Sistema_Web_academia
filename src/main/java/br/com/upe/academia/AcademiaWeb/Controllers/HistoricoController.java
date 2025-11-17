@@ -22,7 +22,7 @@ public class HistoricoController {
     @PostMapping("/refazer")
     public ResponseEntity<String> refazerUltimaAcao(){
         commandHistory.redo();
-        return ResponseEntity.ok("Ultima ação desfeita com sucesso");
+        return ResponseEntity.ok("Ultima ação refeita com sucesso");
     }
 
 }

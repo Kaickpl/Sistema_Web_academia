@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.utils;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoResponseDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoResponseGetDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
@@ -67,6 +68,21 @@ public class TreinoSessaoMapper {
         dto.setConfirmarFechamento(treinoSessao.isConcluido());
         dto.setDataFinal(treinoSessao.getTempoFinalizacao());
         dto.setDuration(DurationManager.toStringTime(treinoSessao.getDuracaoTotal()));
+        return dto;
+    }
+
+    public TreinoSessaoResponseGetDTO toResponseGetDTO(TreinoSessao treinoSessao) {
+        if(treinoSessao == null){
+            return null;
+        }
+
+        TreinoSessaoResponseGetDTO dto = new TreinoSessaoResponseGetDTO();
+        dto.setTreinoTemplate(treinoSessao.getTreinoTemplate().getNome());
+        dto.setNomeAluno(treinoSessao.getAluno().getNomeUsuario());
+        dto.setDuration(DurationManager.toStringTime(treinoSessao.getDuracaoTotal()));
+        dto.setDataExecucao(InstantManager.formatInstantToLocalTime(treinoSessao.getDataExecucao()));
+        dto.setStatusFechamento(treinoSessao.isConcluido());
+        dto.setIdTreinoSessao(treinoSessao.getIdTreinoSessao());
         return dto;
     }
 }

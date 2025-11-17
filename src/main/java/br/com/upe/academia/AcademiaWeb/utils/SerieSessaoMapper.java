@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.utils;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import org.springframework.stereotype.Component;
@@ -33,4 +34,12 @@ public class SerieSessaoMapper {
 
         return serieSessaoDTO;
     }
+
+    public SerieSessaoResponseDTO toRespondeDTO(SerieSessao serieSessao) {
+        SerieSessaoResponseDTO dto = new SerieSessaoResponseDTO();
+        dto.setNumeroDeRepeticoes(serieSessao.getNumeroDeRepeticoes());
+        dto.setPeso(serieSessao.getPeso());
+        return dto;
+    }
+
 }

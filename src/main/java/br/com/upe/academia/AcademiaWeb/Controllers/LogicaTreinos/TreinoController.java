@@ -61,7 +61,7 @@ public class TreinoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TreinoDTO> deletarTreino(@PathVariable("id") UUID idTreino){
+    public ResponseEntity<Void> deletarTreino(@PathVariable("id") UUID idTreino){
         ExecutavelDeletarTreino comandoDelTreino = new ExecutavelDeletarTreino(treinoService ,idTreino);
         commandHistory.execute(comandoDelTreino);
         return ResponseEntity.noContent().build();

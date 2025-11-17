@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ComentarioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
@@ -21,4 +22,5 @@ public interface ExercicioSessaoService {
 
     public void deletarExercicioSessao(UUID idExercicio);
 
+    public ExercicioSessao adicionarComentario(UUID idExercicioSessao, String comentario);
 }

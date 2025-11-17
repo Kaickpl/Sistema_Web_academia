@@ -1,4 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ComentarioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
@@ -71,6 +72,13 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     public void deletarExercicioSessao(UUID idExercicio) {
         this.buscarExercicioSessao(idExercicio);
         exercicioSessaoRepository.deleteById(idExercicio);
+    }
+
+    @Override
+    public ExercicioSessao adicionarComentario(UUID idExercicioSessao, String comentario) {
+        ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicioSessao);
+        exercicioSessao.setComentario(comentario);
+        return exercicioSessaoRepository.save(exercicioSessao);
     }
 
 }
