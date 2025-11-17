@@ -1,5 +1,4 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
-
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
@@ -62,7 +61,7 @@ public class TreinoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TreinoDTO> deletarTreino(@PathVariable("id") UUID idTreino){
+    public ResponseEntity<Void> deletarTreino(@PathVariable("id") UUID idTreino){
         ExecutavelDeletarTreino comandoDelTreino = new ExecutavelDeletarTreino(treinoService ,idTreino);
         commandHistory.execute(comandoDelTreino);
         return ResponseEntity.noContent().build();

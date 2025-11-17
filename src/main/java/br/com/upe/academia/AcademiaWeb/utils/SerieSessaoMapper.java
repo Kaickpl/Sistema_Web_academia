@@ -1,9 +1,11 @@
 package br.com.upe.academia.AcademiaWeb.utils;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class SerieSessaoMapper {
     public SerieSessao toEntity(SerieSessaoDTO serieSessaoDTO) {
         if (serieSessaoDTO == null) return null;
@@ -25,12 +27,19 @@ public class SerieSessaoMapper {
         if (serieSessao == null) return null;
 
         SerieSessaoDTO serieSessaoDTO = new SerieSessaoDTO();
-        serieSessaoDTO.setSerieSessaoId(serieSessao.getIdSerieSessao());
+        serieSessaoDTO.setIdSerieSessao(serieSessao.getIdSerieSessao());
         serieSessaoDTO.setPeso(serieSessao.getPeso());
         serieSessaoDTO.setNumeroDeRepeticoes(serieSessao.getNumeroDeRepeticoes());
         serieSessaoDTO.setIdExercicioSessao(serieSessao.getExercicioSessao().getIdExercicioSessao());
-        serieSessaoDTO.setPesoTotal(serieSessao.getPesoTotal());
 
         return serieSessaoDTO;
     }
+
+    public SerieSessaoResponseDTO toRespondeDTO(SerieSessao serieSessao) {
+        SerieSessaoResponseDTO dto = new SerieSessaoResponseDTO();
+        dto.setNumeroDeRepeticoes(serieSessao.getNumeroDeRepeticoes());
+        dto.setPeso(serieSessao.getPeso());
+        return dto;
+    }
+
 }
