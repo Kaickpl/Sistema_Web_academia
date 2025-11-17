@@ -14,12 +14,9 @@ public class GerenciaConquistas {
     public GerenciaConquistas(Contexto contexto){
         this.contextoConquistas = contexto;
     }
-    @Autowired
-    MedidasCorporaisService medidasCorporaisService;
 
-    public void decisaoConquista(SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO){
+    public void decisaoConquista(SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO, double pesoAluno){
         UUID idAluno = sessaoProgressaoResponseDTO.getAlunoId();
-        double pesoAluno = medidasCorporaisService.mostrarMedidasAtuais(idAluno).getPeso();
         double peso = sessaoProgressaoResponseDTO.getPeso();
         String exercicio = sessaoProgressaoResponseDTO.getExercicioTemplate().getNomeExercicio();
         int repeticoes = sessaoProgressaoResponseDTO.getNumeroDeRepeticoes();

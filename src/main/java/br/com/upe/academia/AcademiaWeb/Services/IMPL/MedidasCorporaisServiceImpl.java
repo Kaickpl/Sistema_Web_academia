@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisResponseDTO;
@@ -30,6 +31,8 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
 
     @Autowired
     ObjetivosRepository objetivosRepository;
+    @Autowired
+    private GerenciaConquistas gerenciaConquistas;
 
     @Override
     public List<MedidasCorporaisResponseDTO> mostrarHistoricoMedidasCorporais(UUID alunoId) {
@@ -101,6 +104,7 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
             if (novoValor != null && novoValor > 0){
                 List<Objetivos> objetivosParaAtualizar = objetivosRepository.findAllByAluno_IdUsuarioAndTipoMedidaAndConcluido(alunoId, tipo, false);
                 for (Objetivos objetivo : objetivosParaAtualizar){
+                    boolean estavaConcluidoAntes = objetivo.isConcluido();
                     boolean ehPraDiminuir = objetivo.getValorAlvo() < objetivo.getValorAtual();
                     objetivo.setValorAtual(novoValor);
                     boolean concluido;
@@ -111,6 +115,9 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
                     }
                     objetivo.setConcluido(concluido);
                     objetivosRepository.save(objetivo);
+                    if (!estavaConcluidoAntes && concluido) {
+                        gerenciaConquistas.decisaoConquistaObjetivo(alunoId);
+                    }
                 }
             }
         }

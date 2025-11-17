@@ -3,6 +3,7 @@ import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
+import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.SerieSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import br.com.upe.academia.AcademiaWeb.utils.SerieSessaoMapper;
@@ -26,6 +27,9 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
     @Autowired
     private GerenciaConquistas gerenciaConquistas;
 
+    @Autowired
+    private MedidasCorporaisRepository medidasCorporaisRepository;
+
     @Override
     public SerieSessao buscarSerieSessao(UUID idSerieSessao) {
         return serieSessaoRepository.findById(idSerieSessao).orElseThrow(() -> new RuntimeException("Série de Sessão não encontrada."));
@@ -34,7 +38,8 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
     @Override
     public SerieSessao salvarSerieSessao(SerieSessaoDTO serieSessaoDTO) {
         SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO = new SessaoProgressaoResponseDTO(serieSessaoDTO.getIdSerieSessao());
-        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO);
+        double pesoAluno = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(sessaoProgressaoResponseDTO.getAlunoId()).getPeso();
+        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO, pesoAluno);
         return serieSessaoRepository.save(serieSessaoMapper.toEntity(serieSessaoDTO));
     }
 
