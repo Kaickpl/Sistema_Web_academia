@@ -78,9 +78,13 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     }
 
     @Override
-    public Avaliacao alterarDataAvaliacao(UUID idAvaliacao, Avaliacao avaliacaoExiste) {
+    public Avaliacao alterarDataAvaliacao(UUID idAvaliacao, AvaliacaoDTOs avaliacaoDTOs) {
         Avaliacao avaliacao = avaliacaoRepository.findByIdAvaliacao(idAvaliacao);
-        avaliacao.setDataAvaliacao(avaliacaoExiste.getDataAvaliacao());
+        //tirar issoe por no service
+        if (avaliacaoDTOs.getDataAvaliacao() != null){
+            avaliacao.setDataAvaliacao(avaliacaoDTOs.getDataAvaliacao());
+        }
+        avaliacao.setDataAvaliacao(avaliacao.getDataAvaliacao());
 
         return avaliacaoRepository.save(avaliacao);
     }

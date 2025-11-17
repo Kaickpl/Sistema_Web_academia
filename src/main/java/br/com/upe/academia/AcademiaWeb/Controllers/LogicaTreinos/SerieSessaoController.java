@@ -15,6 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/exercicios/{idExercicioSessao}/series")
+
 public class SerieSessaoController {
 
     @Autowired
@@ -34,6 +35,7 @@ public class SerieSessaoController {
         SerieSessaoDTO serieSessaoDTOSalva = serieSessaoMapper.toDTO(comandoCriarSerieSessao.getSerieSessaoCriada());
         return ResponseEntity.status(HttpStatus.CREATED).body(serieSessaoDTOSalva);
     }
+
 
     @DeleteMapping("/{idSerieSessao}")
     public ResponseEntity<Void> apagarSerieSessao(@PathVariable UUID idSerieSessao){

@@ -20,5 +20,5 @@ public interface AvaliacaoService {
 
     Avaliacao buscarPorId(UUID idAvaliacao);
 
-    Avaliacao alterarDataAvaliacao(UUID idAvaliacao, Avaliacao avaliacaoExiste);
+    Avaliacao alterarDataAvaliacao(UUID idAvaliacao, AvaliacaoDTOs avaliacaoDTOs);
 }
