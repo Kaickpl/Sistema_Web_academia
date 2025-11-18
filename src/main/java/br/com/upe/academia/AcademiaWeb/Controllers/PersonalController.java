@@ -65,6 +65,7 @@ public class PersonalController {
       return ResponseEntity.ok(new PersonalResponseDTOs(personal));
     }
     @GetMapping("/ListarGruposPersonal/{idPersonal}")
+
     public ResponseEntity<List<GrupoDTOs>> ListarGruposPersonal(@PathVariable UUID idPersonal) {
             List<Grupo> grupo = personalService.ListaGruposPersonal(idPersonal);
             if (grupo.isEmpty()){
