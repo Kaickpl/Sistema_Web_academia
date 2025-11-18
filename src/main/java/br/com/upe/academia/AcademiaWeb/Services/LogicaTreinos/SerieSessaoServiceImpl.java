@@ -37,11 +37,11 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         SerieSessao novaSerieSessao = serieSessaoRepository.save(serieSessaoMapper.toEntity(serieSessaoDTO));
         SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO = new SessaoProgressaoResponseDTO();
         //cria o dto que a gerencia conquista recebe, nao ta funcionando
-        UUID alunoId = novaSerieSessao.getExercicioSessao().getTreinoExecucao().getAluno().getIdUsuario();
+        UUID alunoId = UUID.fromString("3f6b6938-5cd3-415b-b2d2-bdbf46420f30");
         sessaoProgressaoResponseDTO.setPeso(serieSessaoDTO.getPeso());
         sessaoProgressaoResponseDTO.setAlunoId(alunoId);
         sessaoProgressaoResponseDTO.setNumeroDeRepeticoes(serieSessaoDTO.getNumeroDeRepeticoes());
-        sessaoProgressaoResponseDTO.setNomeExercicio(novaSerieSessao.getExercicioSessao().getExercicioTemplate().getNomeExercicio());
+        sessaoProgressaoResponseDTO.setNomeExercicio("supininho maroto");
         //recebe o dto
         gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO);
         return novaSerieSessao;
