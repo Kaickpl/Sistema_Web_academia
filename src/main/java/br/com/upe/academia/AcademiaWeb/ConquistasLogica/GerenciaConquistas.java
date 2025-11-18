@@ -18,7 +18,7 @@ public class GerenciaConquistas {
     private final Contexto contextoConquistas;
 
 
-    public void decisaoConquista(SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO){
+    public void decisaoConquista(SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO, double pesoAluno){
         UUID idAluno = sessaoProgressaoResponseDTO.getAlunoId();
         double peso = sessaoProgressaoResponseDTO.getPeso();
         String exercicio = sessaoProgressaoResponseDTO.getNomeExercicio();
@@ -29,17 +29,26 @@ public class GerenciaConquistas {
             ConquistasInterface conquistaLegpress = new Levantou200QuilosLegpress();
             contextoConquistas.setTipo(conquistaLegpress);
             contextoConquistas.registrar(idAluno);
-        } else if (peso >= 50 && exercicio.equals("Supino inclinado")) {
+        }
+
+        if (peso >= 50 && exercicio.equals("Supino inclinado")) {
             ConquistasInterface conquistaSupinoInclinado = new Levantou50QuilosSupinoInclinado();
             contextoConquistas.setTipo(conquistaSupinoInclinado);
             contextoConquistas.registrar(idAluno);
-        } else if (repeticoes >= 20) {
+        }
+        if (repeticoes >= 20) {
             ConquistasInterface conquistaResistencia = new Resistencia();
             contextoConquistas.setTipo(conquistaResistencia);
             contextoConquistas.registrar(idAluno);
-        } else if (volumeSerie > 500) {
+        }
+        if (volumeSerie > 500) {
             ConquistasInterface conquistaVolume500 = new Volume500();
             contextoConquistas.setTipo(conquistaVolume500);
+            contextoConquistas.registrar(idAluno);
+        }
+        if (peso > pesoAluno*3){
+            ConquistasInterface formiguinha = new Formiguinha();
+            contextoConquistas.setTipo(formiguinha);
             contextoConquistas.registrar(idAluno);
         }
     }

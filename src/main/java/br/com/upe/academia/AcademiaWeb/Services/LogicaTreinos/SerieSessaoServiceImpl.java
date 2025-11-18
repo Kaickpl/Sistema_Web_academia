@@ -8,6 +8,7 @@ import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.SerieSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
+import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import br.com.upe.academia.AcademiaWeb.utils.SerieSessaoMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,9 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
 
     @Autowired
     private ExercicioSessaoRepository exercicioSessaoRepository;
+
+    @Autowired
+    private MedidasCorporaisService medidasCorporaisService;
 
     @Override
     public SerieSessao buscarSerieSessao(UUID idSerieSessao) {
@@ -57,8 +61,10 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         sessaoProgressaoResponseDTO.setNumeroDeRepeticoes(serieSessaoDTO.getNumeroDeRepeticoes());
         sessaoProgressaoResponseDTO.setNomeExercicio(nomeExercicio);
 
+        double pesoAluno = medidasCorporaisService.mostrarMedidasAtuais(alunoId).getPeso();
+
         // Enviar para conquistas
-        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO);
+        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO,pesoAluno);
 
         return novaSerieSessao;
     }
