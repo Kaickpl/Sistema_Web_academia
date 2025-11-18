@@ -1,24 +1,27 @@
 package br.com.upe.academia.AcademiaWeb.ConquistasLogica;
 
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas.*;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
+import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class GerenciaConquistas {
     private final Contexto contextoConquistas;
-    public GerenciaConquistas(Contexto contexto){
-        this.contextoConquistas = contexto;
-    }
 
-    public void decisaoConquista(SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO, double pesoAluno){
+
+    public void decisaoConquista(SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO){
         UUID idAluno = sessaoProgressaoResponseDTO.getAlunoId();
         double peso = sessaoProgressaoResponseDTO.getPeso();
-        String exercicio = sessaoProgressaoResponseDTO.getExercicioTemplate().getNomeExercicio();
+        String exercicio = sessaoProgressaoResponseDTO.getNomeExercicio();
         int repeticoes = sessaoProgressaoResponseDTO.getNumeroDeRepeticoes();
         double volumeSerie = peso * repeticoes;
 
@@ -33,10 +36,6 @@ public class GerenciaConquistas {
         } else if (repeticoes >= 20) {
             ConquistasInterface conquistaResistencia = new Resistencia();
             contextoConquistas.setTipo(conquistaResistencia);
-            contextoConquistas.registrar(idAluno);
-        } else if (peso >= (pesoAluno*3)) {
-            ConquistasInterface conquistasFormiguinha = new Formiguinha();
-            contextoConquistas.setTipo(conquistasFormiguinha);
             contextoConquistas.registrar(idAluno);
         } else if (volumeSerie > 500) {
             ConquistasInterface conquistaVolume500 = new Volume500();

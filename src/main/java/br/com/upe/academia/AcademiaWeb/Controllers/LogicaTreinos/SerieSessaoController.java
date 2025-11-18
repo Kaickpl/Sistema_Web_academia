@@ -1,4 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
@@ -23,6 +24,9 @@ public class SerieSessaoController {
 
     @Autowired
     CommandHistory commandHistory;
+
+    @Autowired
+    GerenciaConquistas gerenciaConquistas;
 
     @Autowired
     SerieSessaoMapper serieSessaoMapper;

@@ -20,5 +20,4 @@ public interface SerieSessaoService {
 
     public SerieSessao salvarEntidade(SerieSessao serieSessao);
 
-    public SessaoProgressaoResponseDTO buscarRegistroProgressao(UUID idSerieSessao);
 }

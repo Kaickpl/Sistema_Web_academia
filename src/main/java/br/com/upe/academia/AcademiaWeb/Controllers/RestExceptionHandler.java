@@ -53,12 +53,12 @@ public class RestExceptionHandler {
         return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
     }
 
-    @ExceptionHandler (NullPointerException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleCampoVazio(NullPointerException ex, HttpServletRequest request) {
-        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO("Erro de campo vazio: Verifique se todos os campos obrigatórios foram devidamente preenchidos.",
-                400, request.getRequestURI());
-        return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
-    }
+//    @ExceptionHandler (NullPointerException.class)
+//    public ResponseEntity<ExceptionResponseDTO> handleCampoVazio(NullPointerException ex, HttpServletRequest request) {
+//        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO("Erro de campo vazio: Verifique se todos os campos obrigatórios foram devidamente preenchidos.",
+//                400, request.getRequestURI());
+//        return ResponseEntity.status(exceptionResponseDTO.getStatus()).body(exceptionResponseDTO);
+//    }
 
     @ExceptionHandler(ValorNuloNaoPermitidoException.class)
     public ResponseEntity<String> handleValorNuloNaoPermitidoException(ValorNuloNaoPermitidoException ex) {

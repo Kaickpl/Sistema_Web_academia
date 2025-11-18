@@ -2,19 +2,20 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.SerieSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import br.com.upe.academia.AcademiaWeb.utils.SerieSessaoMapper;
-import br.com.upe.academia.AcademiaWeb.utils.SessaoProgressaoResponseMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class SerieSessaoServiceImpl implements SerieSessaoService {
-
     @Autowired
     private SerieSessaoRepository serieSessaoRepository;
 
@@ -22,13 +23,9 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
     private SerieSessaoMapper serieSessaoMapper;
 
     @Autowired
-    private SessaoProgressaoResponseMapper  sessaoProgressaoResponseMapper;
-
+    private MedidasCorporaisRepository medidasCorporaisRepository;
     @Autowired
     private GerenciaConquistas gerenciaConquistas;
-
-    @Autowired
-    private MedidasCorporaisRepository medidasCorporaisRepository;
 
     @Override
     public SerieSessao buscarSerieSessao(UUID idSerieSessao) {
@@ -37,10 +34,17 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
 
     @Override
     public SerieSessao salvarSerieSessao(SerieSessaoDTO serieSessaoDTO) {
-        SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO = new SessaoProgressaoResponseDTO(serieSessaoDTO.getIdSerieSessao());
-        double pesoAluno = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(sessaoProgressaoResponseDTO.getAlunoId()).getPeso();
-        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO, pesoAluno);
-        return serieSessaoRepository.save(serieSessaoMapper.toEntity(serieSessaoDTO));
+        SerieSessao novaSerieSessao = serieSessaoRepository.save(serieSessaoMapper.toEntity(serieSessaoDTO));
+        SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO = new SessaoProgressaoResponseDTO();
+        //cria o dto que a gerencia conquista recebe, nao ta funcionando
+        UUID alunoId = novaSerieSessao.getExercicioSessao().getTreinoExecucao().getAluno().getIdUsuario();
+        sessaoProgressaoResponseDTO.setPeso(serieSessaoDTO.getPeso());
+        sessaoProgressaoResponseDTO.setAlunoId(alunoId);
+        sessaoProgressaoResponseDTO.setNumeroDeRepeticoes(serieSessaoDTO.getNumeroDeRepeticoes());
+        sessaoProgressaoResponseDTO.setNomeExercicio(novaSerieSessao.getExercicioSessao().getExercicioTemplate().getNomeExercicio());
+        //recebe o dto
+        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO);
+        return novaSerieSessao;
     }
 
     @Override
@@ -66,9 +70,5 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         return serieSessaoRepository.save(serieSessao);
     }
 
-    @Override
-    public SessaoProgressaoResponseDTO buscarRegistroProgressao(UUID idSerieSessao) {
-        return sessaoProgressaoResponseMapper.toDTO(idSerieSessao);
-    }
 
 }
