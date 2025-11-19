@@ -2,8 +2,10 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivoRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
 import br.com.upe.academia.AcademiaWeb.Entities.Objetivos;
 import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
@@ -11,7 +13,10 @@ import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.ObjetivosRepository;
+import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
+import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
 import br.com.upe.academia.AcademiaWeb.Services.ObjetivosService;
+import br.com.upe.academia.AcademiaWeb.utils.MedidasUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +31,24 @@ public class ObjetivosServiceImpl implements ObjetivosService {
     ObjetivosRepository objetivosRepository;
 
     @Autowired
-    AlunoRepository alunoRepository;
-    @Autowired
     GerenciaConquistas gerenciaConquistas;
+
     @Autowired
-    MedidasCorporaisRepository medidasCorporaisRepository;
+    private MedidasCorporaisRepository medidasCorporaisRepository;
+
+    @Autowired
+    private AlunoService alunoService;
 
     @Override
     public Objetivos registrarObjetivo(ObjetivoRegistroDTO objetivosDto) {
-        Aluno aluno = alunoRepository.findByIdUsuario(objetivosDto.getAlunoId());
+        Aluno aluno = alunoService.buscarAlunoPorId(objetivosDto.getAlunoId());
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
-        Double valorAtual = buscarUltimoValorMedida(aluno.getIdUsuario(), objetivosDto.getTipoMedida());
+        MedidasCorporais ultimasMedidas = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(aluno.getIdUsuario());
+
+        Double valorAtual = MedidasUtils.getValorPorNome(ultimasMedidas, objetivosDto.getTipoMedida());
+
         if (valorAtual == null) {
             throw new InformacaoNaoEncontradoException("Não há medidas corporais registradas para o tipo: " + objetivosDto.getTipoMedida());
         }
@@ -64,27 +74,33 @@ public class ObjetivosServiceImpl implements ObjetivosService {
     }
 
     @Override
-    public List<ObjetivosDTO> mostrarTodosObjetivos(UUID alunoId) {
+    public List<ObjetivosResponseDTO> mostrarTodosObjetivos(UUID alunoId) {
         List<Objetivos> objetivosList = objetivosRepository.findAllByAluno_IdUsuario(alunoId);
-        return objetivosList.stream().map(ObjetivosDTO::new).collect(Collectors.toList());
+        return objetivosList.stream().map(ObjetivosResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<ObjetivosDTO> mostrarObjetivosNaoConcluidos(UUID alunoId) {
+    public List<ObjetivosResponseDTO> mostrarObjetivosNaoConcluidos(UUID alunoId) {
         List<Objetivos> objetivosList = objetivosRepository.findAllByAluno_IdUsuarioAndConcluido(alunoId, false);
-        return objetivosList.stream().map(ObjetivosDTO::new).collect(Collectors.toList());
+        return objetivosList.stream().map(ObjetivosResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<ObjetivosDTO> mostrarObjetivosConcluidos(UUID alunoId) {
+    public List<ObjetivosResponseDTO> mostrarObjetivosConcluidos(UUID alunoId) {
         List<Objetivos> objetivosList = objetivosRepository.findAllByAluno_IdUsuarioAndConcluido(alunoId, true);
+        return objetivosList.stream().map(ObjetivosResponseDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ObjetivosDTO> mostrarObjetivosNaoConcluidosPorTipoMedida(UUID alunoId, String tipo) {
+        List<Objetivos> objetivosList = objetivosRepository.findAllByAluno_IdUsuarioAndTipoMedidaAndConcluido(alunoId, tipo, false);
         return objetivosList.stream().map(ObjetivosDTO::new).collect(Collectors.toList());
     }
 
     @Override
     public Objetivos atualizaObjetivo(UUID id, ObjetivoRegistroDTO objetivosDto) {
         Optional<Objetivos> objetivoExiste = objetivosRepository.findById(id);
-        Aluno aluno = alunoRepository.findByIdUsuario(objetivosDto.getAlunoId());
+        Aluno aluno = alunoService.buscarAlunoPorId(objetivosDto.getAlunoId());
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
@@ -120,28 +136,6 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         }
         objetivosRepository.deleteById(id);
     }
-    private Double buscarUltimoValorMedida(UUID alunoId, String tipoMedida) {
-        MedidasCorporais ultimaMedida = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(alunoId);
 
-        if (ultimaMedida == null) {
-            return null;
-        }
 
-        MedidasCorporais medidas = ultimaMedida;
-        switch (tipoMedida.toLowerCase()) {
-            case "peso": return medidas.getPeso();
-            case "braco": return medidas.getBraco();
-            case "abdomen": return medidas.getAbdomen();
-            case "cintura": return medidas.getCintura();
-            case "peito": return medidas.getPeito();
-            case "quadril": return medidas.getQuadril();
-            case "coxa": return medidas.getCoxa();
-            case "ombro": return medidas.getOmbro();
-            case "massaMagra": return medidas.getMassaMagra();
-            case "gordura": return medidas.getGordura();
-            case "percentualagua": return medidas.getPercentualAgua();
-            case "altura": return medidas.getAltura();
-            default: return null;
-        }
-    }
 }

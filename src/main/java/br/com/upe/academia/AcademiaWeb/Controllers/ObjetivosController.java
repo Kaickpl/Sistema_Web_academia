@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivoRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.Objetivos;
 import br.com.upe.academia.AcademiaWeb.Services.ObjetivosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +21,18 @@ public class ObjetivosController {
     @Autowired
     private ObjetivosService objetivosService;
 
-    @GetMapping("/todos/{alunoId}")
-    public List<ObjetivosDTO> mostrarTodosObjetivos(@PathVariable UUID alunoId) {
+    @GetMapping("/{alunoId}")
+    public List<ObjetivosResponseDTO> mostrarTodosObjetivos(@PathVariable UUID alunoId) {
         return objetivosService.mostrarTodosObjetivos(alunoId);
     }
 
-    @GetMapping("/concluidos/{alunoId}")
-    public List<ObjetivosDTO> mostrarObjetivosConcluidos(@PathVariable UUID alunoId){
+    @GetMapping("/{alunoId}/concluidos")
+    public List<ObjetivosResponseDTO> mostrarObjetivosConcluidos(@PathVariable UUID alunoId){
         return objetivosService.mostrarObjetivosConcluidos(alunoId);
     }
 
-    @GetMapping("/nao-concluidos/{alunoId}")
-    public List<ObjetivosDTO> mostrarObjetivosNaoConcluidos(@PathVariable UUID alunoId){
+    @GetMapping("/{alunoId}/nao-concluidos")
+    public List<ObjetivosResponseDTO> mostrarObjetivosNaoConcluidos(@PathVariable UUID alunoId){
         return objetivosService.mostrarObjetivosNaoConcluidos(alunoId);
     }
 
