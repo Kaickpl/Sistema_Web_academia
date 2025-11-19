@@ -67,7 +67,7 @@ public class TreinoSessaoMapper {
         dto.setIdTreinoSessao(treinoSessao.getIdTreinoSessao());
         dto.setConfirmarFechamento(treinoSessao.isConcluido());
         dto.setDataFinal(treinoSessao.getTempoFinalizacao());
-        dto.setDuration(DurationManager.toStringTime(treinoSessao.getDuracaoTotal()));
+        dto.setDuration(DurationManager.formatDuration(treinoSessao.getDuracaoTotal()));
         return dto;
     }
 
@@ -79,7 +79,7 @@ public class TreinoSessaoMapper {
         TreinoSessaoResponseGetDTO dto = new TreinoSessaoResponseGetDTO();
         dto.setTreinoTemplate(treinoSessao.getTreinoTemplate().getNome());
         dto.setNomeAluno(treinoSessao.getAluno().getNomeUsuario());
-        dto.setDuration(DurationManager.toStringTime(treinoSessao.getDuracaoTotal()));
+        dto.setDuration(DurationManager.formatDuration(treinoSessao.getDuracaoTotal()));
         dto.setDataExecucao(InstantManager.formatInstantToLocalTime(treinoSessao.getDataExecucao()));
         dto.setStatusFechamento(treinoSessao.isConcluido());
         dto.setIdTreinoSessao(treinoSessao.getIdTreinoSessao());

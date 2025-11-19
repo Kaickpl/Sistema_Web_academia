@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
+import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelCriarSerieSessao;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelDeletarSerieSessao;
@@ -48,5 +49,6 @@ public class SerieSessaoController {
         commandHistory.execute(comandoDeletarSerieSessao);
         return ResponseEntity.noContent().build();
     }
+
 
 }

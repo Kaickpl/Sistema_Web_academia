@@ -1,6 +1,4 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
-
-import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Contexto;
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ProgressaoDTOs;
@@ -31,7 +29,13 @@ public class ProgressaoServiceImpl implements ProgressaoService{
 
     @Autowired
     GerenciaConquistas gerenciaConquistas;
-
+    public ProgressaoServiceImpl(AlunoRepository alunoRepository,
+                             ProgressaoRepository progressaoRepository,
+                             GerenciaConquistas gerenciaConquistas) {
+        this.alunoRepository = alunoRepository;
+        this.progressaoRepository = progressaoRepository;
+        this.gerenciaConquistas = gerenciaConquistas;
+    }
 
     @Override
     public Progressao salvaCarga(ProgressaoDTOs progressaoDTOs) {

@@ -17,6 +17,6 @@ public class TreinoSessaoResponseDTO {
     private String duration;
 
     private String duracaoFinal(Duration duration){
-        return DurationManager.toStringTime(duration);
+        return DurationManager.formatDuration(duration);
     }
 }
