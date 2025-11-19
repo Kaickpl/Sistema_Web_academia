@@ -31,6 +31,7 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
     @Autowired
     private ObjetivosService objetivosService;
 
+
     @Override
     public List<MedidasCorporaisResponseDTO> mostrarHistoricoMedidasCorporais(UUID alunoId) {
         List<MedidasCorporais> medidasCorporaisList = medidasCorporaisRepository.findByAluno_IdUsuarioOrderByDataAsc(alunoId);
@@ -84,6 +85,11 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
         MedidasCorporais medidasSalvas = medidasCorporaisRepository.save(novasMedidas);
         atualizarObjetivosAluno(novasMedidas);
         return medidasSalvas;
+    }
+
+    @Override
+    public MedidasCorporais buscarMedidasPorId(UUID idMedidas) {
+        return medidasCorporaisRepository.findByIdMedidas(idMedidas);
     }
 
     public void validarMedida(Double valor, String nomeCampo){

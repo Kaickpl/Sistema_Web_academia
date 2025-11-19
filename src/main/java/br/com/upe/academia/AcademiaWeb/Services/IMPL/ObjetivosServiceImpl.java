@@ -10,6 +10,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
 import br.com.upe.academia.AcademiaWeb.Entities.Objetivos;
 import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.ObjetivosRepository;
@@ -54,6 +55,9 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         }
         Objetivos objetivos = new Objetivos();
         objetivos.setAluno(aluno);
+        if (objetivosDto.getValorAlvo() <= 0){
+            throw new ValorInvalidoException("O valor alvo deve ser maior que zero");
+        }
         objetivos.setValorAtual(valorAtual);
         objetivos.setValorAlvo(objetivosDto.getValorAlvo());
         objetivos.setTipoMedida(objetivosDto.getTipoMedida());

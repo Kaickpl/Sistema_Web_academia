@@ -6,6 +6,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface PersonalService {
@@ -18,6 +19,8 @@ public interface PersonalService {
     public void deletarPersonal(String cref);
 
     public Personal buscarPersonal(String cref);
+
+    Optional<Personal> buscarPersonalEmail(String email);
 
     public List<Personal> buscarPersonalNome(String nomeUsuario);
 

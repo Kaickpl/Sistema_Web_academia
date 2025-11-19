@@ -13,6 +13,7 @@ public interface MedidasCorporaisService {
     public List<MedidasCorporaisResponseDTO> mostrarHistoricoMedidasCorporais(UUID alunoId);
     public MedidasCorporaisResponseDTO mostrarMedidasAtuais(UUID alunoId);
     public MedidasCorporais registrarMedidas(MedidasCorporaisRegistroDTO medidasCorporaisDTOs);
+    MedidasCorporais buscarMedidasPorId(UUID idMedidas);
 
     Double buscarUltimoValorMedida(UUID alunoId, String tipoMedida);
 }
