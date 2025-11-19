@@ -2,14 +2,17 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
-import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
-import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.*;
+import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.SerieSessaoRepository;
+import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import br.com.upe.academia.AcademiaWeb.utils.SerieSessaoMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
 @Service
@@ -22,27 +25,44 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
     private SerieSessaoMapper serieSessaoMapper;
 
     @Autowired
-    private MedidasCorporaisRepository medidasCorporaisRepository;
-    @Autowired
     private GerenciaConquistas gerenciaConquistas;
+
+    @Autowired
+    private ExercicioSessaoRepository exercicioSessaoRepository;
+
+    @Autowired
+    private MedidasCorporaisService medidasCorporaisService;
 
     @Override
     public SerieSessao buscarSerieSessao(UUID idSerieSessao) {
         return serieSessaoRepository.findById(idSerieSessao).orElseThrow(() -> new RuntimeException("Série de Sessão não encontrada."));
     }
 
+
+
     @Override
+    @Transactional
     public SerieSessao salvarSerieSessao(SerieSessaoDTO serieSessaoDTO) {
-        SerieSessao novaSerieSessao = serieSessaoRepository.save(serieSessaoMapper.toEntity(serieSessaoDTO));
+        ExercicioSessao exercicioSessaoPai = exercicioSessaoRepository.findById(serieSessaoDTO.getIdExercicioSessao())
+                .orElseThrow(() -> new RuntimeException("ExercicioSessao pai não encontrado"));
+        SerieSessao serieParaSalvar = serieSessaoMapper.toEntity(serieSessaoDTO);
+        serieParaSalvar.setExercicioSessao(exercicioSessaoPai);
+        SerieSessao novaSerieSessao = serieSessaoRepository.save(serieParaSalvar);
+        UUID alunoId = exercicioSessaoPai.getTreinoExecucao().getAluno().getIdUsuario();
+        String nomeExercicio = exercicioSessaoPai.getExercicioTemplate().getNomeExercicio();
+
+        // Montar o DTO
         SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO = new SessaoProgressaoResponseDTO();
-        //cria o dto que a gerencia conquista recebe, nao ta funcionando
-        UUID alunoId = UUID.fromString("3f6b6938-5cd3-415b-b2d2-bdbf46420f30");
         sessaoProgressaoResponseDTO.setPeso(serieSessaoDTO.getPeso());
         sessaoProgressaoResponseDTO.setAlunoId(alunoId);
         sessaoProgressaoResponseDTO.setNumeroDeRepeticoes(serieSessaoDTO.getNumeroDeRepeticoes());
-        sessaoProgressaoResponseDTO.setNomeExercicio("supininho maroto");
-        //recebe o dto
-        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO);
+        sessaoProgressaoResponseDTO.setNomeExercicio(nomeExercicio);
+
+        double pesoAluno = medidasCorporaisService.mostrarMedidasAtuais(alunoId).getPeso();
+
+        // Enviar para conquistas
+        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO,pesoAluno);
+
         return novaSerieSessao;
     }
 

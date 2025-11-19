@@ -31,8 +31,6 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     private ExercicioSessaoMapper exercicioSessaoMapper;
     @Autowired
     private SerieSessaoService serieSessaoService;
-    @Autowired
-    private SerieSessaoMapper serieSessaoMapper;
 
     @Override
     public ExercicioSessao buscarExercicioSessao(UUID id) {
