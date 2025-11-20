@@ -35,15 +35,7 @@ public class AlunoController {
     private TreinoMapper treinoMapper;
 
     @PostMapping
-    // AlunoResponse no post
-    public ResponseEntity<AlunoResponseDTOs> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
-        Aluno aluno = alunoService.cadastrarAluno(alunoDTOs);
-        if (aluno == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        AlunoResponseDTOs dto = new AlunoResponseDTOs(aluno);
-        return ResponseEntity.ok(dto);
-    }
+
 
 
     @DeleteMapping("/{id}")

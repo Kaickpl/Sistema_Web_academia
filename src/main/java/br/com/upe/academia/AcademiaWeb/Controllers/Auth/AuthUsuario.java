@@ -1,13 +1,11 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.Auth;
 
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.LoginDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalResponseDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.*;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
-import br.com.upe.academia.AcademiaWeb.Entities.Usuario;
+import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import br.com.upe.academia.AcademiaWeb.Services.TokenService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-
 @RestController
 @RequestMapping("/api/autenticacao")
-public class AuthPersonal {
+public class AuthUsuario {
 
     @Autowired
     private PersonalService personalService;
@@ -31,6 +27,9 @@ public class AuthPersonal {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private AlunoService alunoService;
 
     @PostMapping("/Login")
     public ResponseEntity<?> login(@RequestBody LoginDTOs loginDTOs) {
@@ -51,6 +50,15 @@ public class AuthPersonal {
         PersonalResponseDTOs dto = new PersonalResponseDTOs(personal);
         return ResponseEntity.ok(dto);
 
+    }
+
+    public ResponseEntity<AlunoResponseDTOs> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
+        Aluno aluno = alunoService.cadastrarAluno(alunoDTOs);
+        if (aluno == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        AlunoResponseDTOs dto = new AlunoResponseDTOs(aluno);
+        return ResponseEntity.ok(dto);
     }
 
 
