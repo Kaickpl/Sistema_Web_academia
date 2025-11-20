@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,15 +35,23 @@ public class AuthUsuario {
 
     @PostMapping("/Login")
     public ResponseEntity<?> login(@RequestBody LoginDTOs loginDTOs) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(loginDTOs.getEmail(), loginDTOs.getPassword());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(
+                loginDTOs.getEmail(),
+                loginDTOs.getPassword()
+        );
+
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        Personal personal = (Personal) auth.getPrincipal();
-        String token = tokenService.generateToken(personal);
-        return  ResponseEntity.ok().body(token);
+        // Pode ser Personal OU Aluno
+        UserDetails usuario = (UserDetails) auth.getPrincipal();
+
+        String token = tokenService.generateToken(usuario);
+
+        return ResponseEntity.ok().body(token);
     }
 
-    @PostMapping("/cadastro")
+
+    @PostMapping("/cadastro/Personal")
     public ResponseEntity<PersonalResponseDTOs> CadastroPersonal(@RequestBody PersonalDTOs personalDTOs){
         Personal personal = personalService.cadastrarPersonal(personalDTOs);
         if (personal == null){
@@ -51,7 +61,7 @@ public class AuthUsuario {
         return ResponseEntity.ok(dto);
 
     }
-
+    @PostMapping("cadastro/aluno")
     public ResponseEntity<AlunoResponseDTOs> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
         Aluno aluno = alunoService.cadastrarAluno(alunoDTOs);
         if (aluno == null) {
