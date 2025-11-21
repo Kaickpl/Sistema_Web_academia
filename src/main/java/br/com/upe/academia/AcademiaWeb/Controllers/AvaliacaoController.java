@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/avaliacao")
 public class AvaliacaoController {
