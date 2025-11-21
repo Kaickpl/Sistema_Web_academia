@@ -4,6 +4,8 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,5 +33,5 @@ public interface PersonalService {
 
     public List<Grupo> ListaGruposPersonal(UUID idPersonal);
 
-
+    public Personal buscarPersonalPorEmail(String email);
 }

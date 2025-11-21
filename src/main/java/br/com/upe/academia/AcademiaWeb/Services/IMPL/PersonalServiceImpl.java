@@ -9,6 +9,10 @@ import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,8 @@ public class PersonalServiceImpl implements PersonalService {
 
     @Autowired
     PersonalRepository personalRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Personal cadastrarPersonal(PersonalDTOs personalDTOs) {
@@ -59,7 +65,8 @@ public class PersonalServiceImpl implements PersonalService {
         personal.setTipo(personalDTOs.getTipo());
         personal.setEmail(personalDTOs.getEmail());
         personal.setCref(personalDTOs.getCref());
-        personal.setSenha(personalDTOs.getSenha());
+        String password = passwordEncoder.encode(personalDTOs.getSenha());
+        personal.setSenha(password);
 
         return personalRepository.save(personal);
     }
@@ -197,6 +204,11 @@ public class PersonalServiceImpl implements PersonalService {
     @Override
     public Personal buscarPersonal(String cref) {
         return personalRepository.findByCref(cref).orElse(null) ;
+    }
+
+    @Override
+    public Personal buscarPersonalPorEmail(String email){
+        return personalRepository.findByEmail(email).orElse(null) ;
     }
 
 }

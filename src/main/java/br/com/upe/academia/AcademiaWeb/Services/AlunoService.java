@@ -7,6 +7,9 @@ import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -38,5 +41,7 @@ public interface AlunoService {
     public Treino buscarTreinoUnico(UUID idAluno,UUID idTreino);
 
     public List<Grupo> ListarGruposAluno(UUID idAluno);
+
+    public Aluno buscarAlunoPorEmail(String email);
 }
 

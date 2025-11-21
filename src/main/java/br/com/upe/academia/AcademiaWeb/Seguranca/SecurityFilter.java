@@ -1,8 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Seguranca;
-
-import br.com.upe.academia.AcademiaWeb.Repositories.UsuarioRepository;
+import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
+import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import br.com.upe.academia.AcademiaWeb.Services.TokenService;
-import br.com.upe.academia.AcademiaWeb.Services.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,20 +22,31 @@ public class SecurityFilter extends OncePerRequestFilter {
     TokenService tokenService;
 
     @Autowired
-    private UsuarioService usuarioService;
+    private AlunoService alunoService;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
-
+    private PersonalService personalService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = recoverToken(request);
+
         if (token != null) {
             String email = tokenService.validateToken(token);
-            UserDetails user = usuarioService.buscarUsuarioPorEmail(email);
-            var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
+
+            UserDetails userDetails = alunoService.buscarAlunoPorEmail(email);
+
+            if (userDetails != null) {
+                var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } else {
+                userDetails = personalService.buscarPersonalPorEmail(email);
+
+                if (userDetails != null) {
+                    var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
+            }
         }
         filterChain.doFilter(request, response);
     }

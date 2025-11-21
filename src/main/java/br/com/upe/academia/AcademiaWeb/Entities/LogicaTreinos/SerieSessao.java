@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class SerieSessao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

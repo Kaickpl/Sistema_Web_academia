@@ -20,12 +20,13 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public String generateToken(UserDetails userDetails) {
+        System.out.println("Chegou aqui tambem");
         try {
             Algorithm algorithm = Algorithm.HMAC256(my_Secret);
 
             return JWT.create()
                     .withIssuer("Academia")
-                    .withSubject(userDetails.getUsername()) // username = email
+                    .withSubject(userDetails.getUsername())
                     .withExpiresAt(
                             LocalDateTime.now()
                                     .plusHours(4)
