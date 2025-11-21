@@ -12,22 +12,16 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Treino {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idTreino;
     private String nome;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "Treino_Exercicio",
-            joinColumns = @JoinColumn(name = "Treino_id") ,
-            inverseJoinColumns = @JoinColumn(name = "Exercicio_id")
-    )
-    private List<Exercicio> exercicios = new ArrayList<>();
+    @OneToMany(mappedBy = "treino", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TreinoExercicio> regrasDeExercicios =  new ArrayList<>();
 
-    @OneToMany(mappedBy = "treinoTemplate" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<TreinoSessao> treinoExecucoes;
+    @OneToMany(mappedBy = "treinoTemplate" ,fetch = FetchType.LAZY)
+    private List<TreinoSessao> treinoExecucoes =  new ArrayList<>();
 
     }

@@ -51,7 +51,6 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         UUID alunoId = exercicioSessaoPai.getTreinoExecucao().getAluno().getIdUsuario();
         String nomeExercicio = exercicioSessaoPai.getExercicioTemplate().getNomeExercicio();
 
-        // Montar o DTO
         SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO = new SessaoProgressaoResponseDTO();
         sessaoProgressaoResponseDTO.setPeso(serieSessaoDTO.getPeso());
         sessaoProgressaoResponseDTO.setAlunoId(alunoId);
@@ -60,7 +59,6 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
 
         double pesoAluno = medidasCorporaisService.mostrarMedidasAtuais(alunoId).getPeso();
 
-        // Enviar para conquistas
         gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO,pesoAluno);
 
         return novaSerieSessao;

@@ -1,5 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
+import br.com.upe.academia.AcademiaWeb.Entities.Enums.MusculoTrabalhado;
 import br.com.upe.academia.AcademiaWeb.utils.DurationCustomConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
@@ -26,17 +28,16 @@ public class Exercicio {
     private String nomeExercicio;
     private String descricaoExercicio;
 
-    @Convert(converter = DurationCustomConverter.class)
-    @Column(columnDefinition = "VARCHAR(8)", nullable = false, length = 8)
-    private Duration tempoDeDescanso;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MusculoTrabalhado musculoPrincipal;
 
-    @OneToMany(mappedBy = "exercicio", cascade = CascadeType.ALL)
-    private List<Serie> series;
+    @OneToMany(mappedBy ="exercicioTemplate", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<TreinoExercicio> regrasDeTreinos = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "exercicios")
-    private List<Treino> treinos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "exercicioTemplate", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "exercicioTemplate", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ExercicioSessao> exerciciosExecucao = new ArrayList<>();
 
 }

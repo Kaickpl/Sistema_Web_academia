@@ -147,14 +147,24 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public List<Treino> atribuirTreinoAluno(UUID idAluno, UUID idTreino) {
+    public List<Treino> atribuirTreinoAluno(UUID idAluno, UUID idTreino, boolean isCopiaCompartilhada) {
         Aluno aluno = this.buscarAlunoPorId(idAluno);
-        Treino treino = treinoService.buscarTreino(idTreino);
-        List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
-        treinosAtuais.add(treino);
-        aluno.setTreinosAtribuidos(treinosAtuais);
+        Treino treinoOriginal = treinoService.buscarTreino(idTreino);
+        Treino treinoParaAtribuir = treinoOriginal;
+
+        if (isCopiaCompartilhada) {
+            treinoParaAtribuir = treinoService.deepCopyTreino(treinoOriginal);
+        }
+
+        List<Treino> treinosAtuais = aluno.getTreinosAtribuidos();
+
+        if (!treinosAtuais.contains(treinoParaAtribuir)) {
+            treinosAtuais.add(treinoParaAtribuir);
+        }
         alunoRepository.save(aluno);
+
         return treinosAtuais;
+
     }
 
     @Override

@@ -2,11 +2,9 @@ package br.com.upe.academia.AcademiaWeb.utils;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import org.springframework.stereotype.Component;
-import static br.com.upe.academia.AcademiaWeb.utils.DurationManager.formatDuration;
 
 @Component
 public class ExercicioMapper {
-
 
     public Exercicio toEntity(ExercicioDTO dto){
         if(dto == null) return null;
@@ -16,8 +14,7 @@ public class ExercicioMapper {
         exercicio.setIdExercicio(dto.getIdExercicio());
         exercicio.setNomeExercicio(dto.getNomeExercicio());
         exercicio.setDescricaoExercicio(dto.getDescricaoExercicio());
-
-        exercicio.setTempoDeDescanso(DurationManager.parseDuration(dto.getTempoDescandoBase()));
+        exercicio.setMusculoPrincipal(dto.getMusculoPrincipal());
 
         return exercicio;
     }
@@ -29,8 +26,7 @@ public class ExercicioMapper {
         dto.setIdExercicio(exercicio.getIdExercicio());
         dto.setNomeExercicio(exercicio.getNomeExercicio());
         dto.setDescricaoExercicio(exercicio.getDescricaoExercicio());
-
-        dto.setTempoDescandoBase(formatDuration(exercicio.getTempoDeDescanso()));
+        dto.setMusculoPrincipal(exercicio.getMusculoPrincipal());
 
         return dto;
     }

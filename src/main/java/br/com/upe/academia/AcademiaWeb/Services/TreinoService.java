@@ -10,5 +10,6 @@ public interface TreinoService {
     public Treino atualizarTreino(Treino treino);
     public void deletarTreino(UUID idTreino);
     public Treino buscarTreino(UUID id);
+    public Treino deepCopyTreino(Treino treinoOriginal);
 }
 

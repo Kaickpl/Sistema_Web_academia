@@ -1,4 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.Enums.MusculoTrabalhado;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -15,7 +16,5 @@ public class ExercicioDTO {
     private String nomeExercicio;
     private String descricaoExercicio;
     @NonNull
-    @JsonProperty("tempoDeDescanso")
-    private String tempoDescandoBase;
-
+    private MusculoTrabalhado musculoPrincipal;
 }

@@ -87,26 +87,30 @@ public class AlunoController {
 
     @PostMapping("/treinos")
     public ResponseEntity<AlunoTreinoDTO> adicionarTreino(@RequestBody AlunoTreinoDTO alunoTreinoDTO) {
-        ExecutavelAtribuirTreinoAluno atribuirTreinoAluno = new ExecutavelAtribuirTreinoAluno(alunoService, alunoTreinoDTO.getIdAluno(), alunoTreinoDTO.getIdTreino());
+        ExecutavelAtribuirTreinoAluno atribuirTreinoAluno = new ExecutavelAtribuirTreinoAluno(alunoService,
+                alunoTreinoDTO.getIdAluno(),
+                alunoTreinoDTO.getIdTreino(),
+                alunoTreinoDTO.isCopiaCompartilhada());
         commandHistory.execute(atribuirTreinoAluno);
         return ResponseEntity.ok(alunoTreinoDTO);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AlunoTreinosResponseDTO> buscarTreinosALuno(@PathVariable UUID id) {
+    @GetMapping("/{idAluno}")
+    public ResponseEntity<AlunoTreinosResponseDTO> buscarTreinosALuno(@PathVariable UUID idAluno) {
         AlunoTreinosResponseDTO alunoTreinosResponseDTO = new AlunoTreinosResponseDTO();
-        List <TreinoDTO> treinos = alunoService.listarTreinos(id).stream().map(TreinoDTO::new).collect(Collectors.toList());
-        alunoTreinosResponseDTO.setIdAluno(id);
-        alunoTreinosResponseDTO.setNomeAluno(alunoService.buscarAlunoPorId(id).getNomeUsuario());
+        List <TreinoDTO> treinos = alunoService.listarTreinos(idAluno).stream().map(TreinoDTO::new).collect(Collectors.toList());
+        alunoTreinosResponseDTO.setIdAluno(idAluno);
+        alunoTreinosResponseDTO.setNomeAluno(alunoService.buscarAlunoPorId(idAluno).getNomeUsuario());
         alunoTreinosResponseDTO.setTreinos(treinos);
-        return ResponseEntity.status(200).body(alunoTreinosResponseDTO);
+        return ResponseEntity.ok(alunoTreinosResponseDTO);
         }
 
+        //Criar aqui o ResponseDTO que voltará o treino, as regras, os exercicios e suas series
     @GetMapping("/{idAluno}/treinos/{idTreino}")
-    public ResponseEntity<TreinoDTO> buscarTreinoEspecifico(@PathVariable UUID idAluno, @PathVariable UUID idTreino){
+    public ResponseEntity<TreinoCompletoResponseDTO> buscarTreinoEspecifico(@PathVariable UUID idAluno, @PathVariable UUID idTreino){
         Treino treino = alunoService.buscarTreinoUnico(idAluno, idTreino);
-        TreinoDTO treinoDTO = treinoMapper.toDTO(treino);
-        return ResponseEntity.status(200).body(treinoDTO);
+        TreinoCompletoResponseDTO treinoCompletoResponseDTO = treinoMapper.toTreinoCompletoResponseDTO(treino);
+        return ResponseEntity.status(200).body(treinoCompletoResponseDTO);
     }
 
     @DeleteMapping("/{idAluno}/treinos/{idTreino}")
@@ -115,6 +119,9 @@ public class AlunoController {
         commandHistory.execute(executavelRemoverTreinoAluno);
         return ResponseEntity.status(200).build();
     }
+
+
+
     @GetMapping("ListarGruposAluno/{idAluno}")
     public ResponseEntity<List<GruposDoAlunoDTOs>>ListaGruposAluno(@PathVariable UUID idAluno){
         List<Grupo> grupo = alunoService.ListarGruposAluno(idAluno);

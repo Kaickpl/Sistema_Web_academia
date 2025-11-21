@@ -1,15 +1,16 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import java.util.UUID;
 
-@Setter
-@Getter
+@Data
 public class AlunoTreinoDTO {
     @NonNull
-    UUID idAluno;
+    private UUID idAluno;
     @NonNull
-    UUID idTreino;
+    private UUID idTreino;
+    private boolean isCopiaCompartilhada = false;
 
 }

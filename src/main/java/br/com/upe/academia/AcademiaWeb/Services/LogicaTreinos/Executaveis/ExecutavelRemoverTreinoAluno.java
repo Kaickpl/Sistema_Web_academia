@@ -1,6 +1,4 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis;
-import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,9 +12,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExecutavelRemoverTreinoAluno implements Executavel {
-    UUID idAluno;
-    UUID idTreino;
-    AlunoService alunoService;
+    private UUID idAluno;
+    private UUID idTreino;
+    private AlunoService alunoService;
+
+    public ExecutavelRemoverTreinoAluno( AlunoService alunoService,UUID idAluno, UUID idTreino) {
+        this.alunoService = alunoService;
+        this.idAluno = idAluno;
+        this.idTreino = idTreino;
+    }
+
 
     @Override
     public void executar() {
@@ -25,7 +30,7 @@ public class ExecutavelRemoverTreinoAluno implements Executavel {
 
     @Override
     public void desfazer() {
-        alunoService.atribuirTreinoAluno(idAluno, idTreino);
+        alunoService.atribuirTreinoAluno(idAluno, idTreino, false);
     }
 }
 
