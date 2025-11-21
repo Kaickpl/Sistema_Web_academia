@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Seguranca;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Repositories.UsuarioRepository;
 import br.com.upe.academia.AcademiaWeb.Services.TokenService;
 import br.com.upe.academia.AcademiaWeb.Services.UsuarioService;

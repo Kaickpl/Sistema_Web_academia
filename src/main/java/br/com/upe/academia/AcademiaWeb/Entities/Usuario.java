@@ -9,8 +9,7 @@ import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.UUID;
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@MappedSuperclass
 @Getter
 @Setter
 @AllArgsConstructor
