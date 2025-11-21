@@ -27,4 +27,3 @@ public abstract class Usuario implements UserDetails {
     private Tipo tipo;
 
 }
-
