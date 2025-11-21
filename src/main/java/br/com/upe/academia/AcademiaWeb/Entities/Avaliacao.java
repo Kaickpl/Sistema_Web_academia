@@ -21,6 +21,12 @@ public class Avaliacao {
     @GeneratedValue(strategy =  GenerationType.UUID)
     private UUID idAvaliacao;
     private LocalDate dataSolicitacao;
+    @PrePersist
+    protected void onCreate() {
+        if (dataSolicitacao == null) {
+            dataSolicitacao = LocalDate.now();
+        }
+    }
     private LocalDate dataAvaliacao;
     private String objetivoAvaliacao;
 

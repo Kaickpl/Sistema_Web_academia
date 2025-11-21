@@ -2,9 +2,10 @@ package br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas;
 
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.ConquistasInterface;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaRegistroDTO;
+import lombok.Setter;
 
 import java.util.UUID;
-
+@Setter
 public class AtingiuObjetivo implements ConquistasInterface {
     @Override
     public ConquistaRegistroDTO concederConquista(UUID alunoId) {

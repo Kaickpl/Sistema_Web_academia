@@ -14,22 +14,19 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class AvaliacaoDTOs {
-    private UUID alunoId;
-    private String emailPersonal;
+public class AvaliacaoResponseDTO {
+    private String alunoEmail;
+    private String personalEmail;
     private UUID avaliacaoId;
-    private UUID medidasId;
     private LocalDate dataSolicitacao;
     private LocalDate dataAvaliacao;
     private String objetivoAvaliacao;
-    public AvaliacaoDTOs(Avaliacao avaliacao) {
-        this.alunoId = avaliacao.getAluno().getIdUsuario();
-        this.emailPersonal = avaliacao.getPersonal().getEmail();
-        this.medidasId = avaliacao.getMedidasCorporais().getIdMedidas();
+    public AvaliacaoResponseDTO(Avaliacao avaliacao) {
+        this.alunoEmail = avaliacao.getAluno().getEmail();
+        this.personalEmail = avaliacao.getPersonal().getEmail();
         this.avaliacaoId = avaliacao.getIdAvaliacao();
         this.dataSolicitacao = avaliacao.getDataSolicitacao();
         this.dataAvaliacao = avaliacao.getDataAvaliacao();
         this.objetivoAvaliacao = avaliacao.getObjetivoAvaliacao();
-
     }
 }

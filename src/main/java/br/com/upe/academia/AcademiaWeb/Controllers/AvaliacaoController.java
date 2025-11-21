@@ -1,8 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Avaliacao;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AvaliacaoDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.*;
 import br.com.upe.academia.AcademiaWeb.Services.AvaliacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/avaliacao")
 public class AvaliacaoController {
@@ -20,17 +20,17 @@ public class AvaliacaoController {
     private AvaliacaoService avaliacaoService;
 
     @GetMapping("/aluno/{alunoId}")
-    public List<Avaliacao> listarAvaliacaoAluno(@PathVariable UUID alunoId) {
+    public List<AvaliacaoResponseDTO> listarAvaliacaoAluno(@PathVariable UUID alunoId) {
         return avaliacaoService.mostrarAvaliacaoAluno(alunoId);
     }
 
     @GetMapping("/personal/{cref}")
-    public List<Avaliacao> listarAvaliacaoPersonal(@PathVariable String cref) {
+    public List<AvaliacaoResponseDTO> listarAvaliacaoPersonal(@PathVariable String cref) {
         return avaliacaoService.mostrarAvaliacaoPersonal(cref);
     }
 
     @GetMapping("/personal/{cref}/{dataAvaliacao}")
-    public List<Avaliacao> listarAvaliacaoData(@PathVariable String cref, @PathVariable LocalDate dataAvaliacao) {
+    public List<AvaliacaoResponseDTO> listarAvaliacaoData(@PathVariable String cref, @PathVariable LocalDate dataAvaliacao) {
         return avaliacaoService.mostrarAvaliacaoPersonalEData(cref, dataAvaliacao);
     }
 
@@ -51,9 +51,16 @@ public class AvaliacaoController {
     }
 
     //atualiza data
-    @PutMapping("/{idAvaliacao}")
-    public ResponseEntity<AvaliacaoDTOs> atualizarData(@RequestBody AvaliacaoDTOs avaliacaoDTOs, @PathVariable UUID idAvaliacao){
+    @PutMapping("/{idAvaliacao}/atualizar/data")
+    public ResponseEntity<AvaliacaoDTOs> atualizarData(@RequestBody ModificarDataAvaliacaoDTO avaliacaoDTOs, @PathVariable UUID idAvaliacao){
         Avaliacao avaliacaoAtualizada = avaliacaoService.alterarDataAvaliacao(idAvaliacao, avaliacaoDTOs);
+        AvaliacaoDTOs dto = new AvaliacaoDTOs(avaliacaoAtualizada);
+        return ResponseEntity.ok(dto);
+    }
+    //atualiza personal
+    @PutMapping("/{idAvaliacao}/atualizar/personal")
+    public ResponseEntity<AvaliacaoDTOs> atualizarPersonal(@RequestBody ModificarPersonalAvaliacaoDTO avaliacaoDTOs, @PathVariable UUID idAvaliacao){
+        Avaliacao avaliacaoAtualizada = avaliacaoService.alterarPersonal(idAvaliacao, avaliacaoDTOs);
         AvaliacaoDTOs dto = new AvaliacaoDTOs(avaliacaoAtualizada);
         return ResponseEntity.ok(dto);
     }

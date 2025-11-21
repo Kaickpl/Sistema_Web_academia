@@ -199,4 +199,9 @@ public class PersonalServiceImpl implements PersonalService {
         return personalRepository.findByCref(cref).orElse(null) ;
     }
 
+    @Override
+    public Optional<Personal> buscarPersonalEmail(String email) {
+        return personalRepository.findByEmail(email);
+    }
+
 }
