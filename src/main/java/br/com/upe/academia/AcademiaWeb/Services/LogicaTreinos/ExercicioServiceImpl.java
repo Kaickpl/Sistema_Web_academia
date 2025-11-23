@@ -22,9 +22,6 @@ public class ExercicioServiceImpl implements ExercicioService {
     @Autowired
     private TreinoExercicioService treinoExercicioService;
 
-    @Autowired
-    TreinoExercicioMapper treinoExercicioMapper;
-
     @Override
     public Exercicio buscarExercicio(UUID idExercicio) {
         Optional<Exercicio> exercicio = exercicioRepository.findById(idExercicio);

@@ -6,5 +6,5 @@ import java.time.Duration;
 
 @Data
 public class TempoDeDescansoResponseDTO {
-    private Duration tempoDeDescanso;
+    private String tempoDeDescanso;
 }

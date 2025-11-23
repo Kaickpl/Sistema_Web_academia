@@ -1,4 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TempoDeDescansoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TempoDeDescansoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoExercicioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
@@ -6,6 +7,7 @@ import br.com.upe.academia.AcademiaWeb.Repositories.TreinoExercicioRepository;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
+import br.com.upe.academia.AcademiaWeb.utils.DurationManager;
 import br.com.upe.academia.AcademiaWeb.utils.TreinoExercicioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,6 @@ public class TreinoExercicioServiceImpl implements TreinoExercicioService {
 
     @Autowired
     private TreinoExercicioMapper treinoExercicioMapper;
-
-    @Autowired
-    private TreinoService treinoService;
 
     @Override
     public TreinoExercicio buscarTreinoExercicio(UUID idTreinoExercicio) {
@@ -43,6 +42,15 @@ public class TreinoExercicioServiceImpl implements TreinoExercicioService {
     @Override
     public TreinoExercicio salvarRegra(TreinoExercicio regra){
         return treinoExercicioRepository.save(regra);
+    }
+
+    @Override
+    public TreinoExercicio atualizarTempoDeDescanso(UUID idRegra, TempoDeDescansoDTO tempoDeDescanso) {
+        TreinoExercicio regra = this.buscarTreinoExercicio(idRegra);
+        if(tempoDeDescanso.getTempoDeDescanso() != null){
+            regra.setTempoDeDescanso(DurationManager.parseDuration(tempoDeDescanso.getTempoDeDescanso()));
+        }
+        return  treinoExercicioRepository.save(regra);
     }
 
 }

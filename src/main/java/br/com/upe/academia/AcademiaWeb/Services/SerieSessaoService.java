@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 
@@ -20,4 +21,5 @@ public interface SerieSessaoService {
 
     public SerieSessao salvarEntidade(SerieSessao serieSessao);
 
+    public SerieSessaoResponseDTO buscarRecordPorExercicio(UUID idExercicioTemplate, UUID idAluno);
 }

@@ -23,11 +23,16 @@ public class ExecutavelDeletarExercicio implements Executavel{
 
         this.exercicioRemovido = this.exercicioService.buscarExercicio(idParaBuscar);
 
-        if(this.exercicioRemovido.getRegrasDeTreinos() != null){
-            this.regrasAntigas = new ArrayList<>(this.exercicioRemovido.getRegrasDeTreinos());
-        }
+        if(this.exercicioRemovido != null){
+            if(this.exercicioRemovido.getRegrasDeTreinos() != null){
+                this.exercicioRemovido.getRegrasDeTreinos().size();
+                this.regrasAntigas = new ArrayList<>(this.exercicioRemovido.getRegrasDeTreinos());
+            }
 
-        exercicioService.removerExercicio(idParaBuscar);
+            exercicioService.removerExercicio(idParaBuscar);
+
+
+        }
     }
 
 
@@ -36,6 +41,7 @@ public class ExecutavelDeletarExercicio implements Executavel{
     public void desfazer() {
         if(this.exercicioRemovido != null){
             this.exercicioRemovido.setRegrasDeTreinos(new ArrayList<>());
+            this.exercicioRemovido.setExerciciosExecucao(new ArrayList<>());
             this.exercicioRemovido.setIdExercicio(null);
             this.exercicioRemovido = this.exercicioService.adicionarExercicio(this.exercicioRemovido);
 

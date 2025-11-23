@@ -3,6 +3,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
 import br.com.upe.academia.AcademiaWeb.Repositories.TreinoRepository;
+import br.com.upe.academia.AcademiaWeb.Services.TreinoExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ public class TreinoServiceImpl implements TreinoService {
 
     @Autowired
     TreinoRepository treinoRepository;
+    @Autowired
+    private TreinoExercicioService treinoExercicioService;
 
     public Treino buscarTreino(UUID idTreino){
         Optional<Treino> treino = treinoRepository.findById(idTreino);
@@ -82,6 +85,24 @@ public class TreinoServiceImpl implements TreinoService {
         return novaRegra;
     }
 
+    public void restaurarRegras(Treino novoTreino, List<TreinoExercicio> regrasAntigas){
 
+        for(TreinoExercicio regra : regrasAntigas){
+            regra.setIdTreinoExercicio(null);
+            regra.setTreino(novoTreino);
+            if(regra.getSeriesTemplate() != null){
+                List<Serie> seriesParaSalvar = new ArrayList<>(regra.getSeriesTemplate());
+                regra.setSeriesTemplate(new ArrayList<>());
+
+                for(Serie serie : seriesParaSalvar){
+                    serie.setIdSerie(null);
+                    serie.setTreinoExercicio(regra);
+                    regra.getSeriesTemplate().add(serie);
+                }
+            }
+
+            treinoExercicioService.salvarRegra(regra);
+        }
+    }
 }
 

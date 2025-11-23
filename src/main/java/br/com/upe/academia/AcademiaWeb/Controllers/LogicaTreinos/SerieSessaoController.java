@@ -50,5 +50,4 @@ public class SerieSessaoController {
         return ResponseEntity.noContent().build();
     }
 
-
 }

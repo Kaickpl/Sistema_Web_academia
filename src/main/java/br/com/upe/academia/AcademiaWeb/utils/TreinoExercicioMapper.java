@@ -6,6 +6,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
+import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class TreinoExercicioMapper {
     public TempoDeDescansoResponseDTO toTempoDescansoDTO(TreinoExercicio treinoExercicio) {
         if (treinoExercicio == null) return null;
         TempoDeDescansoResponseDTO dto = new TempoDeDescansoResponseDTO();
-        dto.setTempoDeDescanso(treinoExercicio.getTempoDeDescanso());
+        dto.setTempoDeDescanso(DurationManager.formatDuration(treinoExercicio.getTempoDeDescanso()));
         return dto;
     }
 

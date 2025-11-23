@@ -9,6 +9,7 @@ import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelAtribuirTreinoAluno;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelRemoverTreinoAluno;
+import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import br.com.upe.academia.AcademiaWeb.utils.TreinoMapper;
 import org.hibernate.dialect.unique.CreateTableUniqueDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ public class AlunoController {
     private CommandHistory commandHistory;
     @Autowired
     private TreinoMapper treinoMapper;
+    @Autowired
+    private SerieSessaoService serieSessaoService;
 
     @PostMapping
     // AlunoResponse no post
@@ -120,8 +123,6 @@ public class AlunoController {
         return ResponseEntity.status(200).build();
     }
 
-
-
     @GetMapping("ListarGruposAluno/{idAluno}")
     public ResponseEntity<List<GruposDoAlunoDTOs>>ListaGruposAluno(@PathVariable UUID idAluno){
         List<Grupo> grupo = alunoService.ListarGruposAluno(idAluno);
@@ -131,5 +132,14 @@ public class AlunoController {
         List<GruposDoAlunoDTOs> gda = grupo.stream().map(GruposDoAlunoDTOs::new)
                 .toList();
         return ResponseEntity.ok(gda);
+    }
+
+    @GetMapping("/{idAluno}/recordes/{idExercicio}")
+    public ResponseEntity<SerieSessaoResponseDTO> buscarRecordPessoal(@PathVariable UUID idAluno, @PathVariable UUID idExercicio){
+            SerieSessaoResponseDTO recorde = serieSessaoService.buscarRecordPorExercicio(idExercicio,idAluno);
+            if(recorde==null){
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(recorde);
     }
     }
