@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/exerciciosTemplate/{idExercicio}/seriesTemplate")
+@RequestMapping("/exerciciosTemplate/{idTreinoExercicio}/seriesTemplate")
 public class SerieController{
 
     @Autowired
@@ -36,8 +36,8 @@ public class SerieController{
 
     //A parte do uri serve para dizer que deu certo e mostar o caminho exato para o que criou
     @PostMapping
-    public ResponseEntity<SerieDTO> adicionarSerie(@PathVariable UUID idExercicio){
-        ExecutavelCriarSerie comandoCriarSerie = new ExecutavelCriarSerie(serieService, idExercicio);
+    public ResponseEntity<SerieDTO> adicionarSerie(@PathVariable UUID idTreinoExercicio){
+        ExecutavelCriarSerie comandoCriarSerie = new ExecutavelCriarSerie(serieService, idTreinoExercicio);
         commandHistory.execute(comandoCriarSerie);
         Serie novaSerie = comandoCriarSerie.getSerieCriada();
         SerieDTO serieDTO = serieMapper.toDTO(novaSerie);

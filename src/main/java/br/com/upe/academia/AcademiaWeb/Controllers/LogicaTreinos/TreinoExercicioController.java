@@ -54,4 +54,10 @@ public class TreinoExercicioController {
         return ResponseEntity.status(HttpStatus.OK).body(treinoExercicioResponseDTO);
     }
 
+    @DeleteMapping("/{idTreinoExercicio}")
+    public ResponseEntity<Void> removerExercicioDoTreino(@PathVariable UUID idTreinoExercicio) {
+        this.treinoExercicioService.deletarRegraDeExercicio(idTreinoExercicio);
+        return  ResponseEntity.noContent().build();
+    }
+
 }

@@ -1,12 +1,18 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
+import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.TreinoSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
+import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoSessaoService;
+import br.com.upe.academia.AcademiaWeb.utils.ExercicioSessaoMapper;
 import br.com.upe.academia.AcademiaWeb.utils.TreinoSessaoMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -21,13 +28,18 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
 
     @Autowired
     private TreinoSessaoRepository treinoSessaoRepository;
+
     @Autowired
     private TreinoSessaoMapper treinoSessaoMapper;
+
     @Autowired
     private AlunoService alunoService;
+
     @Autowired
     private TreinoService treinoService;
 
+    @Autowired
+    private ExercicioSessaoRepository exercicioSessaoRepository;
 
     @Override
     public TreinoSessao buscarSessaoPorId(UUID idTreinoSessao) {
@@ -78,8 +90,34 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
     }
 
     @Override
-    public void adicionarComentario(UUID idTreinoSessao, String comentario) {
+    @Transactional
+    public TreinoSessao adicionarComentario(UUID idTreinoSessao, String comentario) {
         TreinoSessao treino = this.buscarSessaoPorId(idTreinoSessao);
         treino.setComentario(comentario);
+        return treinoSessaoRepository.save(treino);
+    }
+
+    @Override
+    public TreinoSessao salvarEntidade(TreinoSessao treinoSessao) {
+        return treinoSessaoRepository.save(treinoSessao);
+    }
+
+    @Override
+    public void restaurarExecucaoCompleta(TreinoSessao novaSessao, List<ExercicioSessao> exerciciosSalvos) {
+        for (ExercicioSessao exercicio : exerciciosSalvos) {
+
+            exercicio.setIdExercicioSessao(null);
+
+            exercicio.setTreinoExecucao(novaSessao);
+
+            if (exercicio.getSeriesRealizadas() != null) {
+                for (SerieSessao serie : exercicio.getSeriesRealizadas()) {
+                    serie.setIdSerieSessao(null);
+                    serie.setExercicioSessao(exercicio);
+                }
+            }
+
+            exercicioSessaoRepository.save(exercicio);
+        }
     }
 }

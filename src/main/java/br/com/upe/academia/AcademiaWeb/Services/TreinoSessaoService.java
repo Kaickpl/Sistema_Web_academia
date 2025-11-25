@@ -1,9 +1,11 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -18,5 +20,9 @@ public interface TreinoSessaoService {
 
     public TreinoSessao recriarTreinoSessao(TreinoSessao sessaoAntiga);
 
-    public void adicionarComentario(UUID idTreinoSessao, String comentario);
+    public TreinoSessao adicionarComentario(UUID idTreinoSessao, String comentario);
+
+    public TreinoSessao salvarEntidade(TreinoSessao treinoSessao);
+
+    public void restaurarExecucaoCompleta(TreinoSessao novaSessao, List<ExercicioSessao> exerciciosSalvos);
 }

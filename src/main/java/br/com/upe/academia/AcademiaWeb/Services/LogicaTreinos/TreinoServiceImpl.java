@@ -42,8 +42,10 @@ public class TreinoServiceImpl implements TreinoService {
     }
 
     @Override
+    @Transactional
     public void deletarTreino(UUID idTreino) {
-        buscarTreino(idTreino);
+        Treino treino = this.buscarTreino(idTreino);
+        treinoRepository.desvincularTreinoDeTodosAlunos(idTreino);
         this.treinoRepository.deleteById(idTreino);
     }
 

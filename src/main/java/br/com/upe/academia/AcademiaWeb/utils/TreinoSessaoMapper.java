@@ -1,8 +1,10 @@
 package br.com.upe.academia.AcademiaWeb.utils;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ComentarioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoResponseGetDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
@@ -68,6 +70,7 @@ public class TreinoSessaoMapper {
         dto.setConfirmarFechamento(treinoSessao.isConcluido());
         dto.setDataFinal(treinoSessao.getTempoFinalizacao());
         dto.setDuration(DurationManager.formatDuration(treinoSessao.getDuracaoTotal()));
+        dto.setComentario(treinoSessao.getComentario());
         return dto;
     }
 
@@ -84,5 +87,11 @@ public class TreinoSessaoMapper {
         dto.setStatusFechamento(treinoSessao.isConcluido());
         dto.setIdTreinoSessao(treinoSessao.getIdTreinoSessao());
         return dto;
+    }
+
+    public TreinoSessao comentarioToEntity(ComentarioDTO dto) {
+        TreinoSessao treinoSessao = new TreinoSessao();
+        treinoSessao.setComentario(dto.getComentario());
+        return treinoSessao;
     }
 }

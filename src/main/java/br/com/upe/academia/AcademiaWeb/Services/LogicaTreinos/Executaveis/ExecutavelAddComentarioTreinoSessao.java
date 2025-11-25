@@ -3,16 +3,20 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ComentarioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoSessaoService;
+import lombok.Generated;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 public class ExecutavelAddComentarioTreinoSessao implements Executavel{
-    private final TreinoSessaoService treinoSessaoService;
-    private final UUID idSessao;
-    private final String comentarioNovo;
-
-    // Campos para Rollback
+    private TreinoSessaoService treinoSessaoService;
+    private UUID idSessao;
+    private String comentarioNovo;
     private String comentarioOriginal;
+    private TreinoSessao treinoSessao;
 
     public ExecutavelAddComentarioTreinoSessao(TreinoSessaoService treinoSessaoService, UUID idSessao, ComentarioDTO comentario) {
         this.treinoSessaoService = treinoSessaoService;
@@ -24,7 +28,7 @@ public class ExecutavelAddComentarioTreinoSessao implements Executavel{
     public void executar() {
         TreinoSessao sessao = treinoSessaoService.buscarSessaoPorId(idSessao);
         this.comentarioOriginal = sessao.getComentario();
-        this.treinoSessaoService.adicionarComentario(idSessao, comentarioNovo);
+        this.treinoSessao = treinoSessaoService.adicionarComentario(idSessao, comentarioNovo);
     }
 
     @Override

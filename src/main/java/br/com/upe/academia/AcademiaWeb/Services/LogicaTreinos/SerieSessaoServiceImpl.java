@@ -41,8 +41,6 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         return serieSessaoRepository.findById(idSerieSessao).orElseThrow(() -> new RuntimeException("Série de Sessão não encontrada."));
     }
 
-
-
     @Override
     @Transactional
     public SerieSessao salvarSerieSessao(SerieSessaoDTO serieSessaoDTO) {

@@ -15,6 +15,7 @@ public class TreinoSessaoResponseDTO {
     private boolean confirmarFechamento;
     private Instant dataFinal;
     private String duration;
+    private String comentario;
 
     private String duracaoFinal(Duration duration){
         return DurationManager.formatDuration(duration);

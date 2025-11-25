@@ -4,14 +4,11 @@ import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.*;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
-import br.com.upe.academia.AcademiaWeb.Repositories.TreinoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
-import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelAtribuirTreinoAluno;
-import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelRemoverTreinoAluno;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
+import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import br.com.upe.academia.AcademiaWeb.utils.TreinoMapper;
-import org.hibernate.dialect.unique.CreateTableUniqueDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +33,8 @@ public class AlunoController {
     private TreinoMapper treinoMapper;
     @Autowired
     private SerieSessaoService serieSessaoService;
+    @Autowired
+    private TreinoService treinoService;
 
     @PostMapping
     // AlunoResponse no post
@@ -88,13 +87,13 @@ public class AlunoController {
         return ResponseEntity.ok(new AlunoResponseDTOs(alunoExixste));
     }
 
-    @PostMapping("/treinos")
-    public ResponseEntity<AlunoTreinoDTO> adicionarTreino(@RequestBody AlunoTreinoDTO alunoTreinoDTO) {
-        ExecutavelAtribuirTreinoAluno atribuirTreinoAluno = new ExecutavelAtribuirTreinoAluno(alunoService,
+    @PostMapping("/{idAluno}/treinos")
+    public ResponseEntity<AlunoTreinoDTO> adicionarTreino(@PathVariable UUID idAluno, @RequestBody AlunoTreinoDTO alunoTreinoDTO) {
+        alunoTreinoDTO.setIdAluno(idAluno);
+        alunoService.atribuirTreinoAluno(
                 alunoTreinoDTO.getIdAluno(),
                 alunoTreinoDTO.getIdTreino(),
                 alunoTreinoDTO.isCopiaCompartilhada());
-        commandHistory.execute(atribuirTreinoAluno);
         return ResponseEntity.ok(alunoTreinoDTO);
     }
 
@@ -108,7 +107,6 @@ public class AlunoController {
         return ResponseEntity.ok(alunoTreinosResponseDTO);
         }
 
-        //Criar aqui o ResponseDTO que voltará o treino, as regras, os exercicios e suas series
     @GetMapping("/{idAluno}/treinos/{idTreino}")
     public ResponseEntity<TreinoCompletoResponseDTO> buscarTreinoEspecifico(@PathVariable UUID idAluno, @PathVariable UUID idTreino){
         Treino treino = alunoService.buscarTreinoUnico(idAluno, idTreino);
@@ -118,8 +116,7 @@ public class AlunoController {
 
     @DeleteMapping("/{idAluno}/treinos/{idTreino}")
     public ResponseEntity<Void> removerTreinoAluno(@PathVariable UUID idAluno, @PathVariable UUID idTreino){
-        ExecutavelRemoverTreinoAluno executavelRemoverTreinoAluno = new ExecutavelRemoverTreinoAluno(idAluno, idTreino, alunoService);
-        commandHistory.execute(executavelRemoverTreinoAluno);
+        alunoService.removerTreinoAluno(idAluno, idTreino);
         return ResponseEntity.status(200).build();
     }
 
