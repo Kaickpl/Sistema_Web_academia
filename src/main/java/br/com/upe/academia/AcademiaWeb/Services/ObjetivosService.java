@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivoExercicioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivoRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosResponseDTO;
@@ -17,5 +18,5 @@ public interface ObjetivosService {
     Objetivos atualizaObjetivo(UUID id, ObjetivoRegistroDTO objetivosDto);
     void deletarObjetivo(UUID id);
     List<ObjetivosDTO> mostrarObjetivosNaoConcluidosPorTipoMedida(UUID alunoId, String tipo);
-    Objetivos registrarObjetivoExercicio(ObjetivoRegistroDTO objetivoRegistroDTO);
+    Objetivos registrarObjetivoExercicio(ObjetivoExercicioDTO objetivoRegistroDTO, UUID exercicioId);
 }

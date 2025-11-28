@@ -1,12 +1,12 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
-import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.*;
+import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.SerieSessaoRepository;
-import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
+import br.com.upe.academia.AcademiaWeb.Services.AnaliseDesempenhoService;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import br.com.upe.academia.AcademiaWeb.utils.SerieSessaoMapper;
 import jakarta.transaction.Transactional;
@@ -28,13 +28,13 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
     private SerieSessaoMapper serieSessaoMapper;
 
     @Autowired
-    private GerenciaConquistas gerenciaConquistas;
+    private AnaliseDesempenhoService analiseDesempenhoService;
 
     @Autowired
     private ExercicioSessaoRepository exercicioSessaoRepository;
-
     @Autowired
-    private MedidasCorporaisService medidasCorporaisService;
+    private ExercicioRepository exercicioRepository;
+
 
     @Override
     public SerieSessao buscarSerieSessao(UUID idSerieSessao) {
@@ -58,11 +58,15 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         sessaoProgressaoResponseDTO.setNumeroDeRepeticoes(serieSessaoDTO.getNumeroDeRepeticoes());
         sessaoProgressaoResponseDTO.setNomeExercicio(nomeExercicio);
 
-        double pesoAluno = medidasCorporaisService.mostrarMedidasAtuais(alunoId).getPeso();
-
-        gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO,pesoAluno);
-
+        analiseDesempenhoService.processarDesempenhoSerie(sessaoProgressaoResponseDTO);
         return novaSerieSessao;
+    }
+
+    @Override
+    public String acharNomeExercicioPorIdTemplate(UUID templateId){
+        Exercicio exercicio = exercicioRepository.findExercicioByIdExercicio(templateId);
+        String nomeExercicio = exercicio.getNomeExercicio();
+        return nomeExercicio;
     }
 
     @Override
@@ -100,5 +104,7 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         SerieSessao recorde = resultados.get(0);
         return serieSessaoMapper.toRespondeDTO(recorde);
     }
+
+
 
 }

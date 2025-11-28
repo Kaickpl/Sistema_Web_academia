@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivoExercicioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivoRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosResponseDTO;
@@ -43,9 +44,9 @@ public class ObjetivosController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
-    @PostMapping("/exercicios")
-    public ResponseEntity<ObjetivosDTO> registrarObjetivoExercicios(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO){
-        Objetivos novoObjetivo = objetivosService.registrarObjetivoExercicio(objetivoRegistroDTO);
+    @PostMapping("/exercicios/{idExercicio}")
+    public ResponseEntity<ObjetivosDTO> registrarObjetivoExercicios(@RequestBody ObjetivoExercicioDTO objetivoRegistroDTO, @PathVariable UUID idExercicio){
+        Objetivos novoObjetivo = objetivosService.registrarObjetivoExercicio(objetivoRegistroDTO, idExercicio);
         ObjetivosDTO dto = new ObjetivosDTO(novoObjetivo);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }

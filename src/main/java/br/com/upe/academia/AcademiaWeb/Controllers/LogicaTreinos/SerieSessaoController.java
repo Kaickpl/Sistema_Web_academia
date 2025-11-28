@@ -66,4 +66,13 @@ public class SerieSessaoController {
         SerieSessaoResponseDTO responseDTO = serieSessaoMapper.toRespondeDTO(serieSessaoAntiga);
         return ResponseEntity.ok(responseDTO);
     }
+
+    @GetMapping("/{idAluno}/recordes/{idExercicio}")
+    public ResponseEntity<SerieSessaoResponseDTO> buscarRecordPessoal(@PathVariable UUID idAluno, @PathVariable UUID idExercicio){
+        SerieSessaoResponseDTO recorde = serieSessaoService.buscarRecordPorExercicio(idExercicio,idAluno);
+        if(recorde==null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(recorde);
+    }
 }

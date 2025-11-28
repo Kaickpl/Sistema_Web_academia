@@ -55,7 +55,6 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         novaAvaliacao.setMedidasCorporais(medidasCorporais);
         novaAvaliacao.setObjetivoAvaliacao(avaliacaoDTOs.getObjetivoAvaliacao());
         novaAvaliacao.setDataAvaliacao(avaliacaoDTOs.getDataAvaliacao());
-        novaAvaliacao.setDataSolicitacao(avaliacaoDTOs.getDataSolicitacao());
         return avaliacaoRepository.save(novaAvaliacao);
     }
 

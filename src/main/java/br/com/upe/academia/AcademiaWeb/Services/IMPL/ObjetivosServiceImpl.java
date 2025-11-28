@@ -2,10 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisResponseDTO;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivoRegistroDTO;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosDTO;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosResponseDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.*;
 import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
 import br.com.upe.academia.AcademiaWeb.Entities.Objetivos;
 import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
@@ -17,6 +14,7 @@ import br.com.upe.academia.AcademiaWeb.Repositories.ObjetivosRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
 import br.com.upe.academia.AcademiaWeb.Services.ObjetivosService;
+import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import br.com.upe.academia.AcademiaWeb.utils.MedidasUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,11 +36,13 @@ public class ObjetivosServiceImpl implements ObjetivosService {
     private MedidasCorporaisRepository medidasCorporaisRepository;
 
     @Autowired
-    private AlunoService alunoService;
+    private AlunoRepository alunoRepository;
+    @Autowired
+    private SerieSessaoService serieSessaoService;
 
     @Override
     public Objetivos registrarObjetivo(ObjetivoRegistroDTO objetivosDto) {
-        Aluno aluno = alunoService.buscarAlunoPorId(objetivosDto.getAlunoId());
+        Aluno aluno = alunoRepository.findByIdUsuario(objetivosDto.getAlunoId());
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
@@ -69,27 +69,29 @@ public class ObjetivosServiceImpl implements ObjetivosService {
     }
 
     @Override
-    public Objetivos registrarObjetivoExercicio(ObjetivoRegistroDTO objetivoRegistroDTO) {
-        Aluno aluno = alunoService.buscarAlunoPorId(objetivoRegistroDTO.getAlunoId());
+    public Objetivos registrarObjetivoExercicio(ObjetivoExercicioDTO objetivoRegistroDTO, UUID exercicioId) {
+        Aluno aluno = alunoRepository.findByIdUsuario(objetivoRegistroDTO.getAlunoId());
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
-        //mudar aqui para pegar o maior peso conseguido
-        MedidasCorporais ultimasMedidas = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(aluno.getIdUsuario());
-
-        Double valorAtual = MedidasUtils.getValorPorNome(ultimasMedidas, objetivoRegistroDTO.getTipoMedida());
-
-        if (valorAtual == null) {
-            throw new InformacaoNaoEncontradoException("Não existem dados registrados para o tipo: " + objetivoRegistroDTO.getTipoMedida());
+        SerieSessaoResponseDTO recorde = serieSessaoService.buscarRecordPorExercicio(exercicioId, objetivoRegistroDTO.getAlunoId());
+        Double valorAtual = 0.0;
+        if (recorde != null) {
+            valorAtual = recorde.getPeso();
         }
+//        Double valorAtual = MedidasUtils.getValorPorNome(ultimasMedidas, objetivoRegistroDTO.getTipoMedida());
+//        if (valorAtual == null) {
+//            throw new InformacaoNaoEncontradoException("Não existem dados registrados para o tipo: " + objetivoRegistroDTO.getTipoMedida());
+//        }
         Objetivos objetivos = new Objetivos();
         objetivos.setAluno(aluno);
         if (objetivoRegistroDTO.getValorAlvo() <= 0){
             throw new ValorInvalidoException("O valor alvo deve ser maior que zero");
         }
-        objetivos.setValorAtual(valorAtual);
+
+        objetivos.setValorAtual(recorde.getPeso());
         objetivos.setValorAlvo(objetivoRegistroDTO.getValorAlvo());
-        objetivos.setTipoMedida(objetivoRegistroDTO.getTipoMedida());
+        objetivos.setTipoMedida(serieSessaoService.acharNomeExercicioPorIdTemplate(exercicioId));
         objetivos.setTipoObjetivo("Exercicio");
         objetivos.setConcluido(false);
         Objetivos objetivoSalvo = objetivosRepository.save(objetivos);
@@ -124,7 +126,7 @@ public class ObjetivosServiceImpl implements ObjetivosService {
     @Override
     public Objetivos atualizaObjetivo(UUID id, ObjetivoRegistroDTO objetivosDto) {
         Optional<Objetivos> objetivoExiste = objetivosRepository.findById(id);
-        Aluno aluno = alunoService.buscarAlunoPorId(objetivosDto.getAlunoId());
+        Aluno aluno = alunoRepository.findByIdUsuario(objetivosDto.getAlunoId());
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }

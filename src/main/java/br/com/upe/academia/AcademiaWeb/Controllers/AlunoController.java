@@ -31,10 +31,6 @@ public class AlunoController {
     private CommandHistory commandHistory;
     @Autowired
     private TreinoMapper treinoMapper;
-    @Autowired
-    private SerieSessaoService serieSessaoService;
-    @Autowired
-    private TreinoService treinoService;
 
     @PostMapping
     // AlunoResponse no post
@@ -131,12 +127,4 @@ public class AlunoController {
         return ResponseEntity.ok(gda);
     }
 
-    @GetMapping("/{idAluno}/recordes/{idExercicio}")
-    public ResponseEntity<SerieSessaoResponseDTO> buscarRecordPessoal(@PathVariable UUID idAluno, @PathVariable UUID idExercicio){
-            SerieSessaoResponseDTO recorde = serieSessaoService.buscarRecordPorExercicio(idExercicio,idAluno);
-            if(recorde==null){
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(recorde);
-    }
     }

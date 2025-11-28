@@ -13,6 +13,8 @@ public interface SerieSessaoService {
 
     public SerieSessao salvarSerieSessao(SerieSessaoDTO serieSessaoDTO);
 
+    String acharNomeExercicioPorIdTemplate(UUID templateId);
+
     public void removerSerieSessao(UUID idSerieSessao);
 
     public double calcularVolumeTotal(UUID idSerieSessao);
