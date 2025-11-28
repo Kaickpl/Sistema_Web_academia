@@ -9,6 +9,7 @@ import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class AlunoServiceImpl implements AlunoService {
@@ -34,7 +36,6 @@ public class AlunoServiceImpl implements AlunoService {
 
         return alunoRepository.findByEmail(email).isPresent();
     }
-
 
     public Aluno cadastrarAluno(AlunoDTOs alunoDTOs) {
         alunoDTOs.setTipo(Tipo.aluno);
@@ -161,25 +162,43 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public List<Treino> atribuirTreinoAluno(UUID idAluno, UUID idTreino) {
+    public Treino atribuirTreinoAluno(UUID idAluno, UUID idTreino, boolean isCopiaCompartilhada) {
         Aluno aluno = this.buscarAlunoPorId(idAluno);
-        Treino treino = treinoService.buscarTreino(idTreino);
-        List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
-        treinosAtuais.add(treino);
-        aluno.setTreinosAtribuidos(treinosAtuais);
+        Treino treinoOriginal = treinoService.buscarTreino(idTreino);
+        Treino treinoParaAtribuir = treinoOriginal;
+
+        if (isCopiaCompartilhada) {
+            treinoParaAtribuir = treinoService.deepCopyTreino(treinoOriginal);
+        }
+
+        List<Treino> treinosAtuais = aluno.getTreinosAtribuidos();
+
+        if (!treinosAtuais.contains(treinoParaAtribuir)) {
+            treinosAtuais.add(treinoParaAtribuir);
+        }
         alunoRepository.save(aluno);
-        return treinosAtuais;
+
+        return treinoParaAtribuir;
     }
 
     @Override
-    public List<Treino> removerTreinoAluno(UUID idAluno, UUID idTreino) {
+    public void removerTreinoAluno(UUID idAluno, UUID idTreino) {
         Aluno aluno = this.buscarAlunoPorId(idAluno);
         Treino treino = treinoService.buscarTreino(idTreino);
-        List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
-        treinosAtuais.remove(treino);
-        aluno.setTreinosAtribuidos(treinosAtuais);
+
+        if(aluno.getTreinosAtribuidos().contains(treino)) {
+            aluno.getTreinosAtribuidos().remove(treino);
+        } else {
+            throw new RuntimeException("O treino não está atribuído a este aluno.");
+        }
         alunoRepository.save(aluno);
-        return treinosAtuais;
+    }
+
+    @Override
+    @Transactional
+    public List<UUID> buscarIdAlunoPorTreino(UUID idTreino) {
+        List<Aluno> alunos = alunoRepository.findByTreinosAtribuidos_IdTreino(idTreino);
+        return alunos.stream().map(Aluno::getIdUsuario).collect(Collectors.toList());
     }
 
     @Override

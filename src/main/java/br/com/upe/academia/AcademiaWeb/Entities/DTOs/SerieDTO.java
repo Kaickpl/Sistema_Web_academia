@@ -1,6 +1,4 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
-
-import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,13 +12,9 @@ import java.util.UUID;
 
 public class SerieDTO {
     private UUID idSerie;
-    private UUID idExercicio;
+    private UUID idTreinoExercicio;
 
-    public SerieDTO(Serie serie) {
-        this.idSerie = serie.getIdSerie();
-
-        if (serie.getExercicio() != null) {
-            this.idExercicio = serie.getExercicio().getIdExercicio();
-        }
+    public SerieDTO(UUID idSerie) {
     }
 }
+

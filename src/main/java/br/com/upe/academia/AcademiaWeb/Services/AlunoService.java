@@ -33,12 +33,14 @@ public interface AlunoService {
 
     public List<Treino> listarTreinos(UUID idAluno);
 
-    public List<Treino> atribuirTreinoAluno(UUID idAluno, UUID idTreino);
+    public Treino atribuirTreinoAluno(UUID idAluno, UUID idTreino, boolean isCopiaCompartilhada);
 
-    public List<Treino> removerTreinoAluno(UUID idAluno, UUID idTreino);
+    public void removerTreinoAluno(UUID idAluno, UUID idTreino);
 
     public Treino buscarTreinoUnico(UUID idAluno,UUID idTreino);
 
     public List<Grupo> ListarGruposAluno(UUID idAluno);
+
+    public List<UUID> buscarIdAlunoPorTreino(UUID idTreino);
 }
 

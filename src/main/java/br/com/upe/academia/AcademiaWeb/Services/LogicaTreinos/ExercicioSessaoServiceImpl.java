@@ -26,8 +26,6 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     @Autowired
     private ExercicioService exercicioService;
     @Autowired
-    private TreinoSessaoService treinoSessaoService;
-    @Autowired
     private ExercicioSessaoMapper exercicioSessaoMapper;
     @Autowired
     private SerieSessaoService serieSessaoService;
@@ -57,7 +55,6 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     @Override
     @Transactional
     public ExercicioSessao salvarExercicioSessao(ExercicioSessaoDTO exerciciosessaoDTO) {
-        treinoSessaoService.buscarSessaoPorId(exerciciosessaoDTO.getIdTreinoSessao());
         exercicioService.buscarExercicio(exerciciosessaoDTO.getIdExercicio());
         ExercicioSessao exercicioSessao = exercicioSessaoMapper.toEntity(exerciciosessaoDTO);
 

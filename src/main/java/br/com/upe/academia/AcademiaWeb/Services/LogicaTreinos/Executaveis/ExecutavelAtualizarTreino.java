@@ -16,20 +16,27 @@ public class ExecutavelAtualizarTreino implements Executavel {
 
     private final Treino dadosNovos;
 
+    private UUID idTreino;
+
     private Treino treinoAntigo;
 
     private Treino treinoAtualizado;
 
     public ExecutavelAtualizarTreino(TreinoService treinoService, UUID idTreino, Treino dadosNovos) {
         this.treinoService = treinoService;
+        this.idTreino = idTreino;
         dadosNovos.setIdTreino(idTreino);
         this.dadosNovos = dadosNovos;
     }
 
     @Override
     public void executar() {
-        this.treinoAntigo = this.treinoService.buscarTreino(this.dadosNovos.getIdTreino());
-        this.treinoAtualizado = this.treinoService.atualizarTreino(this.dadosNovos);
+        Treino estadoAtual = this.treinoService.buscarTreino(this.idTreino);
+        this.treinoAntigo = new Treino();
+        this.treinoAntigo.setIdTreino(estadoAtual.getIdTreino());
+        this.treinoAntigo.setNome(estadoAtual.getNome());
+
+        this.treinoAtualizado = treinoService.atualizarTreino(dadosNovos);
     }
 
     @Override

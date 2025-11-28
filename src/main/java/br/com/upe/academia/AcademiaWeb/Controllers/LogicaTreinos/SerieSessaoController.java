@@ -1,7 +1,9 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
+import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelCriarSerieSessao;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelDeletarSerieSessao;
@@ -40,7 +42,6 @@ public class SerieSessaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(serieSessaoDTOSalva);
     }
 
-
     @DeleteMapping("/{idSerieSessao}")
     public ResponseEntity<Void> apagarSerieSessao(@PathVariable UUID idSerieSessao){
         SerieSessaoDTO serieSessaoDTO = serieSessaoMapper.toDTO(serieSessaoService.buscarSerieSessao(idSerieSessao));
@@ -49,4 +50,20 @@ public class SerieSessaoController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{idSerieSessao}")
+    public ResponseEntity<SerieSessaoResponseDTO>  buscarSerieSessao(@PathVariable UUID idSerieSessao){
+        SerieSessao serie =  serieSessaoService.buscarSerieSessao(idSerieSessao);
+        SerieSessaoResponseDTO dto = serieSessaoMapper.toRespondeDTO(serie);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PutMapping("/{idSerieSessao}")
+    public ResponseEntity<SerieSessaoResponseDTO> editarSerieSessao(@PathVariable UUID idSerieSessao, @RequestBody SerieSessaoDTO serieSessaoDTO){
+        SerieSessao serieSessaoAntiga = serieSessaoService.buscarSerieSessao(idSerieSessao);
+        serieSessaoAntiga.setPeso(serieSessaoDTO.getPeso());
+        serieSessaoAntiga.setNumeroDeRepeticoes(serieSessaoDTO.getNumeroDeRepeticoes());
+        SerieSessaoDTO dto = serieSessaoMapper.toDTO(serieSessaoAntiga);
+        SerieSessaoResponseDTO responseDTO = serieSessaoMapper.toRespondeDTO(serieSessaoAntiga);
+        return ResponseEntity.ok(responseDTO);
+    }
 }

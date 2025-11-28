@@ -17,8 +17,7 @@ public class Serie {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idSerie;
 
-    @ManyToOne
-    @JoinColumn(name = "exercicio_id")
-    @JsonIgnore
-    private Exercicio exercicio;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "treino_exercicio_id", nullable = false)
+    private TreinoExercicio treinoExercicio;
 }

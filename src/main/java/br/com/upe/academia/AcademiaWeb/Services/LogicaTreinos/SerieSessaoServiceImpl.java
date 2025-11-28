@@ -1,21 +1,21 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioSessaoRepository;
-import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.SerieSessaoRepository;
-import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
-import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import br.com.upe.academia.AcademiaWeb.utils.SerieSessaoMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,8 +41,6 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         return serieSessaoRepository.findById(idSerieSessao).orElseThrow(() -> new RuntimeException("Série de Sessão não encontrada."));
     }
 
-
-
     @Override
     @Transactional
     public SerieSessao salvarSerieSessao(SerieSessaoDTO serieSessaoDTO) {
@@ -54,7 +52,6 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         UUID alunoId = exercicioSessaoPai.getTreinoExecucao().getAluno().getIdUsuario();
         String nomeExercicio = exercicioSessaoPai.getExercicioTemplate().getNomeExercicio();
 
-        // Montar o DTO
         SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO = new SessaoProgressaoResponseDTO();
         sessaoProgressaoResponseDTO.setPeso(serieSessaoDTO.getPeso());
         sessaoProgressaoResponseDTO.setAlunoId(alunoId);
@@ -63,7 +60,6 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
 
         double pesoAluno = medidasCorporaisService.mostrarMedidasAtuais(alunoId).getPeso();
 
-        // Enviar para conquistas
         gerenciaConquistas.decisaoConquista(sessaoProgressaoResponseDTO,pesoAluno);
 
         return novaSerieSessao;
@@ -92,5 +88,17 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
         return serieSessaoRepository.save(serieSessao);
     }
 
+    @Override
+    public SerieSessaoResponseDTO buscarRecordPorExercicio(UUID idExercicioTemplate, UUID idAluno){
+        Pageable limitOne = PageRequest.of(0, 1);
+        List<SerieSessao> resultados = serieSessaoRepository.findRecordeDeCarga(idExercicioTemplate, idAluno, limitOne);
+
+        if (resultados.isEmpty()) {
+            return null;
+        }
+
+        SerieSessao recorde = resultados.get(0);
+        return serieSessaoMapper.toRespondeDTO(recorde);
+    }
 
 }

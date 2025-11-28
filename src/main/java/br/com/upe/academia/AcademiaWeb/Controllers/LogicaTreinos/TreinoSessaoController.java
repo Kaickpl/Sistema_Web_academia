@@ -1,9 +1,11 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ComentarioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoResponseGetDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
+import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelAddComentarioTreinoSessao;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelCriarTreinoSessao;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.ExecutavelDeletarTreinoSessao;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoSessaoService;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/alunos/{idAluno}/sessoes")
+@RequestMapping("/alunos/{idAluno}")
 public class TreinoSessaoController {
     @Autowired
     private CommandHistory commandHistory;
@@ -28,9 +30,12 @@ public class TreinoSessaoController {
     @Autowired
     private TreinoSessaoMapper treinoSessaoMapper;
 
-    @PostMapping
-    public ResponseEntity<TreinoSessaoDTO> registrarSessaoTreino (@PathVariable UUID idAluno, @RequestBody @Validated TreinoSessaoDTO  treinoSessaoDTO){
+    @PostMapping("treinos/{idTreinoTemplate}/sessoes")
+    public ResponseEntity<TreinoSessaoDTO> registrarSessaoTreino (@PathVariable UUID idAluno,@PathVariable UUID idTreinoTemplate){
+        TreinoSessaoDTO treinoSessaoDTO = new TreinoSessaoDTO();
         treinoSessaoDTO.setIdAluno(idAluno);
+        treinoSessaoDTO.setIdTreinoTemplate(idTreinoTemplate);
+
         ExecutavelCriarTreinoSessao comandoCriarTreinoSessao = new ExecutavelCriarTreinoSessao(this.treinoSessaoService, treinoSessaoDTO);
         commandHistory.execute(comandoCriarTreinoSessao);
         treinoSessaoDTO.setIdTreinoSessao(comandoCriarTreinoSessao.getTreinoSessaoCriadaId());
@@ -43,6 +48,14 @@ public class TreinoSessaoController {
         TreinoSessao treinoEmExecucao = treinoSessaoService.fecharTreinoSessao(idTreinoSessao);
         TreinoSessaoResponseDTO dto = treinoSessaoMapper.toResponseDTO(treinoEmExecucao);
         return ResponseEntity.ok(dto);
+    }
+
+    @PutMapping("/{idTreinoSessao}/comentar")
+    public ResponseEntity<TreinoSessaoResponseDTO> comentarTreino(@PathVariable UUID idAluno, @PathVariable UUID idTreinoSessao,@RequestBody ComentarioDTO comentarioDTO){
+        ExecutavelAddComentarioTreinoSessao comandoAddComentarioTreino = new ExecutavelAddComentarioTreinoSessao(this.treinoSessaoService, idTreinoSessao, comentarioDTO);
+        commandHistory.execute(comandoAddComentarioTreino);
+        TreinoSessao treino = comandoAddComentarioTreino.getTreinoSessao();
+        return ResponseEntity.ok(treinoSessaoMapper.toResponseDTO(treino));
     }
 
     @DeleteMapping("/{idTreinoSessao}")
