@@ -27,6 +27,8 @@ public interface AlunoService {
 
     public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs);
 
+    Aluno atualizaMoedas(UUID alunoId, int moedas);
+
     public Boolean validarEmail(String email);
 
     public List<Treino> listarTreinos(UUID idAluno);

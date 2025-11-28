@@ -17,6 +17,7 @@ public class ObjetivoRegistroDTO {
     private double valorAlvo;
     private double valorAtual;
     private boolean concluido;
+    private String tipoObjetivo;
     public ObjetivoRegistroDTO(Objetivos objetivos){
         this.alunoId = objetivos.getAluno().getIdUsuario();
         this.tipoMedida = objetivos.getTipoMedida();

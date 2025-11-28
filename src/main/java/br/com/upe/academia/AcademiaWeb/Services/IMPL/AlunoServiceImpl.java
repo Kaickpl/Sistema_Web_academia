@@ -131,6 +131,20 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
+    public Aluno atualizaMoedas(UUID alunoId, int moedasGanhas){
+        Aluno aluno = alunoRepository.findByIdUsuario(alunoId);
+        if (aluno == null){
+            throw new UsuarioNaoEncontradoException();
+        }
+        int saldoAtual = aluno.getSaldoMoedas();
+        int novoSaldo = saldoAtual + moedasGanhas;
+
+        aluno.setSaldoMoedas(novoSaldo);
+
+        return alunoRepository.save(aluno);
+    }
+
+    @Override
     public Boolean validarEmail(String email) {
         if (email == null || email.isEmpty()) {
             return false;

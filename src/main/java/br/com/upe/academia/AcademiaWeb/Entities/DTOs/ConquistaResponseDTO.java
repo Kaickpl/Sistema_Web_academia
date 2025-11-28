@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class ConquistaResponseDTO {
     private UUID alunoId;
     private String nomeConquista;
     private String descricaoConquista;
-    private LocalDate data;
+    private LocalDateTime data;
     private int moedas;
 
     public ConquistaResponseDTO(Conquistas conquistas) {

@@ -19,6 +19,7 @@ public class ObjetivosDTO {
     private double valorAlvo;
     private double valorAtual;
     private boolean concluido;
+    private String tipoObjetivo;
     public ObjetivosDTO(Objetivos objetivos){
         this.idObjetivo = objetivos.getIdObjetivo();
         this.alunoId = objetivos.getAluno().getIdUsuario();
@@ -26,5 +27,6 @@ public class ObjetivosDTO {
         this.valorAlvo = objetivos.getValorAlvo();
         this.valorAtual = objetivos.getValorAtual();
         this.concluido = objetivos.isConcluido();
+        this.tipoObjetivo = objetivos.getTipoObjetivo();
     }
 }

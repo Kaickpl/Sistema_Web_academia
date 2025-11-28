@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import java.util.UUID;
 public class MedidasCorporaisResponseDTO {
     private UUID medidasCoporaisId;
     private UUID alunoId;
-    private LocalDate data;
+    private LocalDateTime data;
     private Double braco;
     private Double abdomen;
     private Double cintura;

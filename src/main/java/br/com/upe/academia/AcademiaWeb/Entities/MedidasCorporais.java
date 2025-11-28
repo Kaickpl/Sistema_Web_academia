@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -20,12 +21,11 @@ public class MedidasCorporais {
     @Id
     @GeneratedValue(strategy =  GenerationType.UUID)
     private UUID idMedidas;
-
-    private LocalDate data;
+    private LocalDateTime data;
     @PrePersist
     protected void onCreate() {
         if (data == null) {
-            data = LocalDate.now();
+            data = LocalDateTime.now();
         }
     }
 

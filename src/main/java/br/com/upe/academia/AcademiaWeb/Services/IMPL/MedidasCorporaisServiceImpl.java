@@ -40,6 +40,12 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
     }
 
     @Override
+    public List<MedidasCorporaisResponseDTO> mostrar10Medidas(UUID alunoId) {
+        List<MedidasCorporais> medidasCorporaisList = medidasCorporaisRepository.findTop10ByAluno_IdUsuarioOrderByDataDesc(alunoId);
+        return medidasCorporaisList.stream().map(MedidasCorporaisResponseDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
     public MedidasCorporaisResponseDTO mostrarMedidasAtuais(UUID alunoId) {
         MedidasCorporais medidasCorporaisAtuais = medidasCorporaisRepository
                 .findTop1ByAluno_IdUsuarioOrderByDataDesc(alunoId);
@@ -125,7 +131,7 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
                     objetivoRegistroDTO.setConcluido(objetivo.isConcluido());
                     objetivosService.atualizaObjetivo(objetivo.getIdObjetivo(), objetivoRegistroDTO);
                     if (!estavaConcluidoAntes && concluido) {
-                        gerenciaConquistas.decisaoConquistaObjetivo(alunoId);
+                        gerenciaConquistas.decisaoConquistaObjetivo(alunoId, objetivoRegistroDTO.getTipoMedida());
                     }
                 }
             }

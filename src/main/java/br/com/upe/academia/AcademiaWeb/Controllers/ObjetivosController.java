@@ -36,9 +36,16 @@ public class ObjetivosController {
         return objetivosService.mostrarObjetivosNaoConcluidos(alunoId);
     }
 
-    @PostMapping
-    public ResponseEntity<ObjetivosDTO> registrarObjetivo(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO){
+    @PostMapping("/medidas")
+    public ResponseEntity<ObjetivosDTO> registrarObjetivoMedidas(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO){
         Objetivos novoObjetivo = objetivosService.registrarObjetivo(objetivoRegistroDTO);
+        ObjetivosDTO dto = new ObjetivosDTO(novoObjetivo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+    }
+
+    @PostMapping("/exercicios")
+    public ResponseEntity<ObjetivosDTO> registrarObjetivoExercicios(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO){
+        Objetivos novoObjetivo = objetivosService.registrarObjetivoExercicio(objetivoRegistroDTO);
         ObjetivosDTO dto = new ObjetivosDTO(novoObjetivo);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }

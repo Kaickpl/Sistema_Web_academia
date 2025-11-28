@@ -61,21 +61,42 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         objetivos.setValorAtual(valorAtual);
         objetivos.setValorAlvo(objetivosDto.getValorAlvo());
         objetivos.setTipoMedida(objetivosDto.getTipoMedida());
-        boolean ehPraDiminuir = objetivosDto.getValorAlvo() < objetivosDto.getValorAtual();
-        boolean concluido;
-        if (ehPraDiminuir){
-            concluido = objetivosDto.getValorAtual() <= objetivosDto.getValorAlvo();
-        } else {
-            concluido = objetivosDto.getValorAtual() >= objetivosDto.getValorAlvo();
-        }
-        objetivos.setConcluido(concluido);
+        objetivos.setTipoObjetivo("Medidas");
+        objetivos.setConcluido(false);
         Objetivos objetivoSalvo = objetivosRepository.save(objetivos);
-        if (concluido) {
-            gerenciaConquistas.decisaoConquistaObjetivo(aluno.getIdUsuario());
-        }
 
         return objetivoSalvo;
     }
+
+    @Override
+    public Objetivos registrarObjetivoExercicio(ObjetivoRegistroDTO objetivoRegistroDTO) {
+        Aluno aluno = alunoService.buscarAlunoPorId(objetivoRegistroDTO.getAlunoId());
+        if (aluno == null){
+            throw new UsuarioNaoEncontradoException();
+        }
+        //mudar aqui para pegar o maior peso conseguido
+        MedidasCorporais ultimasMedidas = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(aluno.getIdUsuario());
+
+        Double valorAtual = MedidasUtils.getValorPorNome(ultimasMedidas, objetivoRegistroDTO.getTipoMedida());
+
+        if (valorAtual == null) {
+            throw new InformacaoNaoEncontradoException("Não existem dados registrados para o tipo: " + objetivoRegistroDTO.getTipoMedida());
+        }
+        Objetivos objetivos = new Objetivos();
+        objetivos.setAluno(aluno);
+        if (objetivoRegistroDTO.getValorAlvo() <= 0){
+            throw new ValorInvalidoException("O valor alvo deve ser maior que zero");
+        }
+        objetivos.setValorAtual(valorAtual);
+        objetivos.setValorAlvo(objetivoRegistroDTO.getValorAlvo());
+        objetivos.setTipoMedida(objetivoRegistroDTO.getTipoMedida());
+        objetivos.setTipoObjetivo("Exercicio");
+        objetivos.setConcluido(false);
+        Objetivos objetivoSalvo = objetivosRepository.save(objetivos);
+
+        return objetivoSalvo;
+    }
+
 
     @Override
     public List<ObjetivosResponseDTO> mostrarTodosObjetivos(UUID alunoId) {
@@ -100,7 +121,6 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         List<Objetivos> objetivosList = objetivosRepository.findAllByAluno_IdUsuarioAndTipoMedidaAndConcluido(alunoId, tipo, false);
         return objetivosList.stream().map(ObjetivosDTO::new).collect(Collectors.toList());
     }
-
     @Override
     public Objetivos atualizaObjetivo(UUID id, ObjetivoRegistroDTO objetivosDto) {
         Optional<Objetivos> objetivoExiste = objetivosRepository.findById(id);
@@ -109,7 +129,7 @@ public class ObjetivosServiceImpl implements ObjetivosService {
             throw new UsuarioNaoEncontradoException();
         }
         if (objetivoExiste.isEmpty()){
-            throw new InformacaoNaoEncontradoException("Não foi encontrada uma progressão com esse id");
+            throw new InformacaoNaoEncontradoException("Não foi encontrada um objetivo com esse id");
         }
         Objetivos objetivos = objetivoExiste.get();
         boolean estavaConcluidoAntes = objetivos.isConcluido();
@@ -117,7 +137,7 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         objetivos.setAluno(aluno);
         objetivos.setValorAtual(objetivosDto.getValorAtual());
         objetivos.setValorAlvo(objetivosDto.getValorAlvo());
-        boolean ehPraDiminuir = objetivos.getValorAtual() > objetivos.getValorAlvo();
+        boolean ehPraDiminuir = objetivos.getValorAtual() < objetivos.getValorAlvo();
         boolean concluido;
         if (ehPraDiminuir){
             concluido = objetivosDto.getValorAtual() <= objetivosDto.getValorAlvo();
@@ -127,7 +147,7 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         objetivos.setConcluido(concluido);
         Objetivos objetivoAtualizado = objetivosRepository.save(objetivos);
         if (!estavaConcluidoAntes && concluido) {
-            gerenciaConquistas.decisaoConquistaObjetivo(aluno.getIdUsuario());
+            gerenciaConquistas.decisaoConquistaObjetivo(aluno.getIdUsuario(), objetivosDto.getTipoMedida());
         }
 
         return objetivoAtualizado;
