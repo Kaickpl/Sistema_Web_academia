@@ -37,6 +37,7 @@ public class ObjetivosController {
         return objetivosService.mostrarObjetivosNaoConcluidos(alunoId);
     }
 
+
     @PostMapping("/medidas")
     public ResponseEntity<ObjetivosDTO> registrarObjetivoMedidas(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO){
         Objetivos novoObjetivo = objetivosService.registrarObjetivo(objetivoRegistroDTO);
@@ -44,13 +45,13 @@ public class ObjetivosController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
-    @PostMapping("/exercicios/{idExercicio}")
+    @PostMapping("/exercicios/{idExercicio}")//recebe o template
     public ResponseEntity<ObjetivosDTO> registrarObjetivoExercicios(@RequestBody ObjetivoExercicioDTO objetivoRegistroDTO, @PathVariable UUID idExercicio){
         Objetivos novoObjetivo = objetivosService.registrarObjetivoExercicio(objetivoRegistroDTO, idExercicio);
         ObjetivosDTO dto = new ObjetivosDTO(novoObjetivo);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
-
+//precisa msm disso?
     @PutMapping("/{idObjetivo}")
     public ResponseEntity<ObjetivosDTO> atualizarObjetivo(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO, @PathVariable UUID idObjetivo){
         Objetivos objetivoAtualizado = objetivosService.atualizaObjetivo(idObjetivo, objetivoRegistroDTO);

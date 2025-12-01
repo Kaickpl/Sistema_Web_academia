@@ -26,4 +26,6 @@ public interface AvaliacaoRepository extends JpaRepository<Avaliacao, UUID> {
     boolean existsByPersonal_Cref(String personalCref);
 
     Avaliacao findByIdAvaliacao(UUID idAvaliacao);
+
+    Avaliacao findTop1ByAluno_IdUsuario(UUID alunoIdUsuario);
 }

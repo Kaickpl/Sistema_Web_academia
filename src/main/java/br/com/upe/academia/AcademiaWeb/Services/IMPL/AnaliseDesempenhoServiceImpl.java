@@ -56,38 +56,29 @@ public class AnaliseDesempenhoServiceImpl implements AnaliseDesempenhoService {
     @Override
     public void processarNovasMedidas(MedidasCorporais novaMedida) {
         UUID alunoId = novaMedida.getAluno().getIdUsuario();
-
-        // 1. Busca todos os objetivos NÃO concluídos deste aluno de uma vez
         List<Objetivos> objetivosPendentes = objetivosRepository.findAllByAluno_IdUsuarioAndConcluido(alunoId, false);
 
         for (Objetivos objetivo : objetivosPendentes) {
-            // 2. Verifica se a nova medida afeta este objetivo
             Double novoValor = MedidasUtils.getValorPorNome(novaMedida, objetivo.getTipoMedida());
 
             if (novoValor != null && novoValor > 0) {
+                double valorAntigo = objetivo.getValorAtual();
+                boolean eraPraAumentar = valorAntigo < objetivo.getValorAlvo();
                 boolean estavaConcluidoAntes = objetivo.isConcluido();
 
-                // Lógica de Atualização
                 objetivo.setValorAtual(novoValor);
 
-                // Lógica de Conclusão (Emagrecer ou Ganhar Massa?)
-                boolean ehPraDiminuir = objetivo.getValorAlvo() < objetivo.getValorAtual();
-
                 boolean concluido;
-                // Assumindo que se o alvo é menor que o valor anterior (que não temos aqui fácil), é pra diminuir.
-                // Vou simplificar: Se o alvo é menor que o valor atual, o objetivo é diminuir.
-                if (objetivo.getValorAlvo() < novoValor) {
-                    concluido = novoValor <= objetivo.getValorAlvo();
-                } else {
+                if (eraPraAumentar) {
                     concluido = novoValor >= objetivo.getValorAlvo();
+                } else {
+                    concluido = novoValor <= objetivo.getValorAlvo();
                 }
 
                 objetivo.setConcluido(concluido);
 
-                // 3. Salva a alteração
                 objetivosRepository.save(objetivo);
 
-                // 4. Verifica Conquista
                 if (!estavaConcluidoAntes && concluido) {
                     gerenciaConquistas.decisaoConquistaObjetivo(alunoId, objetivo.getTipoMedida());
                 }

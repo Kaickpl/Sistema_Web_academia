@@ -23,6 +23,7 @@ public interface AvaliacaoService {
 
     Avaliacao buscarPorId(UUID idAvaliacao);
 
+    AvaliacaoResponseDTO mostrarProximaAvaliacaoAluno(UUID alunoId);
 
     Avaliacao alterarDataAvaliacao(UUID idAvaliacao, ModificarDataAvaliacaoDTO modificarDataAvaliacaoDTO);
 

@@ -135,16 +135,18 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         }
         Objetivos objetivos = objetivoExiste.get();
         boolean estavaConcluidoAntes = objetivos.isConcluido();
+        boolean objetivoEraAumentar = objetivos.getValorAtual() < objetivos.getValorAlvo();
+
         objetivos.setTipoMedida(objetivosDto.getTipoMedida());
         objetivos.setAluno(aluno);
         objetivos.setValorAtual(objetivosDto.getValorAtual());
         objetivos.setValorAlvo(objetivosDto.getValorAlvo());
-        boolean ehPraDiminuir = objetivos.getValorAtual() < objetivos.getValorAlvo();
+
         boolean concluido;
-        if (ehPraDiminuir){
-            concluido = objetivosDto.getValorAtual() <= objetivosDto.getValorAlvo();
-        } else {
+        if (objetivoEraAumentar){
             concluido = objetivosDto.getValorAtual() >= objetivosDto.getValorAlvo();
+        } else {
+            concluido = objetivosDto.getValorAtual() <= objetivosDto.getValorAlvo();
         }
         objetivos.setConcluido(concluido);
         Objetivos objetivoAtualizado = objetivosRepository.save(objetivos);
