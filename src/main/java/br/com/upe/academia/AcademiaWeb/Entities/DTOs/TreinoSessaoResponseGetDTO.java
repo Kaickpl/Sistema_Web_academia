@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -19,4 +21,6 @@ public class TreinoSessaoResponseGetDTO {
     private String treinoTemplate;
     private boolean statusFechamento;
     private String duration;
-}
+
+    }
+

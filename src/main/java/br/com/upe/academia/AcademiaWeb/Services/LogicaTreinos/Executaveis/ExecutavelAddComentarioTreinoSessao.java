@@ -14,25 +14,27 @@ import java.util.UUID;
 public class ExecutavelAddComentarioTreinoSessao implements Executavel{
     private TreinoSessaoService treinoSessaoService;
     private UUID idSessao;
+    private UUID idAluno;
     private String comentarioNovo;
     private String comentarioOriginal;
     private TreinoSessao treinoSessao;
 
-    public ExecutavelAddComentarioTreinoSessao(TreinoSessaoService treinoSessaoService, UUID idSessao, ComentarioDTO comentario) {
+    public ExecutavelAddComentarioTreinoSessao(TreinoSessaoService treinoSessaoService, UUID idSessao, UUID idAluno ,ComentarioDTO comentario) {
         this.treinoSessaoService = treinoSessaoService;
         this.idSessao = idSessao;
         this.comentarioNovo = comentario.getComentario();
+        this.idAluno = idAluno;
     }
 
     @Override
     public void executar() {
-        TreinoSessao sessao = treinoSessaoService.buscarSessaoPorId(idSessao);
+        TreinoSessao sessao = treinoSessaoService.buscarSessaoPorId( idAluno,idSessao);
         this.comentarioOriginal = sessao.getComentario();
-        this.treinoSessao = treinoSessaoService.adicionarComentario(idSessao, comentarioNovo);
+        this.treinoSessao = treinoSessaoService.adicionarComentario(idSessao, idAluno ,comentarioNovo);
     }
 
     @Override
     public void desfazer() {
-        this.treinoSessaoService.adicionarComentario(idSessao, this.comentarioOriginal);
+        this.treinoSessaoService.adicionarComentario(idSessao, idAluno, this.comentarioOriginal);
     }
 }

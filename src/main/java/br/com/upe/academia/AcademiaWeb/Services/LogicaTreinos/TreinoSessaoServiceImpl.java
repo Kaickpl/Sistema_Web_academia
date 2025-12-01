@@ -1,18 +1,20 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
+import br.com.upe.academia.AcademiaWeb.Exceptions.CampoObrigatorioException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.OperacaoNaoPermitidaException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioSessaoRepository;
+import br.com.upe.academia.AcademiaWeb.Repositories.TreinoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.TreinoSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
-import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoSessaoService;
-import br.com.upe.academia.AcademiaWeb.utils.ExercicioSessaoMapper;
 import br.com.upe.academia.AcademiaWeb.utils.TreinoSessaoMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +43,20 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
     @Autowired
     private ExercicioSessaoRepository exercicioSessaoRepository;
 
+    @Autowired
+    private TreinoRepository treinoRepository;
+
     @Override
-    public TreinoSessao buscarSessaoPorId(UUID idTreinoSessao) {
-        return treinoSessaoRepository.findById(idTreinoSessao).orElseThrow(() -> new RuntimeException("Sessoa de Treino não encontrada."));
+    public TreinoSessao buscarSessaoPorId(UUID idAluno, UUID idTreinoSessao) {
+        TreinoSessao treino = treinoSessaoRepository.findById(idTreinoSessao).orElseThrow(() -> new InformacaoNaoEncontradoException(
+                "Sessão de treino não encontrada com ID " +  idTreinoSessao
+        ));
+
+        if(!treino.getAluno().getIdUsuario().equals(idAluno)){
+            throw new ValorInvalidoException("A sessão de treino a ser encontrada não pertence ao aluno informado na URL.");
+        }
+
+        return treino;
     }
 
     @Override
@@ -60,17 +73,23 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
         }
 
         treinoSessao.setTreinoTemplate(treinoTemplate);
+
         treinoSessao.setAluno(aluno);
 
         return treinoSessaoRepository.save(treinoSessao);
     }
 
     @Override
-    public TreinoSessao fecharTreinoSessao(UUID idTreinoSessao) {
-        TreinoSessao treinoSessaoAtt = buscarSessaoPorId(idTreinoSessao);
+    public TreinoSessao fecharTreinoSessao(UUID idAluno,UUID idTreinoSessao) {
+        TreinoSessao treinoSessaoAtt = buscarSessaoPorId(idAluno, idTreinoSessao);
         if(treinoSessaoAtt.isConcluido()){
-            throw new IllegalStateException("Esta sessão já foi finalizada");
+            throw new OperacaoNaoPermitidaException("Esta Sessão já foi finalizada e não pode ser alterada");
         }
+
+        if (treinoSessaoAtt.getAluno().getIdUsuario() != idAluno){
+            throw new ValorInvalidoException("A sessão de treino a ser fechada não pertence ao aluno informado na URL.");
+        }
+
         treinoSessaoAtt.setConcluido(true);
         treinoSessaoAtt.setTempoFinalizacao(Instant.now());
         return treinoSessaoRepository.save(treinoSessaoAtt);
@@ -78,7 +97,7 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
 
     @Override
     public void apagarTreinoSessao(UUID idTreinoSessao) {
-         this.buscarSessaoPorId(idTreinoSessao);
+        TreinoSessao treinoSessao = treinoSessaoRepository.findById(idTreinoSessao).orElseThrow(() -> new InformacaoNaoEncontradoException("Sessão de treino não encontrada com ID " +  idTreinoSessao));
          treinoSessaoRepository.deleteById(idTreinoSessao);
     }
 
@@ -91,9 +110,17 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
 
     @Override
     @Transactional
-    public TreinoSessao adicionarComentario(UUID idTreinoSessao, String comentario) {
-        TreinoSessao treino = this.buscarSessaoPorId(idTreinoSessao);
+    public TreinoSessao adicionarComentario(UUID idTreinoSessao, UUID idAluno ,String comentario) {
+        TreinoSessao treino = this.buscarSessaoPorId(idAluno, idTreinoSessao);
         treino.setComentario(comentario);
+
+        if (!treino.getAluno().getIdUsuario().equals(idAluno)) {
+            throw new ValorInvalidoException("A sessão de treino informada não pertence ao aluno informado na URL.");
+        }
+
+        if(comentario==null){
+            throw new CampoObrigatorioException("");
+        }
         return treinoSessaoRepository.save(treino);
     }
 

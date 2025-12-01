@@ -3,6 +3,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ComentarioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
@@ -32,7 +33,7 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
 
     @Override
     public ExercicioSessao buscarExercicioSessao(UUID id) {
-        return exercicioSessaoRepository.findById(id).orElseThrow( () -> new RuntimeException("Execução de Exercicio não encontrada"));
+        return exercicioSessaoRepository.findById(id).orElseThrow( () -> new InformacaoNaoEncontradoException("Execução de Exercicio não encontrada"));
     }
 
     @Override

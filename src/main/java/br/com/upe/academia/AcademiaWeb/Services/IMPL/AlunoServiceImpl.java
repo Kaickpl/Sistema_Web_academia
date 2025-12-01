@@ -229,7 +229,7 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     public Aluno buscarAlunoPorId(UUID idAluno) {
-        return alunoRepository.findById(idAluno).orElse(null);
+        return alunoRepository.findById(idAluno).orElseThrow(() -> new InformacaoNaoEncontradoException("Aluno não encontrado com ID " + idAluno));
     }
 
     @Override

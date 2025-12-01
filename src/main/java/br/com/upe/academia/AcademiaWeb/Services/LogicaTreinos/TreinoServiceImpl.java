@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.TreinoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
@@ -23,8 +24,7 @@ public class TreinoServiceImpl implements TreinoService {
     private TreinoExercicioService treinoExercicioService;
 
     public Treino buscarTreino(UUID idTreino){
-        Optional<Treino> treino = treinoRepository.findById(idTreino);
-        return treino.orElseThrow(() -> new RuntimeException("Treino não encontrado"));
+        return treinoRepository.findById(idTreino).orElseThrow(() -> new InformacaoNaoEncontradoException("Template de Treino não encontrado com ID " + idTreino));
     }
 
     @Override
