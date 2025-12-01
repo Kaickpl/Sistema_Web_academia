@@ -33,32 +33,32 @@ public class ExercicioSessaoController {
     @PostMapping
     public ResponseEntity<ExercicioSessaoDTO> registrarSessaoExercicio(@PathVariable UUID idSessao ,@RequestBody @Validated ExercicioSessaoDTO exercicioSessaoDTO){
         exercicioSessaoDTO.setIdTreinoSessao(idSessao);
-        ExecutavelCriarExercicioSessao comandoCriarSerieSessao = new ExecutavelCriarExercicioSessao(this.exercicioSessaoService, exercicioSessaoDTO);
-        commandHistory.execute(comandoCriarSerieSessao);
-        exercicioSessaoDTO.setIdExercicioSessao(comandoCriarSerieSessao.getIdExercicioSessao());
+        ExecutavelCriarExercicioSessao comandoCriarExercicioSessao = new ExecutavelCriarExercicioSessao(this.exercicioSessaoService, exercicioSessaoDTO);
+        commandHistory.execute(comandoCriarExercicioSessao);
+        exercicioSessaoDTO.setIdExercicioSessao(comandoCriarExercicioSessao.getIdExercicioSessao());
         return ResponseEntity.status(HttpStatus.CREATED).body(exercicioSessaoDTO);
     }
 
     @DeleteMapping("/{idExercicioSessao}")
-    public ResponseEntity<Void> deletarExercicioSessao(@PathVariable UUID idExercicioSessao){
-        ExercicioSessaoDTO exercicioSessaoDTO = exercicioSessaoMapper.toDTO(exercicioSessaoService.buscarExercicioSessao(idExercicioSessao));
+    public ResponseEntity<Void> deletarExercicioSessao(@PathVariable UUID idSessao ,@PathVariable UUID idExercicioSessao){
+        ExercicioSessaoDTO exercicioSessaoDTO = exercicioSessaoMapper.toDTO(exercicioSessaoService.buscarExercicioSessao(idSessao, idExercicioSessao));
         ExecutavelDeletarExercicioSessao comandoDeletarExercicioSessao = new ExecutavelDeletarExercicioSessao(this.exercicioSessaoService, this.exercicioSessaoMapper, exercicioSessaoDTO);
         commandHistory.execute(comandoDeletarExercicioSessao);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{idExercicioSessao}")
-    public ResponseEntity<ExercicioSessaoResponseDTO> buscarExercicioSessao(@PathVariable UUID idExercicioSessao){
-        ExercicioSessao exercicioReff = exercicioSessaoService.buscarExercicioSessao(idExercicioSessao);
+    public ResponseEntity<ExercicioSessaoResponseDTO> buscarExercicioSessao(@PathVariable UUID idSessao ,@PathVariable UUID idExercicioSessao){
+        ExercicioSessao exercicioReff = exercicioSessaoService.buscarExercicioSessao(idSessao, idExercicioSessao);
         ExercicioSessaoResponseDTO exercicioSessaoResponseDTO = exercicioSessaoMapper.toReponseDTO(exercicioReff);
         return ResponseEntity.ok(exercicioSessaoResponseDTO);
     }
 
     @PutMapping("/{idExercicioSessao}")
-    public ResponseEntity<ExercicioSessaoResponseDTO> adicionarComentario(@PathVariable UUID idExercicioSessao, @RequestBody ComentarioDTO comentarioDTO){
-        ExecutavelAddComentarioExercicioSessao comandoAddComentario = new ExecutavelAddComentarioExercicioSessao(this.exercicioSessaoService, idExercicioSessao, comentarioDTO);
+    public ResponseEntity<ExercicioSessaoResponseDTO> adicionarComentario(@PathVariable UUID idSessao ,@PathVariable UUID idExercicioSessao, @RequestBody ComentarioDTO comentarioDTO){
+        ExecutavelAddComentarioExercicioSessao comandoAddComentario = new ExecutavelAddComentarioExercicioSessao(this.exercicioSessaoService, idSessao , idExercicioSessao, comentarioDTO);
         commandHistory.execute(comandoAddComentario);
-        ExercicioSessao exercicioSessao = exercicioSessaoService.buscarExercicioSessao(idExercicioSessao);
+        ExercicioSessao exercicioSessao = exercicioSessaoService.buscarExercicioSessao(idSessao, idExercicioSessao);
         ExercicioSessaoResponseDTO dto = exercicioSessaoMapper.toReponseDTO(exercicioSessao);
         return ResponseEntity.ok(dto);
     }

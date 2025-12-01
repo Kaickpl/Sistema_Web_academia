@@ -24,4 +24,6 @@ public interface TreinoSessaoService {
     public TreinoSessao salvarEntidade(TreinoSessao treinoSessao);
 
     public void restaurarExecucaoCompleta(TreinoSessao novaSessao, List<ExercicioSessao> exerciciosSalvos);
+
+    public TreinoSessao buscarSessaoPorIdUnico(UUID idTreinoSessao);
 }

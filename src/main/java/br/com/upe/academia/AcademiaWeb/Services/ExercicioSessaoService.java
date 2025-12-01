@@ -12,15 +12,15 @@ import java.util.UUID;
 
 @Service
 public interface ExercicioSessaoService {
-    public ExercicioSessao buscarExercicioSessao(UUID id);
+    public ExercicioSessao buscarExercicioSessao(UUID idTreinoSessao, UUID idExercicioSessao);
 
-    public List<SerieSessao> listarSeriesExecucao(UUID idExercicio);
+    public List<SerieSessao> listarSeriesExecucao(UUID idExercicio, UUID idTreinoSessao);
 
-    ExercicioSessao reinserirSeries(List<SerieSessao> serieSessao, UUID idExercicio);
+    public ExercicioSessao reinserirSeries(List<SerieSessao> serieSessao, UUID idSessao , UUID idExercicio);
 
     public ExercicioSessao salvarExercicioSessao(ExercicioSessaoDTO exerciciosessaoDTO);
 
-    public void deletarExercicioSessao(UUID idExercicio);
+    public void deletarExercicioSessao(UUID idExercicio ,UUID idSessao);
 
-    public ExercicioSessao adicionarComentario(UUID idExercicioSessao, String comentario);
+    public ExercicioSessao adicionarComentario(UUID idExercicioSessao, UUID idSessao , String comentario);
 }

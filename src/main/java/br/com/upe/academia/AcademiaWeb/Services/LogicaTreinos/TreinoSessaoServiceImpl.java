@@ -53,7 +53,7 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
         ));
 
         if(!treino.getAluno().getIdUsuario().equals(idAluno)){
-            throw new ValorInvalidoException("A sessão de treino a ser encontrada não pertence ao aluno informado na URL.");
+            throw new ValorInvalidoException("A sessão de treino a ser encontrada não pertence à sessão de treino informada na URL.");
         }
 
         return treino;
@@ -119,7 +119,7 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
         }
 
         if(comentario==null){
-            throw new CampoObrigatorioException("");
+            throw new CampoObrigatorioException("Adicione algum comentário para ser postado!");
         }
         return treinoSessaoRepository.save(treino);
     }
@@ -146,5 +146,10 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
 
             exercicioSessaoRepository.save(exercicio);
         }
+    }
+
+    @Override
+    public TreinoSessao buscarSessaoPorIdUnico(UUID idTreinoSessao) {
+        return treinoSessaoRepository.findById(idTreinoSessao).orElseThrow(() -> new InformacaoNaoEncontradoException("Sessão de treino não encontrada com ID " +  idTreinoSessao));
     }
 }

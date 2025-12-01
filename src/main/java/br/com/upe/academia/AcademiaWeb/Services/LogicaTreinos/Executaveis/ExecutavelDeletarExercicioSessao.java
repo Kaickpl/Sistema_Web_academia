@@ -14,12 +14,14 @@ public class ExecutavelDeletarExercicioSessao implements Executavel{
     private ExercicioSessao sessaoDeletada;
     private List<SerieSessao> seriesSessoesSalvas;
     private ExercicioSessaoService exercicioSessaoService;
+    private UUID idSessao;
     private UUID idExercicioSessao;
     private ExercicioSessaoMapper exercicioSessaoMapper;
 
     public ExecutavelDeletarExercicioSessao(ExercicioSessaoService exercicioSessaoService, ExercicioSessaoMapper exercicioSessaoMapper ,ExercicioSessaoDTO exercicioSessaoDTO) {
         this.exercicioSessaoService = exercicioSessaoService;
         this.exercicioSessaoMapper = exercicioSessaoMapper;
+        this.idSessao = exercicioSessaoDTO.getIdTreinoSessao();
         this.idExercicioSessao = exercicioSessaoDTO.getIdExercicioSessao();
     }
 
@@ -32,9 +34,9 @@ public class ExecutavelDeletarExercicioSessao implements Executavel{
         else{
             idParaBuscar = this.sessaoDeletada.getIdExercicioSessao();
         }
-        this.sessaoDeletada = exercicioSessaoService.buscarExercicioSessao(idParaBuscar);
+        this.sessaoDeletada = exercicioSessaoService.buscarExercicioSessao(idSessao, idParaBuscar);
         this.seriesSessoesSalvas = sessaoDeletada.getSeriesRealizadas().stream().map(this::clonarSerieSessao).collect(Collectors.toList());
-        exercicioSessaoService.deletarExercicioSessao(sessaoDeletada.getIdExercicioSessao());
+        exercicioSessaoService.deletarExercicioSessao(sessaoDeletada.getTreinoExecucao().getIdTreinoSessao() ,sessaoDeletada.getIdExercicioSessao());
     }
 
     @Override
@@ -44,7 +46,7 @@ public class ExecutavelDeletarExercicioSessao implements Executavel{
             this.sessaoDeletada.setSeriesRealizadas(new ArrayList<>());
             this.sessaoDeletada = exercicioSessaoService.salvarExercicioSessao(exercicioSessaoMapper.toDTO(this.sessaoDeletada));
             if(!this.seriesSessoesSalvas.isEmpty()){
-                exercicioSessaoService.reinserirSeries(seriesSessoesSalvas, this.sessaoDeletada.getIdExercicioSessao());
+                exercicioSessaoService.reinserirSeries(seriesSessoesSalvas, this.sessaoDeletada.getTreinoExecucao().getIdTreinoSessao() ,this.sessaoDeletada.getIdExercicioSessao());
             }
         }
     }

@@ -21,6 +21,7 @@ public class TreinoSessaoResponseGetDTO {
     private String treinoTemplate;
     private boolean statusFechamento;
     private String duration;
+    private String comentario;
 
     }
 

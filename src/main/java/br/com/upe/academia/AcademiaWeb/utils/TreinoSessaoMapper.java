@@ -97,6 +97,7 @@ public class TreinoSessaoMapper {
         dto.setDataExecucao(InstantManager.formatInstantToLocalTime(treinoSessao.getDataExecucao()));
         dto.setStatusFechamento(treinoSessao.isConcluido());
         dto.setIdTreinoSessao(treinoSessao.getIdTreinoSessao());
+        dto.setComentario(treinoSessao.getComentario());
         return dto;
     }
 
