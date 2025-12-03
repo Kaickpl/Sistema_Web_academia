@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/objetivos")
+@RequestMapping("/api/objetivos")
 public class ObjetivosController {
     @Autowired
     private ObjetivosService objetivosService;
