@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/medidas")
+@RequestMapping("/api/medidas")
 @CrossOrigin(origins = "*")
 public class MedidasCorporaisController {
     @Autowired
