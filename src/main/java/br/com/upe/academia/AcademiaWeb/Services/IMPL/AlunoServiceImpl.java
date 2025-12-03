@@ -2,7 +2,6 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
@@ -10,13 +9,12 @@ import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
-import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,11 +34,14 @@ public class AlunoServiceImpl implements AlunoService {
     @Autowired
     private TreinoService treinoService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public boolean existeEmail(String email) {
 
         return alunoRepository.findByEmail(email).isPresent();
     }
+
 
     public Aluno cadastrarAluno(AlunoDTOs alunoDTOs) {
         alunoDTOs.setTipo(Tipo.aluno);
@@ -65,7 +66,8 @@ public class AlunoServiceImpl implements AlunoService {
 
         Aluno aluno =  new Aluno();
         aluno.setEmail(alunoDTOs.getEmail());
-        aluno.setSenha(alunoDTOs.getSenha());
+        String password = passwordEncoder.encode(alunoDTOs.getSenha());
+        aluno.setSenha(password);
         aluno.setDataNascimento(alunoDTOs.getDataNascimento());
         aluno.setTelefone(alunoDTOs.getTelefone());
         aluno.setTipo(alunoDTOs.getTipo());
@@ -132,6 +134,7 @@ public class AlunoServiceImpl implements AlunoService {
             throw new OperacaoNaoPermitidaException("A nova senha não pode ser igual a atual.");
         }
         Aluno alunoEncontrado = alunoExiste.get();
+
         alunoEncontrado.setSenha(senhaDTOs.getConfirmaSenha());
         return alunoRepository.save(alunoEncontrado);
     }
@@ -244,6 +247,11 @@ public class AlunoServiceImpl implements AlunoService {
             throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado foi encontrado.");
         }
         return alunoRepository.findAll(page);
+    }
+
+    @Override
+    public Aluno buscarAlunoPorEmail(String email) {
+        return alunoRepository.findByEmail(email).orElse(null);
     }
 
 }

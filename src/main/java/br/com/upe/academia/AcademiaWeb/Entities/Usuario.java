@@ -6,14 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.UUID;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.UUID;
 @MappedSuperclass
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class Usuario {
+public abstract class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idUsuario;
@@ -26,4 +27,3 @@ public abstract class Usuario {
     private Tipo tipo;
 
 }
-
