@@ -96,8 +96,8 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
     }
 
     public void validarMedida(Double valor, String nomeCampo){
-        if (valor <= 0){
-            throw new ValorInvalidoException("A medida de " + nomeCampo + " deve ser maior que zero");
+        if (valor != null &&valor <= 0){
+            throw new ValorInvalidoException("Se informada, a medida de " + nomeCampo + " deve ser maior que zero");
         }
     }
 

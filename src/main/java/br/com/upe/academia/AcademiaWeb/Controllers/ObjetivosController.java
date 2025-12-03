@@ -51,11 +51,4 @@ public class ObjetivosController {
         ObjetivosDTO dto = new ObjetivosDTO(novoObjetivo);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
-//precisa msm disso?
-    @PutMapping("/{idObjetivo}")
-    public ResponseEntity<ObjetivosDTO> atualizarObjetivo(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO, @PathVariable UUID idObjetivo){
-        Objetivos objetivoAtualizado = objetivosService.atualizaObjetivo(idObjetivo, objetivoRegistroDTO);
-        ObjetivosDTO dto = new ObjetivosDTO(objetivoAtualizado);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-    }
 }

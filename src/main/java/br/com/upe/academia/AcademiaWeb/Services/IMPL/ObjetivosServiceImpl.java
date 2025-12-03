@@ -79,17 +79,14 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         if (recorde != null) {
             valorAtual = recorde.getPeso();
         }
-//        Double valorAtual = MedidasUtils.getValorPorNome(ultimasMedidas, objetivoRegistroDTO.getTipoMedida());
-//        if (valorAtual == null) {
-//            throw new InformacaoNaoEncontradoException("Não existem dados registrados para o tipo: " + objetivoRegistroDTO.getTipoMedida());
-//        }
+
         Objetivos objetivos = new Objetivos();
         objetivos.setAluno(aluno);
         if (objetivoRegistroDTO.getValorAlvo() <= 0){
             throw new ValorInvalidoException("O valor alvo deve ser maior que zero");
         }
 
-        objetivos.setValorAtual(recorde.getPeso());
+        objetivos.setValorAtual(valorAtual);
         objetivos.setValorAlvo(objetivoRegistroDTO.getValorAlvo());
         objetivos.setTipoMedida(serieSessaoService.acharNomeExercicioPorIdTemplate(exercicioId));
         objetivos.setTipoObjetivo("Exercicio");

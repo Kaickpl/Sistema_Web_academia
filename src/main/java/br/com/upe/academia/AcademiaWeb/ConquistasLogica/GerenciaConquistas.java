@@ -32,7 +32,6 @@ public class GerenciaConquistas {
             contextoConquistas.setTipo(conquistaLegpress);
             contextoConquistas.registrar(idAluno);
         }
-
         if (peso >= 50 && exercicio.equals("Supino inclinado")) {
             ConquistasInterface conquistaSupinoInclinado = new Levantou50QuilosSupinoInclinado();
             contextoConquistas.setTipo(conquistaSupinoInclinado);
