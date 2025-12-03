@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
@@ -40,5 +41,6 @@ public interface AlunoService {
     public List<Grupo> ListarGruposAluno(UUID idAluno);
 
     public List<UUID> buscarIdAlunoPorTreino(UUID idTreino);
+
 }
 

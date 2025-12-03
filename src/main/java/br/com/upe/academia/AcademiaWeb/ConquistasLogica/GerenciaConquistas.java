@@ -4,6 +4,7 @@ import br.com.upe.academia.AcademiaWeb.ConquistasLogica.Conquistas.*;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
+import br.com.upe.academia.AcademiaWeb.Services.ConquistasService;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
 import br.com.upe.academia.AcademiaWeb.Services.SerieSessaoService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GerenciaConquistas {
     private final Contexto contextoConquistas;
+    private final ConquistasService conquistasService;
 
 
     public void decisaoConquista(SessaoProgressaoResponseDTO sessaoProgressaoResponseDTO, double pesoAluno){
@@ -30,7 +32,6 @@ public class GerenciaConquistas {
             contextoConquistas.setTipo(conquistaLegpress);
             contextoConquistas.registrar(idAluno);
         }
-
         if (peso >= 50 && exercicio.equals("Supino inclinado")) {
             ConquistasInterface conquistaSupinoInclinado = new Levantou50QuilosSupinoInclinado();
             contextoConquistas.setTipo(conquistaSupinoInclinado);
@@ -51,10 +52,16 @@ public class GerenciaConquistas {
             contextoConquistas.setTipo(formiguinha);
             contextoConquistas.registrar(idAluno);
         }
+        if (peso == 40) {
+            ConquistasInterface quarentao = new Atingiu40quilos();
+            contextoConquistas.setTipo(quarentao);
+            contextoConquistas.registrar(idAluno);
+        }
     }
 
-    public void decisaoConquistaObjetivo(UUID idUsuario) {
-        ConquistasInterface conquistaObjetivo = new AtingiuObjetivo();
+    public void decisaoConquistaObjetivo(UUID idUsuario, String tipoMedida) {
+        ConquistasInterface conquistaObjetivo = new AtingiuObjetivo(idUsuario, tipoMedida);
+
         contextoConquistas.setTipo(conquistaObjetivo);
         contextoConquistas.registrarConquistaObjetivo(idUsuario);
     }

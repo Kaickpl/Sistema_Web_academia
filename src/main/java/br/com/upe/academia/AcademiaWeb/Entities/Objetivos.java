@@ -28,4 +28,6 @@ public class Objetivos {
     private double valorAtual;
     @Column(nullable = false)
     private boolean concluido;
+    @Column(nullable = false)
+    private String tipoObjetivo;
 }

@@ -10,10 +10,12 @@ import java.util.UUID;
 
 @Service
 public interface MedidasCorporaisService {
-    public List<MedidasCorporaisResponseDTO> mostrarHistoricoMedidasCorporais(UUID alunoId);
-    public MedidasCorporaisResponseDTO mostrarMedidasAtuais(UUID alunoId);
-    public MedidasCorporais registrarMedidas(MedidasCorporaisRegistroDTO medidasCorporaisDTOs);
+    List<MedidasCorporaisResponseDTO> mostrarHistoricoMedidasCorporais(UUID alunoId);
+    MedidasCorporaisResponseDTO mostrarMedidasAtuais(UUID alunoId);
+    MedidasCorporais registrarMedidas(MedidasCorporaisRegistroDTO medidasCorporaisDTOs);
     MedidasCorporais buscarMedidasPorId(UUID idMedidas);
 
     Double buscarUltimoValorMedida(UUID alunoId, String tipoMedida);
+
+    List<MedidasCorporaisResponseDTO> mostrar10Medidas(UUID alunoId);
 }

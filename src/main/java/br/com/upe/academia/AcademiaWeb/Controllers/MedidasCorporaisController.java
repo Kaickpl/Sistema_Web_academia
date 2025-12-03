@@ -12,16 +12,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/medidas")
+@CrossOrigin(origins = "*")
 public class MedidasCorporaisController {
     @Autowired
     private MedidasCorporaisService medidasCorporaisService;
 
-    @GetMapping("/historico/{alunoId}")
+    @GetMapping("/{alunoId}/historico")
     public List<MedidasCorporaisResponseDTO> ListarMedidasCorporais(@PathVariable UUID alunoId){
         return medidasCorporaisService.mostrarHistoricoMedidasCorporais(alunoId);
+    }
+
+    @GetMapping("/{alunoId}/historico/10")
+    public List<MedidasCorporaisResponseDTO> Listar10MedidasCorporais(@PathVariable UUID alunoId){
+        return medidasCorporaisService.mostrar10Medidas(alunoId);
     }
 
     @GetMapping("/{alunoId}")
