@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
@@ -220,4 +221,14 @@ public class PersonalServiceImpl implements PersonalService {
         return personalRepository.findByEmail(email);
     }
 
+    @Override
+    public  PersonalResponseDTOs VerPerfil(UUID id) {
+        Optional<Personal> personal = personalRepository.findById(id);
+        if (personal.isEmpty()) {
+            throw new InformacaoNaoEncontradoException("Nenhum personal com esse ID: " + id);
+        }
+        return new PersonalResponseDTOs(
+                personal.get()
+        );
+    }
 }

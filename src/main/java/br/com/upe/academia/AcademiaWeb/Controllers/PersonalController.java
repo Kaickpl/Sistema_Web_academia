@@ -58,6 +58,7 @@ public class PersonalController {
       }
       return ResponseEntity.ok(new PersonalResponseDTOs(personal));
     }
+
     @GetMapping("/ListarGruposPersonal/{idPersonal}")
     public ResponseEntity<List<GrupoDTOs>> ListarGruposPersonal(@PathVariable UUID idPersonal) {
             List<Grupo> grupo = personalService.ListaGruposPersonal(idPersonal);
@@ -67,5 +68,12 @@ public class PersonalController {
             List<GrupoDTOs> gda = grupo.stream().map(GrupoDTOs::new)
                     .toList();
             return ResponseEntity.ok(gda);
+    }
+
+    @GetMapping("/VerPerfil/{id}")
+    public ResponseEntity<PersonalResponseDTOs> verPerfil(@PathVariable UUID id) {
+        PersonalResponseDTOs personalResponseDTOs = personalService.VerPerfil(id);
+        return ResponseEntity.ok(personalResponseDTOs);
+
     }
 }

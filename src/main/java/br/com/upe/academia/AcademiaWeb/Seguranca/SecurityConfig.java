@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/personal/ListarGruposPersonal/{idPersonal}").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.GET, "/api/personal/buscar").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.GET,"/api/personal/buscarCref").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/personal/VerPerfil/{id}").hasRole("PersonalTrainer")
                         //avaliacao
                         .requestMatchers(HttpMethod.GET, "/api/avaliacao/aluno/{alunoId}").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.GET, "/api/avaliacao/aluno/{alunoId}/proxima").hasRole("ALUNO")
