@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
@@ -252,6 +253,17 @@ public class AlunoServiceImpl implements AlunoService {
     @Override
     public Aluno buscarAlunoPorEmail(String email) {
         return alunoRepository.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public AlunoResponseDTOs VerPerfil(UUID idAluno) {
+        Optional<Aluno> aluno = alunoRepository.findById(idAluno);
+        if (aluno.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("Usuario com esse ID: " + idAluno + "não encontrado!");
+        }
+        return new AlunoResponseDTOs(
+                aluno.get()
+        );
     }
 
 }

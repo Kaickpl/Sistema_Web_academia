@@ -72,10 +72,10 @@ public class PersonalServiceImpl implements PersonalService {
     }
 
     @Override
-    public Personal alterarPersonal(String cref, PersonalDTOs personalDTOs) {
-        Optional<Personal> crefExiste = personalRepository.findByCref(cref);
+    public Personal alterarPersonal(UUID id, PersonalDTOs personalDTOs) {
+        Optional<Personal> crefExiste = personalRepository.findById(id);
        if (crefExiste.isEmpty()) {
-           throw new UsuarioExistenteException("Nenhum usuário encontrado com o CREF: " + cref);
+           throw new UsuarioExistenteException("Nenhum usuário encontrado com o CREF: " + id);
        }
        Personal personalEncontrado = crefExiste.get();
         if (personalDTOs.getEmail() != null && !personalDTOs.getEmail().equals(personalEncontrado.getEmail())) {
@@ -124,12 +124,12 @@ public class PersonalServiceImpl implements PersonalService {
 
     @Override
     @Transactional
-    public void deletarPersonal(String cref) {
-        if(!personalRepository.existsByCref(cref)){
-           throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + cref);
+    public void deletarPersonal(UUID id) {
+        if(!personalRepository.existsById(id)){
+           throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + id);
 
         }
-        personalRepository.deleteByCref(cref);
+        personalRepository.deleteById(id);
     }
 
     @Override
@@ -139,6 +139,10 @@ public class PersonalServiceImpl implements PersonalService {
         }
         List<Personal> personais = personalRepository.findByNomeUsuarioContaining(nome);
         if (personais.isEmpty()) {
+            if(nome.length()<2){
+                throw new InformacaoNaoEncontradoException("Nenhum personal com a letra: " + nome);
+            }
+            if(nome.length()>2){}
             throw new InformacaoNaoEncontradoException("Nenhum personal com esse nome: " + nome);
         }
         return personais;

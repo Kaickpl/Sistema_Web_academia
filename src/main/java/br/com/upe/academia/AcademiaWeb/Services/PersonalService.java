@@ -16,9 +16,9 @@ public interface PersonalService {
     public Personal cadastrarPersonal(PersonalDTOs personalDTOs);
 
 
-    public Personal alterarPersonal(String cref, PersonalDTOs personalDTOs);
+    public Personal alterarPersonal(UUID id, PersonalDTOs personalDTOs);
 
-    public void deletarPersonal(String cref);
+    public void deletarPersonal(UUID id);
 
     public Personal buscarPersonal(String cref);
 

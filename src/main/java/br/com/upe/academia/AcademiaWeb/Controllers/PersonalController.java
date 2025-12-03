@@ -22,18 +22,15 @@ public class PersonalController {
     private PersonalService  personalService;
 
 
-    @DeleteMapping("/{cref}")
-    public ResponseEntity<Void> deletarPersonal (@PathVariable String cref){
-      personalService.deletarPersonal(cref);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarPersonal (@PathVariable UUID id){
+      personalService.deletarPersonal(id);
       return ResponseEntity.ok().build();
     }
 
     @GetMapping("/buscar")
     public ResponseEntity<List<PersonalResponseDTOs>> buscarPersonal(@RequestParam String nome) {
         List<Personal> personal = personalService.buscarPersonalNome(nome);
-        if (personal.isEmpty()) {
-            return  ResponseEntity.status(404).body(null);
-        }
         List<PersonalResponseDTOs> dto = personal.stream().map(PersonalResponseDTOs::new).collect(Collectors.toList());
         return ResponseEntity.ok(dto);
     }
@@ -48,12 +45,9 @@ public class PersonalController {
         return ResponseEntity.ok(dto);
     }
 
-    @PutMapping("/{cref}")
-    public ResponseEntity<PersonalResponseDTOs> atualizarPersonal(@PathVariable String cref, @RequestBody PersonalDTOs personalDTOs) {
-        Personal personalExiste = personalService.alterarPersonal(cref, personalDTOs);
-        if (personalExiste == null) {
-            return ResponseEntity.badRequest().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonalResponseDTOs> atualizarPersonal(@PathVariable UUID id, @RequestBody PersonalDTOs personalDTOs) {
+        Personal personalExiste = personalService.alterarPersonal(id, personalDTOs);
         return ResponseEntity.ok(new PersonalResponseDTOs(personalExiste));
     }
     @PutMapping("/RecuperarSenha")
@@ -65,7 +59,6 @@ public class PersonalController {
       return ResponseEntity.ok(new PersonalResponseDTOs(personal));
     }
     @GetMapping("/ListarGruposPersonal/{idPersonal}")
-
     public ResponseEntity<List<GrupoDTOs>> ListarGruposPersonal(@PathVariable UUID idPersonal) {
             List<Grupo> grupo = personalService.ListaGruposPersonal(idPersonal);
             if (grupo.isEmpty()){

@@ -35,12 +35,11 @@ public class SecurityConfig {
                         SessionCreationPolicy.STATELESS
                 ))
                 .authorizeHttpRequests( authorize -> authorize
+                        //autenticacao
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/autenticacao/Login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/autenticacao/cadastro/Personal").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/autenticacao/cadastro/aluno").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/aluno/{id}").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET, "/api/aluno/buscarTodos").hasRole("PersonalTrainer")
                         //Grupo
                         .requestMatchers(HttpMethod.POST, "/api/Grupo").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.DELETE, "/api/Grupo/{id}").hasRole("PersonalTrainer")
@@ -48,14 +47,22 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/Grupo/ListarTodos").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/Grupo/AddAluno/{grupoId}").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.PUT,"/api/Grupo/DeletarAluno/{grupoId}/{idAluno}").hasRole("PersonalTrainer")
-                        .requestMatchers(HttpMethod.GET,"/api/Grupo/ListarAlunosGrupo?").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.GET,"/api/Grupo/ListarAlunosGrupo").hasRole("PersonalTrainer")
                         //Aluno
                         .requestMatchers(HttpMethod.DELETE,"/api/aluno/{id}").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET,"/api/aluno/buscar").hasRole("PERSONALTRAINER")
+                        .requestMatchers(HttpMethod.GET,"/api/aluno/buscar").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.PUT,"/api/aluno/{id}").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.PUT, "/api/aluno/RecuperarSeha").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET,"/api/aluno/ListarGruposAluno/{{idAluno}}").hasRole("ALUNO")
+                        .requestMatchers(HttpMethod.GET,"/api/aluno/ListarGruposAluno/{idAluno}").hasRole("ALUNO")
+                        .requestMatchers(HttpMethod.GET, "/api/aluno/VerPerfil/{idAluno}").hasRole("ALUNO")
+                        .requestMatchers(HttpMethod.GET, "/api/aluno/buscarTodos").hasRole("PersonalTrainer")
                         //Personal
+                        .requestMatchers(HttpMethod.DELETE,"api/personal/{id}").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.PUT,"/api/personal/{id}").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.PUT,"/api/personal/RecuperarSenha").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.GET,"/api/personal/ListarGruposPersonal/{idPersonal}").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.GET, "/api/personal/buscar").hasRole("ALUNO")
+                        .requestMatchers(HttpMethod.GET,"/api/personal/buscarCref").permitAll()
                         //avaliacao
                         .requestMatchers(HttpMethod.GET, "/api/avaliacao/aluno/{alunoId}").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.GET, "/api/avaliacao/aluno/{alunoId}/proxima").hasRole("ALUNO")
