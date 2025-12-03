@@ -7,9 +7,6 @@ import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +25,7 @@ public interface AlunoService {
 
     public Page<Aluno> listarAlunos(Pageable page);
 
-    public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs);
+    public Aluno trocarSenha(TrocaSenhaDTOs senhaDTOs);
 
     public Boolean validarEmail(String email);
 
@@ -42,9 +39,8 @@ public interface AlunoService {
 
     public List<Grupo> ListarGruposAluno(UUID idAluno);
 
-    public List<UUID> buscarIdAlunoPorTreino(UUID idTreino);
-
-
     public Aluno buscarAlunoPorEmail(String email);
+
+    public List<UUID> buscarIdAlunoPorTreino(UUID idTreino);
 }
 

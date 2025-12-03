@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioRepository;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoExercicioService;
@@ -27,7 +28,7 @@ public class ExercicioServiceImpl implements ExercicioService {
     @Override
     public Exercicio buscarExercicio(UUID idExercicio) {
         Optional<Exercicio> exercicio = exercicioRepository.findById(idExercicio);
-        return exercicio.orElseThrow(() -> new RuntimeException("Exercicio não encontrado") );
+        return exercicio.orElseThrow(() -> new InformacaoNaoEncontradoException("Exercicio não encontrado com ID " + idExercicio));
     }
 
     @Override

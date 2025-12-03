@@ -7,7 +7,6 @@ import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
-import br.com.upe.academia.AcademiaWeb.Services.TreinoSessaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +21,6 @@ public class ExercicioSessaoMapper {
 
     @Autowired
     ExercicioService exercicioService;
-
-    @Autowired
-    TreinoSessaoService treinoSessaoService;
 
     public ExercicioSessao toEntity(ExercicioSessaoDTO exercicioSessaoDTO) {
 
@@ -63,6 +59,7 @@ public class ExercicioSessaoMapper {
 
     public ExercicioSessaoResponseDTO toReponseDTO(ExercicioSessao entity) {
         ExercicioSessaoResponseDTO dto = new ExercicioSessaoResponseDTO();
+        dto.setIdExercicioSessao(entity.getIdExercicioSessao());
         dto.setNomeExercicio(entity.getExercicioTemplate().getNomeExercicio());
         dto.setComentarioSessao(entity.getComentario());
         if(entity.getTreinoExecucao() != null) {

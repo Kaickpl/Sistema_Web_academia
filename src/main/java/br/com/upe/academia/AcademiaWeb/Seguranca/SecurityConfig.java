@@ -43,12 +43,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/aluno/buscarTodos").hasRole("PersonalTrainer")
                         //Grupo
                         .requestMatchers(HttpMethod.POST, "/api/Grupo").hasRole("PersonalTrainer")
-                        .requestMatchers(HttpMethod.DELETE, "/api/Grupo/{{id}}?").hasRole("PersonalTrainer")
-                        .requestMatchers(HttpMethod.GET, "/api/Grupo/BuscarPorNome?").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/Grupo/{id}").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.GET, "/api/Grupo/BuscarPorNome").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/Grupo/ListarTodos").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/Grupo/AddAluno/{{grupoId}}").hasRole("PersonalTrainer")
-                        .requestMatchers(HttpMethod.PUT,"/api/Grupo/DeletarAluno/{{grupoId}}/{{idAluno}}").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.PUT, "/api/Grupo/AddAluno/{grupoId}").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.PUT,"/api/Grupo/DeletarAluno/{grupoId}/{idAluno}").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.GET,"/api/Grupo/ListarAlunosGrupo?").hasRole("PersonalTrainer")
+                        //Aluno
+                        .requestMatchers(HttpMethod.DELETE,"/api/aluno/{id}").hasRole("ALUNO")
+                        .requestMatchers(HttpMethod.GET,"/api/aluno/buscar").hasRole("PERSONALTRAINER")
+                        .requestMatchers(HttpMethod.PUT,"/api/aluno/{id}").hasRole("ALUNO")
+                        .requestMatchers(HttpMethod.PUT, "/api/aluno/RecuperarSeha").hasRole("ALUNO")
+                        .requestMatchers(HttpMethod.GET,"/api/aluno/ListarGruposAluno/{{idAluno}}").hasRole("ALUNO")
+                        //Personal
                         //avaliacao
                         .requestMatchers(HttpMethod.GET, "/api/avaliacao/aluno/{{alunoId}}").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.GET, "/api/avaliacao/aluno/{{alunoId}}/proxima").hasRole("ALUNO")

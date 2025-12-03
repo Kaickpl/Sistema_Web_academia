@@ -56,9 +56,9 @@ public class PersonalController {
         }
         return ResponseEntity.ok(new PersonalResponseDTOs(personalExiste));
     }
-    @PutMapping("/RecuperarSenha/{id}")
-    public ResponseEntity<PersonalResponseDTOs> atualizarSenha(@PathVariable String email, @RequestBody TrocaSenhaDTOs senhaDTOs) {
-      Personal personal = personalService.TrocaSenha(email, senhaDTOs);
+    @PutMapping("/RecuperarSenha")
+    public ResponseEntity<PersonalResponseDTOs> atualizarSenha( @RequestBody TrocaSenhaDTOs senhaDTOs) {
+      Personal personal = personalService.TrocaSenha( senhaDTOs);
       if (personal == null) {
           return ResponseEntity.badRequest().build();
       }

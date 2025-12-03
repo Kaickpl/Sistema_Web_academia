@@ -13,18 +13,20 @@ public class ExecutavelDeletarTreinoSessao implements Executavel {
     private TreinoSessaoService treinoSessaoService;
     private TreinoSessao treinoSessaoDeletada;
     private UUID idTreinoSessao;
+    private UUID idAluno;
     private List<ExercicioSessao> exerciciosSalvos;
 
-    public ExecutavelDeletarTreinoSessao(TreinoSessaoService treinoSessaoService, UUID idTreinoSessao) {
+    public ExecutavelDeletarTreinoSessao(TreinoSessaoService treinoSessaoService, UUID idAluno , UUID idTreinoSessao) {
         this.treinoSessaoService = treinoSessaoService;
         this.idTreinoSessao = idTreinoSessao;
+        this.idAluno = idAluno;
     }
 
     @Override
     public void executar() {
         UUID idParaBuscar = (this.treinoSessaoDeletada == null) ? this.idTreinoSessao : this.treinoSessaoDeletada.getIdTreinoSessao();
 
-        this.treinoSessaoDeletada = treinoSessaoService.buscarSessaoPorId(idParaBuscar);
+        this.treinoSessaoDeletada = treinoSessaoService.buscarSessaoPorId(idAluno, idParaBuscar);
 
         if(this.treinoSessaoDeletada != null){
             this.exerciciosSalvos = clonarExerciciosRecursivamente(this.treinoSessaoDeletada.getExerciciosRealizados());

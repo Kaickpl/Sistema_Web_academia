@@ -16,12 +16,14 @@ public class ExecutavelCriarExercicioSessao implements Executavel{
     private ExercicioSessao exercicioSessao;
     private ExercicioSessaoDTO exercicioSessaoDTO;
     private ExercicioSessaoService exercicioSessaoService;
+    private UUID idTreinoSessao;
     private UUID idExercicioSessao;
     private List<SerieSessao> seriesSalvas;
 
     public ExecutavelCriarExercicioSessao(ExercicioSessaoService exercicioSessaoService, ExercicioSessaoDTO exercicioSessaoDTO) {
         this.exercicioSessaoService = exercicioSessaoService;
         this.exercicioSessaoDTO = exercicioSessaoDTO;
+        this.idTreinoSessao = exercicioSessaoDTO.getIdTreinoSessao();
     }
 
     @Override
@@ -35,7 +37,7 @@ public class ExecutavelCriarExercicioSessao implements Executavel{
     public void desfazer() {
         if(this.idExercicioSessao != null){
             this.seriesSalvas = this.exercicioSessao.getSeriesRealizadas();
-            exercicioSessaoService.deletarExercicioSessao(this.idExercicioSessao);
+            exercicioSessaoService.deletarExercicioSessao(this.idExercicioSessao, idTreinoSessao);
         }
     }
 }

@@ -22,19 +22,19 @@ public interface PersonalService {
 
     public Personal buscarPersonal(String cref);
 
-    Optional<Personal> buscarPersonalEmail(String email);
-
     public List<Personal> buscarPersonalNome(String nomeUsuario);
 
     public boolean existeCref(String cref);
 
     public Boolean validarEmail(String email);
 
-    public Personal TrocaSenha(String email, TrocaSenhaDTOs senhaDTOs);
+    public Personal TrocaSenha(TrocaSenhaDTOs senhaDTOs);
 
     public Boolean validarCref(String cref);
 
     public List<Grupo> ListaGruposPersonal(UUID idPersonal);
 
     public Personal buscarPersonalPorEmail(String email);
+
+    public Optional<Personal> buscarPersonalEmail(String email);
 }

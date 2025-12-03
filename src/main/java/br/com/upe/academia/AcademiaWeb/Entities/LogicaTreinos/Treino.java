@@ -1,9 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
-
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
