@@ -22,8 +22,6 @@ public interface PersonalService {
 
     public Personal buscarPersonal(String cref);
 
-    Optional<Personal> buscarPersonalEmail(String email);
-
     public List<Personal> buscarPersonalNome(String nomeUsuario);
 
     public boolean existeCref(String cref);
@@ -37,4 +35,6 @@ public interface PersonalService {
     public List<Grupo> ListaGruposPersonal(UUID idPersonal);
 
     public Personal buscarPersonalPorEmail(String email);
+
+    public Optional<Personal> buscarPersonalEmail(String email);
 }

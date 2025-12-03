@@ -40,5 +40,7 @@ public interface AlunoService {
     public List<Grupo> ListarGruposAluno(UUID idAluno);
 
     public Aluno buscarAlunoPorEmail(String email);
+
+    public List<UUID> buscarIdAlunoPorTreino(UUID idTreino);
 }
 
