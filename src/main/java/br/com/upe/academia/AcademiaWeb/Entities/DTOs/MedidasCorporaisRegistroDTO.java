@@ -41,6 +41,5 @@ public class MedidasCorporaisRegistroDTO {
         this.percentualAgua = medidasCorporais.getPercentualAgua();
         this.peso = medidasCorporais.getPeso();
         this.altura = medidasCorporais.getAltura();
-
     }
 }

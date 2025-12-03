@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/avaliacao")
+@RequestMapping("/api/avaliacao")
 public class AvaliacaoController {
     @Autowired
     private AvaliacaoService avaliacaoService;
@@ -22,6 +22,11 @@ public class AvaliacaoController {
     @GetMapping("/aluno/{alunoId}")
     public List<AvaliacaoResponseDTO> listarAvaliacaoAluno(@PathVariable UUID alunoId) {
         return avaliacaoService.mostrarAvaliacaoAluno(alunoId);
+    }
+
+    @GetMapping("/aluno/{alunoId}/proxima")
+    public AvaliacaoResponseDTO mostrarProximaAvaliacaoAluno(@PathVariable UUID alunoId){
+        return avaliacaoService.mostrarProximaAvaliacaoAluno(alunoId);
     }
 
     @GetMapping("/personal/{cref}")
@@ -45,9 +50,10 @@ public class AvaliacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Avaliacao> criarAvaliacao(@RequestBody AvaliacaoDTOs avaliacaoDTOs){
+    public ResponseEntity<AvaliacaoResponseDTO> criarAvaliacao(@RequestBody AvaliacaoDTOs avaliacaoDTOs){
         Avaliacao novaAvaliacao = avaliacaoService.criarAvaliacao(avaliacaoDTOs);
-        return new ResponseEntity<>(novaAvaliacao, HttpStatus.CREATED);
+        AvaliacaoResponseDTO responseDTO = new AvaliacaoResponseDTO(novaAvaliacao);
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     //atualiza data

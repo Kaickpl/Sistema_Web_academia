@@ -1,5 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivoExercicioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivoRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ObjetivosResponseDTO;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/objetivos")
+@RequestMapping("/api/objetivos")
 public class ObjetivosController {
     @Autowired
     private ObjetivosService objetivosService;
@@ -36,17 +37,18 @@ public class ObjetivosController {
         return objetivosService.mostrarObjetivosNaoConcluidos(alunoId);
     }
 
-    @PostMapping
-    public ResponseEntity<ObjetivosDTO> registrarObjetivo(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO){
+
+    @PostMapping("/medidas")
+    public ResponseEntity<ObjetivosDTO> registrarObjetivoMedidas(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO){
         Objetivos novoObjetivo = objetivosService.registrarObjetivo(objetivoRegistroDTO);
         ObjetivosDTO dto = new ObjetivosDTO(novoObjetivo);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
-    @PutMapping("/{idObjetivo}")
-    public ResponseEntity<ObjetivosDTO> atualizarObjetivo(@RequestBody ObjetivoRegistroDTO objetivoRegistroDTO, @PathVariable UUID idObjetivo){
-        Objetivos objetivoAtualizado = objetivosService.atualizaObjetivo(idObjetivo, objetivoRegistroDTO);
-        ObjetivosDTO dto = new ObjetivosDTO(objetivoAtualizado);
+    @PostMapping("/exercicios/{idExercicio}")//recebe o template
+    public ResponseEntity<ObjetivosDTO> registrarObjetivoExercicios(@RequestBody ObjetivoExercicioDTO objetivoRegistroDTO, @PathVariable UUID idExercicio){
+        Objetivos novoObjetivo = objetivosService.registrarObjetivoExercicio(objetivoRegistroDTO, idExercicio);
+        ObjetivosDTO dto = new ObjetivosDTO(novoObjetivo);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 }

@@ -10,23 +10,18 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ObjetivosDTO {
-    private UUID idObjetivo;
+@NoArgsConstructor
+public class ObjetivoExercicioDTO {
     private UUID alunoId;
-    private String tipoMedida;
     private double valorAlvo;
     private double valorAtual;
     private boolean concluido;
     private String tipoObjetivo;
-    public ObjetivosDTO(Objetivos objetivos){
-        this.idObjetivo = objetivos.getIdObjetivo();
+    public ObjetivoExercicioDTO(Objetivos objetivos){
         this.alunoId = objetivos.getAluno().getIdUsuario();
-        this.tipoMedida = objetivos.getTipoMedida();
         this.valorAlvo = objetivos.getValorAlvo();
         this.valorAtual = objetivos.getValorAtual();
         this.concluido = objetivos.isConcluido();
-        this.tipoObjetivo = objetivos.getTipoObjetivo();
     }
 }

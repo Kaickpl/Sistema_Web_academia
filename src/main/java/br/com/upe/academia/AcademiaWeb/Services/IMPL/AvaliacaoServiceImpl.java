@@ -45,7 +45,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         if (personal.isEmpty()){
             throw new InformacaoNaoEncontradoException("Não existe um personal registrado com esse CREF");
         }
-        MedidasCorporais medidasCorporais = medidasCorporaisService.buscarMedidasPorId(avaliacaoDTOs.getMedidasId());
+        MedidasCorporais medidasCorporais = medidasCorporaisService.buscarMedidasPorId(medidasCorporaisService.mostrarMedidasAtuais(avaliacaoDTOs.getAlunoId()).getMedidasCoporaisId());
         if (medidasCorporais == null){
             throw new InformacaoNaoEncontradoException("Não foram encontradas medidas corporais com esse id.");
         }
@@ -55,7 +55,6 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         novaAvaliacao.setMedidasCorporais(medidasCorporais);
         novaAvaliacao.setObjetivoAvaliacao(avaliacaoDTOs.getObjetivoAvaliacao());
         novaAvaliacao.setDataAvaliacao(avaliacaoDTOs.getDataAvaliacao());
-        novaAvaliacao.setDataSolicitacao(avaliacaoDTOs.getDataSolicitacao());
         return avaliacaoRepository.save(novaAvaliacao);
     }
 
@@ -71,6 +70,21 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         }
         List<Avaliacao> avaliacoes = avaliacaoRepository.findByAluno_IdUsuario(alunoId);
         return avaliacoes.stream().map(AvaliacaoResponseDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public AvaliacaoResponseDTO mostrarProximaAvaliacaoAluno(UUID alunoId) {
+        Aluno aluno = alunoService.buscarAlunoPorId(alunoId);
+        if (aluno == null){
+            throw new UsuarioNaoEncontradoException();
+        }
+        boolean existeAvaliacao = avaliacaoRepository.existsByAluno_IdUsuario(alunoId);
+        if (!existeAvaliacao){
+            throw new InformacaoNaoEncontradoException("Este aluno não possui nenhuma avaliação registrada");
+        }
+        Avaliacao proxAvaliacao = avaliacaoRepository.findTop1ByAluno_IdUsuario(alunoId);
+        AvaliacaoResponseDTO avaliacaoResponseDTO = new AvaliacaoResponseDTO(proxAvaliacao);
+        return avaliacaoResponseDTO;
     }
 
     @Override

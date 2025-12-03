@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface ExercicioRepository extends JpaRepository<Exercicio, UUID> {
     @Query("SELECT e FROM Exercicio e JOIN e.regrasDeTreinos regra WHERE regra.treino.idTreino = :treinoId")
     List<Exercicio> findByTreinoIdTreino(@Param("treinoId") UUID idTreino);
+    Exercicio findExercicioByIdExercicio(UUID idExercicio);
 }

@@ -7,11 +7,10 @@ import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
 import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
+import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
-import br.com.upe.academia.AcademiaWeb.Repositories.ObjetivosRepository;
-import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
+import br.com.upe.academia.AcademiaWeb.Services.AnaliseDesempenhoService;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
-import br.com.upe.academia.AcademiaWeb.Services.ObjetivosService;
 import br.com.upe.academia.AcademiaWeb.utils.MedidasUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,17 +24,21 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
     @Autowired
     MedidasCorporaisRepository medidasCorporaisRepository;
     @Autowired
-    private GerenciaConquistas gerenciaConquistas;
+    private AlunoRepository alunoRepository;
     @Autowired
-    private AlunoService alunoService;
-    @Autowired
-    private ObjetivosService objetivosService;
+    private AnaliseDesempenhoService analiseDesempenhoService;
 
 
     @Override
     public List<MedidasCorporaisResponseDTO> mostrarHistoricoMedidasCorporais(UUID alunoId) {
         List<MedidasCorporais> medidasCorporaisList = medidasCorporaisRepository.findByAluno_IdUsuarioOrderByDataAsc(alunoId);
 
+        return medidasCorporaisList.stream().map(MedidasCorporaisResponseDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MedidasCorporaisResponseDTO> mostrar10Medidas(UUID alunoId) {
+        List<MedidasCorporais> medidasCorporaisList = medidasCorporaisRepository.findTop10ByAluno_IdUsuarioOrderByDataDesc(alunoId);
         return medidasCorporaisList.stream().map(MedidasCorporaisResponseDTO::new).collect(Collectors.toList());
     }
 
@@ -51,7 +54,7 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
 
     @Override
     public MedidasCorporais registrarMedidas(MedidasCorporaisRegistroDTO medidasCorporaisDTOs) {
-        Aluno aluno = alunoService.buscarAlunoPorId(medidasCorporaisDTOs.getAlunoId());
+        Aluno aluno = alunoRepository.findByIdUsuario(medidasCorporaisDTOs.getAlunoId());
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
@@ -83,7 +86,7 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
         novasMedidas.setPeso(medidasCorporaisDTOs.getPeso());
         novasMedidas.setAltura(medidasCorporaisDTOs.getAltura());
         MedidasCorporais medidasSalvas = medidasCorporaisRepository.save(novasMedidas);
-        atualizarObjetivosAluno(novasMedidas);
+        analiseDesempenhoService.processarNovasMedidas(medidasSalvas);
         return medidasSalvas;
     }
 
@@ -93,42 +96,8 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
     }
 
     public void validarMedida(Double valor, String nomeCampo){
-        if (valor <= 0){
-            throw new ValorInvalidoException("A medida de " + nomeCampo + " deve ser maior que zero");
-        }
-    }
-
-    public void atualizarObjetivosAluno(MedidasCorporais medidasCorporais){
-        UUID alunoId = medidasCorporais.getAluno().getIdUsuario();
-        List<String> tiposDeMedida = List.of("peso", "braco", "cintura", "abdomen", "peito", "quadril", "coxa", "ombro", "massaMagra", "gordura", "percentualAgua", "altura");
-        for (String tipo : tiposDeMedida) {
-            Double novoValor = MedidasUtils.getValorPorNome(medidasCorporais, tipo);
-
-            if (novoValor != null && novoValor > 0){
-                List<ObjetivosDTO> objetivosParaAtualizar = objetivosService.mostrarObjetivosNaoConcluidosPorTipoMedida(alunoId, tipo);
-                for (ObjetivosDTO objetivo : objetivosParaAtualizar){
-                    boolean estavaConcluidoAntes = objetivo.isConcluido();
-                    boolean ehPraDiminuir = objetivo.getValorAlvo() < objetivo.getValorAtual();
-                    objetivo.setValorAtual(novoValor);
-                    boolean concluido;
-                    if (ehPraDiminuir){
-                        concluido = novoValor <= objetivo.getValorAlvo();
-                    } else {
-                        concluido = novoValor >= objetivo.getValorAlvo();
-                    }
-                    objetivo.setConcluido(concluido);
-                    ObjetivoRegistroDTO objetivoRegistroDTO = new ObjetivoRegistroDTO();
-                    objetivoRegistroDTO.setAlunoId(objetivo.getAlunoId());
-                    objetivoRegistroDTO.setTipoMedida(objetivo.getTipoMedida());
-                    objetivoRegistroDTO.setValorAlvo(objetivo.getValorAlvo());
-                    objetivoRegistroDTO.setValorAtual(objetivo.getValorAtual());
-                    objetivoRegistroDTO.setConcluido(objetivo.isConcluido());
-                    objetivosService.atualizaObjetivo(objetivo.getIdObjetivo(), objetivoRegistroDTO);
-                    if (!estavaConcluidoAntes && concluido) {
-                        gerenciaConquistas.decisaoConquistaObjetivo(alunoId);
-                    }
-                }
-            }
+        if (valor != null &&valor <= 0){
+            throw new ValorInvalidoException("Se informada, a medida de " + nomeCampo + " deve ser maior que zero");
         }
     }
 
