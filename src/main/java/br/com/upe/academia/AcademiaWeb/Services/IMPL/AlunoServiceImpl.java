@@ -13,6 +13,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +36,9 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Autowired
     private TreinoService treinoService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public boolean existeEmail(String email) {
 
@@ -60,7 +68,8 @@ public class AlunoServiceImpl implements AlunoService {
 
         Aluno aluno =  new Aluno();
         aluno.setEmail(alunoDTOs.getEmail());
-        aluno.setSenha(alunoDTOs.getSenha());
+        String password = passwordEncoder.encode(alunoDTOs.getSenha());
+        aluno.setSenha(password);
         aluno.setDataNascimento(alunoDTOs.getDataNascimento());
         aluno.setTelefone(alunoDTOs.getTelefone());
         aluno.setTipo(alunoDTOs.getTipo());
@@ -109,10 +118,10 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
-        Optional<Aluno> alunoExiste = alunoRepository.findByEmail(Email);
+    public Aluno trocarSenha( TrocaSenhaDTOs senhaDTOs){
+        Optional<Aluno> alunoExiste = alunoRepository.findByEmail(senhaDTOs.getEmail());
         if (alunoExiste.isEmpty()) {
-            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse email: "+ Email);
+            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse email: "+ senhaDTOs.getEmail());
         }
 
         if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank() ||
@@ -127,7 +136,8 @@ public class AlunoServiceImpl implements AlunoService {
             throw new OperacaoNaoPermitidaException("A nova senha não pode ser igual a atual.");
         }
         Aluno alunoEncontrado = alunoExiste.get();
-        alunoEncontrado.setSenha(senhaDTOs.getConfirmaSenha());
+
+        alunoEncontrado.setSenha(passwordEncoder.encode(senhaDTOs.getNovaSenha()));
         return alunoRepository.save(alunoEncontrado);
     }
 
@@ -239,6 +249,11 @@ public class AlunoServiceImpl implements AlunoService {
             throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado foi encontrado.");
         }
         return alunoRepository.findAll(page);
+    }
+
+    @Override
+    public Aluno buscarAlunoPorEmail(String email) {
+        return alunoRepository.findByEmail(email).orElse(null);
     }
 
 }

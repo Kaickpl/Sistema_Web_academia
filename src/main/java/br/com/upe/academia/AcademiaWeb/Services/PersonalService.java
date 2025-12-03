@@ -4,6 +4,8 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,11 +30,11 @@ public interface PersonalService {
 
     public Boolean validarEmail(String email);
 
-    public Personal TrocaSenha(String email, TrocaSenhaDTOs senhaDTOs);
+    public Personal TrocaSenha(TrocaSenhaDTOs senhaDTOs);
 
     public Boolean validarCref(String cref);
 
     public List<Grupo> ListaGruposPersonal(UUID idPersonal);
 
-
+    public Personal buscarPersonalPorEmail(String email);
 }

@@ -36,18 +36,6 @@ public class AlunoController {
     @Autowired
     private TreinoService treinoService;
 
-    @PostMapping
-    // AlunoResponse no post
-    public ResponseEntity<AlunoResponseDTOs> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
-        Aluno aluno = alunoService.cadastrarAluno(alunoDTOs);
-        if (aluno == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        AlunoResponseDTOs dto = new AlunoResponseDTOs(aluno);
-        return ResponseEntity.ok(dto);
-    }
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarAluno(@PathVariable UUID id) {
         alunoService.removerAluno(id);
@@ -78,13 +66,10 @@ public class AlunoController {
         return ResponseEntity.ok(new AlunoResponseDTOs(alunoExistente));
     }
 
-    @PutMapping("/RecuperarSeha/{Email}")
-    public ResponseEntity<AlunoResponseDTOs> recuperarSenha(@PathVariable String Email, @RequestBody TrocaSenhaDTOs senhaDTOs) {
-        Aluno alunoExixste = alunoService.trocarSenha(Email, senhaDTOs);
-        if (alunoExixste == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(new AlunoResponseDTOs(alunoExixste));
+    @PutMapping("/RecuperarSeha")
+    public ResponseEntity<AlunoResponseDTOs> recuperarSenha(@RequestBody TrocaSenhaDTOs senhaDTOs) {
+            Aluno alunoExixste = alunoService.trocarSenha(senhaDTOs);
+            return ResponseEntity.ok(new AlunoResponseDTOs(alunoExixste));
     }
 
     @PostMapping("/{idAluno}/treinos")
