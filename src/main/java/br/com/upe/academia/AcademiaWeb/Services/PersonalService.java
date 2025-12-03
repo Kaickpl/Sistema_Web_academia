@@ -27,7 +27,7 @@ public interface PersonalService {
 
     public Boolean validarEmail(String email);
 
-    public Personal TrocaSenha(String email, TrocaSenhaDTOs senhaDTOs);
+    public Personal TrocaSenha(TrocaSenhaDTOs senhaDTOs);
 
     public Boolean validarCref(String cref);
 

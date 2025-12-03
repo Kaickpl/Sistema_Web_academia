@@ -116,10 +116,10 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
-        Optional<Aluno> alunoExiste = alunoRepository.findByEmail(Email);
+    public Aluno trocarSenha( TrocaSenhaDTOs senhaDTOs){
+        Optional<Aluno> alunoExiste = alunoRepository.findByEmail(senhaDTOs.getEmail());
         if (alunoExiste.isEmpty()) {
-            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse email: "+ Email);
+            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse email: "+ senhaDTOs.getEmail());
         }
 
         if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank() ||
@@ -135,7 +135,7 @@ public class AlunoServiceImpl implements AlunoService {
         }
         Aluno alunoEncontrado = alunoExiste.get();
 
-        alunoEncontrado.setSenha(senhaDTOs.getConfirmaSenha());
+        alunoEncontrado.setSenha(passwordEncoder.encode(senhaDTOs.getNovaSenha()));
         return alunoRepository.save(alunoEncontrado);
     }
 

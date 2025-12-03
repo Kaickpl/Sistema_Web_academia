@@ -28,7 +28,7 @@ public interface AlunoService {
 
     public Page<Aluno> listarAlunos(Pageable page);
 
-    public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs);
+    public Aluno trocarSenha(TrocaSenhaDTOs senhaDTOs);
 
     public Boolean validarEmail(String email);
 

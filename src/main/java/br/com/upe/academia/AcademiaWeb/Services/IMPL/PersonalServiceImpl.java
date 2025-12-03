@@ -145,10 +145,10 @@ public class PersonalServiceImpl implements PersonalService {
     }
 
     @Override
-    public Personal TrocaSenha(String email, TrocaSenhaDTOs senhaDTOs){
-        Optional<Personal> personalExiste = personalRepository.findByEmail(email);
+    public Personal TrocaSenha( TrocaSenhaDTOs senhaDTOs){
+        Optional<Personal> personalExiste = personalRepository.findByEmail(senhaDTOs.getEmail());
         if (personalExiste.isEmpty()) {
-            throw new InformacaoNaoEncontradoException("Nenhum personal com esse email: " + email);
+            throw new InformacaoNaoEncontradoException("Nenhum personal com esse email: " + senhaDTOs.getEmail());
 
         }
         if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank()
@@ -164,7 +164,7 @@ public class PersonalServiceImpl implements PersonalService {
 
         }
         Personal personal = personalExiste.get();
-        personal.setSenha(senhaDTOs.getConfirmaSenha());
+        personal.setSenha(passwordEncoder.encode(senhaDTOs.getNovaSenha()));
         return personalRepository.save(personal);
     }
 
