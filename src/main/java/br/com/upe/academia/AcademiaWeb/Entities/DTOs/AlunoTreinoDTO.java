@@ -1,15 +1,17 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import java.util.UUID;
 
-@Setter
-@Getter
+@Data
 public class AlunoTreinoDTO {
+    private UUID idAluno;
     @NonNull
-    UUID idAluno;
-    @NonNull
-    UUID idTreino;
+    private UUID idTreino;
+    @JsonProperty("isCopiaCompartilhada")
+    private boolean isCopiaCompartilhada = false;
 
 }

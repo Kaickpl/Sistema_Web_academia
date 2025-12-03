@@ -211,4 +211,9 @@ public class PersonalServiceImpl implements PersonalService {
         return personalRepository.findByEmail(email).orElse(null) ;
     }
 
+    @Override
+    public Optional<Personal> buscarPersonalEmail(String email) {
+        return personalRepository.findByEmail(email);
+    }
+
 }

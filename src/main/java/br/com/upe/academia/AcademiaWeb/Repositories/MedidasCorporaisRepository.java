@@ -14,5 +14,6 @@ public interface MedidasCorporaisRepository extends JpaRepository<MedidasCorpora
 
     List<MedidasCorporais> findByAluno_IdUsuarioOrderByDataAsc(UUID alunoId);
     MedidasCorporais findTop1ByAluno_IdUsuarioOrderByDataDesc(UUID alunoId);
+    MedidasCorporais findByIdMedidas(UUID idMedidas);
 
 }

@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Controllers.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
+import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.CommandHistory;
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.*;
@@ -30,6 +31,8 @@ public class TreinoController {
     private ExercicioService exercicioService;
     @Autowired
     private ExercicioMapper exercicioMapper;
+    @Autowired
+    private AlunoService alunoService;
 
     @GetMapping("/{id}")
     public ResponseEntity<TreinoDTO> buscarTreino(@PathVariable("id") UUID id){
@@ -62,7 +65,7 @@ public class TreinoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarTreino(@PathVariable("id") UUID idTreino){
-        ExecutavelDeletarTreino comandoDelTreino = new ExecutavelDeletarTreino(treinoService ,idTreino);
+        ExecutavelDeletarTreino comandoDelTreino = new ExecutavelDeletarTreino(treinoService , alunoService ,idTreino);
         commandHistory.execute(comandoDelTreino);
         return ResponseEntity.noContent().build();
     }

@@ -3,6 +3,9 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ComentarioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioSessaoDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.ExercicioSessao;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
+import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioSessaoService;
@@ -26,28 +29,32 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     @Autowired
     private ExercicioService exercicioService;
     @Autowired
-    private TreinoSessaoService treinoSessaoService;
-    @Autowired
     private ExercicioSessaoMapper exercicioSessaoMapper;
     @Autowired
     private SerieSessaoService serieSessaoService;
     @Autowired
-    private SerieSessaoMapper serieSessaoMapper;
+    private TreinoSessaoService treinoSessaoService;
 
     @Override
-    public ExercicioSessao buscarExercicioSessao(UUID id) {
-        return exercicioSessaoRepository.findById(id).orElseThrow( () -> new RuntimeException("Execução de Exercicio não encontrada"));
+    public ExercicioSessao buscarExercicioSessao(UUID idTreinoSessao, UUID idExercicioSessao) {
+        ExercicioSessao exSessao = exercicioSessaoRepository.findById(idExercicioSessao).orElseThrow( () -> new InformacaoNaoEncontradoException("Execução de Exercicio não encontrada com ID " + idExercicioSessao));
+
+        if(!exSessao.getTreinoExecucao().getIdTreinoSessao().equals(idTreinoSessao)){
+            throw new ValorInvalidoException("A execução de exercicio a ser encontrada não pertence à sessão de treino informada na URL.");
+        }
+
+        return exSessao;
     }
 
     @Override
-    public List<SerieSessao> listarSeriesExecucao(UUID idExercicio) {
-        ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicio);
+    public List<SerieSessao> listarSeriesExecucao(UUID idTreinoSessao , UUID idExercicio) {
+        ExercicioSessao exercicioSessao = buscarExercicioSessao(idTreinoSessao, idExercicio);
         return new ArrayList<>(exercicioSessao.getSeriesRealizadas());
     }
 
     @Override
-    public ExercicioSessao reinserirSeries(List<SerieSessao> serieSessao, UUID idExercicio) {
-        ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicio);
+    public ExercicioSessao reinserirSeries(List<SerieSessao> serieSessao, UUID idSessao , UUID idExercicio) {
+        ExercicioSessao exercicioSessao = buscarExercicioSessao(idSessao, idExercicio);
         for(SerieSessao series : serieSessao){
             series.setIdSerieSessao(null);
             series.setExercicioSessao(exercicioSessao);
@@ -59,23 +66,23 @@ public class ExercicioSessaoServiceImpl implements ExercicioSessaoService {
     @Override
     @Transactional
     public ExercicioSessao salvarExercicioSessao(ExercicioSessaoDTO exerciciosessaoDTO) {
-        treinoSessaoService.buscarSessaoPorId(exerciciosessaoDTO.getIdTreinoSessao());
         exercicioService.buscarExercicio(exerciciosessaoDTO.getIdExercicio());
-        ExercicioSessao exercicioSessao = exercicioSessaoMapper.toEntity(exerciciosessaoDTO);
+        treinoSessaoService.buscarSessaoPorIdUnico(exerciciosessaoDTO.getIdTreinoSessao());
+        ExercicioSessao exercicioSessao = exercicioSessaoRepository.save(exercicioSessaoMapper.toEntity(exerciciosessaoDTO));
 
-        return exercicioSessaoRepository.save(exercicioSessao);
+        return exercicioSessao;
     }
 
     @Override
     @Transactional
-    public void deletarExercicioSessao(UUID idExercicio) {
-        this.buscarExercicioSessao(idExercicio);
+    public void deletarExercicioSessao(UUID idSessao ,UUID idExercicio) {
+        this.buscarExercicioSessao(idSessao, idExercicio);
         exercicioSessaoRepository.deleteById(idExercicio);
     }
 
     @Override
-    public ExercicioSessao adicionarComentario(UUID idExercicioSessao, String comentario) {
-        ExercicioSessao exercicioSessao = buscarExercicioSessao(idExercicioSessao);
+    public ExercicioSessao adicionarComentario(UUID idSessao, UUID idExercicioSessao , String comentario) {
+        ExercicioSessao exercicioSessao = buscarExercicioSessao(idSessao,idExercicioSessao);
         exercicioSessao.setComentario(comentario);
         return exercicioSessaoRepository.save(exercicioSessao);
     }

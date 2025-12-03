@@ -6,12 +6,14 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExercicioSessaoResponseDTO {
+    private UUID idExercicioSessao;
     private String nomeExercicio;
     private String comentarioSessao;
     private List<SerieSessaoResponseDTO> seriesExecutadas = new ArrayList<>();

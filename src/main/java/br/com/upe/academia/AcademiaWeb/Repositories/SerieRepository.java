@@ -1,7 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Repositories;
-
-import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface SerieRepository extends JpaRepository<Serie, UUID> {
-    List<Serie> findByExercicio(Exercicio exercicio);
+    List<Serie> findByTreinoExercicio(TreinoExercicio treinoExercicio);
+
 }

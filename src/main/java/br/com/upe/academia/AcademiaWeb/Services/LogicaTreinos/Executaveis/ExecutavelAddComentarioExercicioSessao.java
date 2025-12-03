@@ -8,28 +8,30 @@ import java.util.UUID;
 public class ExecutavelAddComentarioExercicioSessao implements Executavel {
     private String comentarioOriginal;
     private String comentarioNovo;
+    private UUID idSessao;
     private UUID exercicioExecucaoId;
     private ExercicioSessaoService service;
 
-    public ExecutavelAddComentarioExercicioSessao(ExercicioSessaoService service,UUID exercicioSessaoId, ComentarioDTO comentario) {
+    public ExecutavelAddComentarioExercicioSessao(ExercicioSessaoService service,UUID idSessao ,UUID exercicioSessaoId, ComentarioDTO comentario) {
         this.exercicioExecucaoId = exercicioSessaoId;
         this.comentarioNovo = comentario.getComentario();
         this.service = service;
+        this.idSessao = idSessao;
     }
 
     @Override
     public void executar() {
-        ExercicioSessao sessao = service.buscarExercicioSessao(exercicioExecucaoId);
+        ExercicioSessao sessao = service.buscarExercicioSessao(idSessao, exercicioExecucaoId);
         this.comentarioOriginal = sessao.getComentario();
-        service.adicionarComentario(exercicioExecucaoId, comentarioNovo);
+        service.adicionarComentario(idSessao, exercicioExecucaoId ,comentarioNovo);
     }
 
     @Override
     public void desfazer() {
         if(this.comentarioOriginal != null){
-            this.service.adicionarComentario(exercicioExecucaoId, comentarioOriginal);
+            this.service.adicionarComentario(idSessao ,exercicioExecucaoId,comentarioOriginal);
         } else {
-          this.service.adicionarComentario(exercicioExecucaoId, null);
+          this.service.adicionarComentario( idSessao,exercicioExecucaoId, null);
         }
     }
 }

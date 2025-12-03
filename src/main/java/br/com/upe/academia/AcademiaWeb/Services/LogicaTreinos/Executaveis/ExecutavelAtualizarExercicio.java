@@ -2,14 +2,17 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis;
 
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
+import lombok.Getter;
+import lombok.Setter;
 
 
 import java.util.UUID;
 
-
+@Getter
+@Setter
 public class ExecutavelAtualizarExercicio implements Executavel {
     private final ExercicioService exercicioService;
-    private final UUID id;
+    private final UUID idExercicio;
     private final Exercicio dadosNovos;
 
     private Exercicio exercicioAntigo;
@@ -17,14 +20,21 @@ public class ExecutavelAtualizarExercicio implements Executavel {
 
     public ExecutavelAtualizarExercicio(ExercicioService service, UUID id, Exercicio dadosNovos) {
         this.exercicioService = service;
-        this.id = id;
+        this.idExercicio = id;
+        dadosNovos.setIdExercicio(id);
         this.dadosNovos = dadosNovos;
     }
 
     @Override
     public void executar() {
-        this.exercicioAntigo = exercicioService.buscarExercicio(this.id);
-        exercicioAtualizado = exercicioService.alterarExercicio(this.dadosNovos);
+        Exercicio estadoAtualNoBanco = exercicioService.buscarExercicio(this.idExercicio);
+        this.exercicioAntigo = new Exercicio();
+        this.exercicioAntigo.setIdExercicio(estadoAtualNoBanco.getIdExercicio());
+        this.exercicioAntigo.setNomeExercicio(estadoAtualNoBanco.getNomeExercicio());
+        this.exercicioAntigo.setDescricaoExercicio(estadoAtualNoBanco.getDescricaoExercicio());
+        this.exercicioAntigo.setMusculoPrincipal(estadoAtualNoBanco.getMusculoPrincipal());
+
+        this.exercicioAtualizado = exercicioService.alterarExercicio(this.dadosNovos);
     }
 
 
@@ -33,10 +43,6 @@ public class ExecutavelAtualizarExercicio implements Executavel {
         if (this.exercicioAntigo != null) {
             this.exercicioAtualizado = exercicioService.alterarExercicio(this.exercicioAntigo);
         }
-    }
-
-    public Exercicio getExercicioAtualizado() {
-        return exercicioAtualizado;
     }
 }
 

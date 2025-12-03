@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
 
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
 import br.com.upe.academia.AcademiaWeb.Repositories.SerieRepository;
 import br.com.upe.academia.AcademiaWeb.Services.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +31,6 @@ public class SerieServiceImpl implements SerieService {
         return this.serieRepository.save(serie);
     }
 
-    @Transactional
-    @Override
-    public Serie atualizarSerie(Serie serie) {
-        Serie serieAtt = buscarSerie(serie.getIdSerie());
-        return this.serieRepository.save(serieAtt);
-    }
-
     @Override
     public void removerSerie(UUID uuid) {
         buscarSerie(uuid);
@@ -44,8 +38,8 @@ public class SerieServiceImpl implements SerieService {
     }
 
     @Override
-    public List<Serie> buscarSeriePorExercicio(Exercicio exercicio) {
-        return this.serieRepository.findByExercicio(exercicio);
+    public List<Serie> buscarSeriePorRegra(TreinoExercicio treinoExercicio) {
+        return this.serieRepository.findByTreinoExercicio(treinoExercicio);
     }
 
 }
