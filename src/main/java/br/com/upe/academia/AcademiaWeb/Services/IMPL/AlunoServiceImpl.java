@@ -43,7 +43,6 @@ public class AlunoServiceImpl implements AlunoService {
         return alunoRepository.findByEmail(email).isPresent();
     }
 
-
     public Aluno cadastrarAluno(AlunoDTOs alunoDTOs) {
         alunoDTOs.setTipo(Tipo.aluno);
 
@@ -135,6 +134,7 @@ public class AlunoServiceImpl implements AlunoService {
             throw new OperacaoNaoPermitidaException("A nova senha não pode ser igual a atual.");
         }
         Aluno alunoEncontrado = alunoExiste.get();
+
         alunoEncontrado.setSenha(senhaDTOs.getConfirmaSenha());
         return alunoRepository.save(alunoEncontrado);
     }

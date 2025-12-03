@@ -35,16 +35,13 @@ public class AuthUsuario {
 
     @PostMapping("/Login")
     public ResponseEntity<?> login(@RequestBody LoginDTOs loginDTOs) {
-        System.out.println("chegou aqui");
         System.out.println(loginDTOs.getEmail() + loginDTOs.getPassword());
         var usernamePassword = new UsernamePasswordAuthenticationToken(
                 loginDTOs.getEmail(),
                 loginDTOs.getPassword()
         );
-        System.out.println("chegou aqui 2");
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        System.out.println("chegou aqui 3");
         // Pode ser Personal OU Aluno
         UserDetails usuario = (UserDetails) auth.getPrincipal();
 
@@ -66,9 +63,6 @@ public class AuthUsuario {
     @PostMapping("cadastro/aluno")
     public ResponseEntity<AlunoResponseDTOs> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
         Aluno aluno = alunoService.cadastrarAluno(alunoDTOs);
-        if (aluno == null) {
-            return ResponseEntity.badRequest().build();
-        }
         AlunoResponseDTOs dto = new AlunoResponseDTOs(aluno);
         return ResponseEntity.ok(dto);
     }

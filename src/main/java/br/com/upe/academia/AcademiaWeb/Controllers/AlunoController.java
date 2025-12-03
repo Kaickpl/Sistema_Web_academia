@@ -70,11 +70,11 @@ public class AlunoController {
 
     @PutMapping("/RecuperarSeha/{Email}")
     public ResponseEntity<AlunoResponseDTOs> recuperarSenha(@PathVariable String Email, @RequestBody TrocaSenhaDTOs senhaDTOs) {
-        Aluno alunoExixste = alunoService.trocarSenha(Email, senhaDTOs);
-        if (alunoExixste == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(new AlunoResponseDTOs(alunoExixste));
+            Aluno alunoExixste = alunoService.trocarSenha(Email, senhaDTOs);
+            if (alunoExixste == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            return ResponseEntity.ok(new AlunoResponseDTOs(alunoExixste));
     }
 
     @PostMapping("/treinos")
