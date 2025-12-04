@@ -73,6 +73,19 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionResponseDTO> handleJsonParseError(HttpMessageNotReadableException ex, HttpServletRequest request) {
+
+        if (ex.getCause() instanceof com.fasterxml.jackson.databind.exc.ValueInstantiationException) {
+            Throwable causaOriginal = ex.getCause().getCause();
+            if (causaOriginal != null) {
+                ExceptionResponseDTO response = new ExceptionResponseDTO(
+                        causaOriginal.getMessage(),
+                        400,
+                        request.getRequestURI()
+                );
+                return ResponseEntity.status(400).body(response);
+            }
+        }
+
         ExceptionResponseDTO exceptionResponseDTO;
 
         if (ex.getCause() instanceof com.fasterxml.jackson.databind.exc.InvalidFormatException) {

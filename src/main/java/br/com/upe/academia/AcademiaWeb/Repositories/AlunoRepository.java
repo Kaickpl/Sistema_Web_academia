@@ -2,10 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Repositories;
 
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -16,5 +13,6 @@ public interface AlunoRepository extends JpaRepository<Aluno, UUID> {
     Aluno findByIdUsuario(UUID idUsuario);
     Optional<Aluno> findByEmail(String email);
     List<Aluno> findByNomeUsuarioContaining(String NomeUsuario);
+    List<Aluno> findByTreinosAtribuidos_IdTreino(UUID idTreino);
 }
 

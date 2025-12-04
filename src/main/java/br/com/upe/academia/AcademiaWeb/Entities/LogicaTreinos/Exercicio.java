@@ -1,10 +1,13 @@
 package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
+import br.com.upe.academia.AcademiaWeb.Entities.Enums.MusculoTrabalhado;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.Duration;
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,24 +23,17 @@ public class Exercicio {
     private UUID idExercicio;
     private String nomeExercicio;
     private String descricaoExercicio;
-    private Duration tempoDeDescanso;
 
-    public Exercicio (Exercicio exercicioOriginal){
-        this.idExercicio = null;
-        this.nomeExercicio = exercicioOriginal.getNomeExercicio();
-        this.descricaoExercicio = exercicioOriginal.getDescricaoExercicio();
-        this.tempoDeDescanso = exercicioOriginal.getTempoDeDescanso();
-        this.series = new ArrayList<>();
-        this.treinos = new ArrayList<>();
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MusculoTrabalhado musculoPrincipal;
 
-    @OneToMany(mappedBy = "exercicio", cascade = CascadeType.ALL)
-    private List<Serie> series;
+    @OneToMany(mappedBy ="exercicioTemplate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<TreinoExercicio> regrasDeTreinos = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "exercicios")
-    private List<Treino> treinos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "exercicioTemplate", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "exercicioTemplate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ExercicioSessao> exerciciosExecucao = new ArrayList<>();
 
 }

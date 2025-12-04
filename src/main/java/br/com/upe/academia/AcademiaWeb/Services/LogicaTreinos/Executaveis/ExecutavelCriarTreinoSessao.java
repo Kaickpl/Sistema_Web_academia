@@ -22,6 +22,7 @@ public class ExecutavelCriarTreinoSessao implements Executavel{
 
     @Override
     public void executar() {
+        this.treinoSessaoDTO.setIdTreinoSessao(null);
         this.sessaoCriada = treinoSessaoService.iniciarTreinoSessao(treinoSessaoDTO);
         this.treinoSessaoCriadaId = sessaoCriada.getIdTreinoSessao();
     }
@@ -31,6 +32,7 @@ public class ExecutavelCriarTreinoSessao implements Executavel{
         if(this.treinoSessaoCriadaId != null)
             treinoSessaoService.apagarTreinoSessao(this.treinoSessaoCriadaId);
     }
+
 
 }
 

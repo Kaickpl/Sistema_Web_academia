@@ -14,13 +14,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlunoTreinosResponseDTO {
-    private UUID idAluno;
     private String nomeAluno;
+    private UUID idAluno;
     private List<TreinoDTO> treinos;
 
-    public AlunoTreinosResponseDTO(Aluno aluno) {
-        this.idAluno = aluno.getIdUsuario();
-        this.nomeAluno = aluno.getNomeUsuario();
-        this.treinos = aluno.getTreinosAtribuidos().stream().map(TreinoDTO :: new).collect(Collectors.toList());
-    }
 }

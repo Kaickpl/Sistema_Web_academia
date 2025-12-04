@@ -1,7 +1,9 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
@@ -9,17 +11,23 @@ import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class AlunoServiceImpl implements AlunoService {
@@ -29,6 +37,9 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Autowired
     private TreinoService treinoService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public boolean existeEmail(String email) {
 
@@ -54,12 +65,20 @@ public class AlunoServiceImpl implements AlunoService {
         }
         if (!this.validarEmail(alunoDTOs.getEmail())) {
             throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
-
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataNasc = LocalDate.parse(alunoDTOs.getDataNascimento(), formatter);
+
+        // Verificar se está no futuro
+        if (dataNasc.isAfter(LocalDate.now())) {
+            throw new OperacaoNaoPermitidaException("A data de nascimento não pode ser no futuro.");
+        }
+
 
         Aluno aluno =  new Aluno();
         aluno.setEmail(alunoDTOs.getEmail());
-        aluno.setSenha(alunoDTOs.getSenha());
+        String password = passwordEncoder.encode(alunoDTOs.getSenha());
+        aluno.setSenha(password);
         aluno.setDataNascimento(alunoDTOs.getDataNascimento());
         aluno.setTelefone(alunoDTOs.getTelefone());
         aluno.setTipo(alunoDTOs.getTipo());
@@ -99,6 +118,11 @@ public class AlunoServiceImpl implements AlunoService {
                 throw new OperacaoNaoPermitidaException("A data de nascimento já foi definida e não pode ser modificada.");
             }
              alunoEncontrado.setDataNascimento(alunoDTOs.getDataNascimento());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate dataNasc = LocalDate.parse(alunoDTOs.getDataNascimento(), formatter);
+            if (dataNasc.isAfter(LocalDate.now())) {
+                throw new OperacaoNaoPermitidaException("A data de nascimento não pode ser no futuro.");
+            }
         }
         if (alunoDTOs.getEmail() == null && alunoDTOs.getNomeUsuario() == null && alunoDTOs.getTelefone() == null) {
             throw new OperacaoNaoPermitidaException("Nenhuma informação foi enviada para atualização.");
@@ -108,10 +132,10 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Aluno trocarSenha(String Email, TrocaSenhaDTOs senhaDTOs){
-        Optional<Aluno> alunoExiste = alunoRepository.findByEmail(Email);
+    public Aluno trocarSenha( TrocaSenhaDTOs senhaDTOs){
+        Optional<Aluno> alunoExiste = alunoRepository.findByEmail(senhaDTOs.getEmail());
         if (alunoExiste.isEmpty()) {
-            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse email: "+ Email);
+            throw new InformacaoNaoEncontradoException("Nenhum aluno com esse email: "+ senhaDTOs.getEmail());
         }
 
         if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank() ||
@@ -126,7 +150,8 @@ public class AlunoServiceImpl implements AlunoService {
             throw new OperacaoNaoPermitidaException("A nova senha não pode ser igual a atual.");
         }
         Aluno alunoEncontrado = alunoExiste.get();
-        alunoEncontrado.setSenha(senhaDTOs.getConfirmaSenha());
+
+        alunoEncontrado.setSenha(passwordEncoder.encode(senhaDTOs.getNovaSenha()));
         return alunoRepository.save(alunoEncontrado);
     }
 
@@ -147,30 +172,49 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public List<Treino> atribuirTreinoAluno(UUID idAluno, UUID idTreino) {
+    public Treino atribuirTreinoAluno(UUID idAluno, UUID idTreino, boolean isCopiaCompartilhada) {
         Aluno aluno = this.buscarAlunoPorId(idAluno);
-        Treino treino = treinoService.buscarTreino(idTreino);
-        List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
-        treinosAtuais.add(treino);
-        aluno.setTreinosAtribuidos(treinosAtuais);
+        Treino treinoOriginal = treinoService.buscarTreino(idTreino);
+        Treino treinoParaAtribuir = treinoOriginal;
+
+        if (isCopiaCompartilhada) {
+            treinoParaAtribuir = treinoService.deepCopyTreino(treinoOriginal);
+        }
+
+        List<Treino> treinosAtuais = aluno.getTreinosAtribuidos();
+
+        if (!treinosAtuais.contains(treinoParaAtribuir)) {
+            treinosAtuais.add(treinoParaAtribuir);
+        }
         alunoRepository.save(aluno);
-        return treinosAtuais;
+
+        return treinoParaAtribuir;
     }
 
     @Override
-    public List<Treino> removerTreinoAluno(UUID idAluno, UUID idTreino) {
+    public void removerTreinoAluno(UUID idAluno, UUID idTreino) {
         Aluno aluno = this.buscarAlunoPorId(idAluno);
         Treino treino = treinoService.buscarTreino(idTreino);
-        List<Treino> treinosAtuais = new ArrayList<>(aluno.getTreinosAtribuidos());
-        treinosAtuais.remove(treino);
-        aluno.setTreinosAtribuidos(treinosAtuais);
+
+        if(aluno.getTreinosAtribuidos().contains(treino)) {
+            aluno.getTreinosAtribuidos().remove(treino);
+        } else {
+            throw new RuntimeException("O treino não está atribuído a este aluno.");
+        }
         alunoRepository.save(aluno);
-        return treinosAtuais;
+    }
+
+    @Override
+    @Transactional
+    public List<UUID> buscarIdAlunoPorTreino(UUID idTreino) {
+        List<Aluno> alunos = alunoRepository.findByTreinosAtribuidos_IdTreino(idTreino);
+        return alunos.stream().map(Aluno::getIdUsuario).collect(Collectors.toList());
     }
 
     @Override
     public Treino buscarTreinoUnico(UUID idAluno ,UUID idTreino) {
         Aluno  aluno = this.buscarAlunoPorId(idAluno);
+        treinoService.buscarTreino(idTreino);
         Treino treinoEncontrado = aluno.getTreinosAtribuidos().stream().filter(t -> t.getIdTreino().equals(idTreino)).findFirst().get();
         return treinoEncontrado;
     }
@@ -210,7 +254,7 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     public Aluno buscarAlunoPorId(UUID idAluno) {
-        return alunoRepository.findById(idAluno).orElse(null);
+        return alunoRepository.findById(idAluno).orElseThrow(() -> new InformacaoNaoEncontradoException("Aluno não encontrado com ID " + idAluno));
     }
 
     @Override
@@ -220,6 +264,22 @@ public class AlunoServiceImpl implements AlunoService {
             throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado foi encontrado.");
         }
         return alunoRepository.findAll(page);
+    }
+
+    @Override
+    public Aluno buscarAlunoPorEmail(String email) {
+        return alunoRepository.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public AlunoResponseDTOs VerPerfil(UUID idAluno) {
+        Optional<Aluno> aluno = alunoRepository.findById(idAluno);
+        if (aluno.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("Usuario com esse ID: " + idAluno + "não encontrado!");
+        }
+        return new AlunoResponseDTOs(
+                aluno.get()
+        );
     }
 
 }

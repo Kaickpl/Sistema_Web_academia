@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.SerieSessao;
 
@@ -12,6 +13,8 @@ public interface SerieSessaoService {
 
     public SerieSessao salvarSerieSessao(SerieSessaoDTO serieSessaoDTO);
 
+    String acharNomeExercicioPorIdTemplate(UUID templateId);
+
     public void removerSerieSessao(UUID idSerieSessao);
 
     public double calcularVolumeTotal(UUID idSerieSessao);
@@ -20,5 +23,7 @@ public interface SerieSessaoService {
 
     public SerieSessao salvarEntidade(SerieSessao serieSessao);
 
-    public SessaoProgressaoResponseDTO buscarRegistroProgressao(UUID idSerieSessao);
+    public SerieSessaoResponseDTO buscarRecordPorExercicio(UUID idExercicioTemplate, UUID idAluno);
+
+    public SerieSessao buscarSerieSessaoSegura(UUID idExercicioSessao, UUID idSerieSessao);
 }

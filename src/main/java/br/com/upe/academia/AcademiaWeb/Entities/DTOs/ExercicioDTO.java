@@ -1,14 +1,10 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.Enums.MusculoTrabalhado;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
-import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
-import br.com.upe.academia.AcademiaWeb.utils.DurationManager;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import java.time.Duration;
+
 import java.util.UUID;
 
 @Getter
@@ -19,8 +15,6 @@ public class ExercicioDTO {
     private UUID idExercicio;
     private String nomeExercicio;
     private String descricaoExercicio;
-    private String tempoDescansoBase;
-    private DurationManager durationManager;
-
-
+    @NonNull
+    private MusculoTrabalhado musculoPrincipal;
 }

@@ -1,15 +1,17 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
+import br.com.upe.academia.AcademiaWeb.ConquistasLogica.GerenciaConquistas;
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisRegistroDTO;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.MedidasCorporaisResponseDTO;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.*;
 import br.com.upe.academia.AcademiaWeb.Entities.MedidasCorporais;
 import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
+import br.com.upe.academia.AcademiaWeb.Services.AnaliseDesempenhoService;
 import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
+import br.com.upe.academia.AcademiaWeb.utils.MedidasUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +23,22 @@ import java.util.stream.Collectors;
 public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
     @Autowired
     MedidasCorporaisRepository medidasCorporaisRepository;
-
     @Autowired
-    AlunoRepository alunoRepository;
+    private AlunoRepository alunoRepository;
+    @Autowired
+    private AnaliseDesempenhoService analiseDesempenhoService;
+
 
     @Override
     public List<MedidasCorporaisResponseDTO> mostrarHistoricoMedidasCorporais(UUID alunoId) {
         List<MedidasCorporais> medidasCorporaisList = medidasCorporaisRepository.findByAluno_IdUsuarioOrderByDataAsc(alunoId);
 
+        return medidasCorporaisList.stream().map(MedidasCorporaisResponseDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MedidasCorporaisResponseDTO> mostrar10Medidas(UUID alunoId) {
+        List<MedidasCorporais> medidasCorporaisList = medidasCorporaisRepository.findTop10ByAluno_IdUsuarioOrderByDataDesc(alunoId);
         return medidasCorporaisList.stream().map(MedidasCorporaisResponseDTO::new).collect(Collectors.toList());
     }
 
@@ -75,12 +85,29 @@ public class MedidasCorporaisServiceImpl implements MedidasCorporaisService {
         novasMedidas.setPercentualAgua(medidasCorporaisDTOs.getPercentualAgua());
         novasMedidas.setPeso(medidasCorporaisDTOs.getPeso());
         novasMedidas.setAltura(medidasCorporaisDTOs.getAltura());
-        return medidasCorporaisRepository.save(novasMedidas);
+        MedidasCorporais medidasSalvas = medidasCorporaisRepository.save(novasMedidas);
+        analiseDesempenhoService.processarNovasMedidas(medidasSalvas);
+        return medidasSalvas;
+    }
+
+    @Override
+    public MedidasCorporais buscarMedidasPorId(UUID idMedidas) {
+        return medidasCorporaisRepository.findByIdMedidas(idMedidas);
     }
 
     public void validarMedida(Double valor, String nomeCampo){
-        if (valor <= 0){
-            throw new ValorInvalidoException("A medida de " + nomeCampo + " deve ser maior que zero");
+        if (valor != null &&valor <= 0){
+            throw new ValorInvalidoException("Se informada, a medida de " + nomeCampo + " deve ser maior que zero");
         }
+    }
+
+    @Override
+    public Double buscarUltimoValorMedida(UUID alunoId, String tipoMedida) {
+        MedidasCorporais ultimaMedida = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(alunoId);
+
+        if (ultimaMedida == null) {
+            throw new InformacaoNaoEncontradoException("Aluno com Id: " + alunoId + "não possui medidas registradas");
+        }
+        return MedidasUtils.getValorPorNome(ultimaMedida, tipoMedida);
     }
 }

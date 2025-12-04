@@ -22,4 +22,8 @@ public class Contexto {
         ConquistaRegistroDTO dto = tipo.concederConquista(alunoId);
         service.registrarConquista(dto);
     }
+    public void registrarConquistaObjetivo(UUID alunoID) {
+        ConquistaRegistroDTO dto = tipo.concederConquista(alunoID);
+        service.registrarConquistaObjetivo(dto);
+    }
 }

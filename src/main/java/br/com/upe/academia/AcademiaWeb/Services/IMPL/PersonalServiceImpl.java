@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
@@ -9,9 +10,15 @@ import br.com.upe.academia.AcademiaWeb.Exceptions.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +31,8 @@ public class PersonalServiceImpl implements PersonalService {
 
     @Autowired
     PersonalRepository personalRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Personal cadastrarPersonal(PersonalDTOs personalDTOs) {
@@ -52,6 +61,11 @@ public class PersonalServiceImpl implements PersonalService {
         if (!validarEmail(personalDTOs.getEmail())) {
             throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataNasc = LocalDate.parse(personalDTOs.getDataNascimento(), formatter);
+        if (dataNasc.isAfter(LocalDate.now())) {
+            throw new OperacaoNaoPermitidaException("A data de nascimento não pode ser no futuro.");
+        }
         Personal personal = new Personal();
         personal.setNomeUsuario(personalDTOs.getNomeUsuario());
         personal.setDataNascimento(personalDTOs.getDataNascimento());
@@ -59,16 +73,17 @@ public class PersonalServiceImpl implements PersonalService {
         personal.setTipo(personalDTOs.getTipo());
         personal.setEmail(personalDTOs.getEmail());
         personal.setCref(personalDTOs.getCref());
-        personal.setSenha(personalDTOs.getSenha());
+        String password = passwordEncoder.encode(personalDTOs.getSenha());
+        personal.setSenha(password);
 
         return personalRepository.save(personal);
     }
 
     @Override
-    public Personal alterarPersonal(String cref, PersonalDTOs personalDTOs) {
-        Optional<Personal> crefExiste = personalRepository.findByCref(cref);
+    public Personal alterarPersonal(UUID id, PersonalDTOs personalDTOs) {
+        Optional<Personal> crefExiste = personalRepository.findById(id);
        if (crefExiste.isEmpty()) {
-           throw new UsuarioExistenteException("Nenhum usuário encontrado com o CREF: " + cref);
+           throw new UsuarioExistenteException("Nenhum usuário encontrado com o CREF: " + id);
        }
        Personal personalEncontrado = crefExiste.get();
         if (personalDTOs.getEmail() != null && !personalDTOs.getEmail().equals(personalEncontrado.getEmail())) {
@@ -117,12 +132,12 @@ public class PersonalServiceImpl implements PersonalService {
 
     @Override
     @Transactional
-    public void deletarPersonal(String cref) {
-        if(!personalRepository.existsByCref(cref)){
-           throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + cref);
+    public void deletarPersonal(UUID id) {
+        if(!personalRepository.existsById(id)){
+           throw new InformacaoNaoEncontradoException("Nenhum aluno cadastrado com esse ID: " + id);
 
         }
-        personalRepository.deleteByCref(cref);
+        personalRepository.deleteById(id);
     }
 
     @Override
@@ -132,16 +147,20 @@ public class PersonalServiceImpl implements PersonalService {
         }
         List<Personal> personais = personalRepository.findByNomeUsuarioContaining(nome);
         if (personais.isEmpty()) {
+            if(nome.length()<2){
+                throw new InformacaoNaoEncontradoException("Nenhum personal com a letra: " + nome);
+            }
+            if(nome.length()>2){}
             throw new InformacaoNaoEncontradoException("Nenhum personal com esse nome: " + nome);
         }
         return personais;
     }
 
     @Override
-    public Personal TrocaSenha(String email, TrocaSenhaDTOs senhaDTOs){
-        Optional<Personal> personalExiste = personalRepository.findByEmail(email);
+    public Personal TrocaSenha( TrocaSenhaDTOs senhaDTOs){
+        Optional<Personal> personalExiste = personalRepository.findByEmail(senhaDTOs.getEmail());
         if (personalExiste.isEmpty()) {
-            throw new InformacaoNaoEncontradoException("Nenhum personal com esse email: " + email);
+            throw new InformacaoNaoEncontradoException("Nenhum personal com esse email: " + senhaDTOs.getEmail());
 
         }
         if (senhaDTOs.getNovaSenha() == null || senhaDTOs.getNovaSenha().isBlank()
@@ -157,7 +176,7 @@ public class PersonalServiceImpl implements PersonalService {
 
         }
         Personal personal = personalExiste.get();
-        personal.setSenha(senhaDTOs.getConfirmaSenha());
+        personal.setSenha(passwordEncoder.encode(senhaDTOs.getNovaSenha()));
         return personalRepository.save(personal);
     }
 
@@ -199,4 +218,24 @@ public class PersonalServiceImpl implements PersonalService {
         return personalRepository.findByCref(cref).orElse(null) ;
     }
 
+    @Override
+    public Personal buscarPersonalPorEmail(String email){
+        return personalRepository.findByEmail(email).orElse(null) ;
+    }
+
+    @Override
+    public Optional<Personal> buscarPersonalEmail(String email) {
+        return personalRepository.findByEmail(email);
+    }
+
+    @Override
+    public  PersonalResponseDTOs VerPerfil(UUID id) {
+        Optional<Personal> personal = personalRepository.findById(id);
+        if (personal.isEmpty()) {
+            throw new InformacaoNaoEncontradoException("Nenhum personal com esse ID: " + id);
+        }
+        return new PersonalResponseDTOs(
+                personal.get()
+        );
+    }
 }

@@ -11,13 +11,11 @@ import br.com.upe.academia.AcademiaWeb.utils.ExercicioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/exercicio")
+@RequestMapping("/api/exercicio")
 public class ExercicioController {
     @Autowired
     private CommandHistory commandHistory;
@@ -37,7 +35,8 @@ public class ExercicioController {
 
     @PostMapping
     public ResponseEntity<ExercicioDTO> criarExercicio(@RequestBody ExercicioDTO exercicioDto){
-        ExecutavelCriarExercicio comandoCriarExerc = new ExecutavelCriarExercicio(exercicioService, exercicioMapper.toEntity(exercicioDto));
+        Exercicio exercicioParaSalvar = exercicioMapper.toEntity(exercicioDto);
+        ExecutavelCriarExercicio comandoCriarExerc = new ExecutavelCriarExercicio(exercicioService, exercicioParaSalvar);
         commandHistory.execute(comandoCriarExerc);
         Exercicio novoExercicio = comandoCriarExerc.getExercicioCriado();
         ExercicioDTO exercicioDTO = exercicioMapper.toDTO(novoExercicio);
@@ -61,5 +60,4 @@ public class ExercicioController {
         commandHistory.execute(comandoDelExerc);
         return  ResponseEntity.noContent().build();
     }
-
 }

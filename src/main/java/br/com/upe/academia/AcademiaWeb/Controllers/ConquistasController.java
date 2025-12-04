@@ -1,20 +1,15 @@
 package br.com.upe.academia.AcademiaWeb.Controllers;
 
-import br.com.upe.academia.AcademiaWeb.Entities.Conquistas;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaRegistroDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistaResponseDTO;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ConquistasDTOs;
 import br.com.upe.academia.AcademiaWeb.Services.ConquistasService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/conquistas")
+@RequestMapping("/api/conquistas")
 public class ConquistasController {
     @Autowired
     private ConquistasService conquistasService;
@@ -24,7 +19,7 @@ public class ConquistasController {
         return conquistasService.mostrarConquistas(alunoId);
     }
 
-    @GetMapping("/recente/{alunoId}")
+    @GetMapping("/{alunoId}/recente")
     public ConquistaResponseDTO mostrarUltimaConquista(@PathVariable UUID alunoId){
         return conquistasService.mostrarUltimaConquista(alunoId);
     }

@@ -6,29 +6,32 @@ import java.util.UUID;
 
 public class ExecutavelDeletarSerie implements Executavel{
     private SerieService serieService;
-    private UUID id;
+    private UUID idOriginal;
     private Serie serieRemovida;
 
-    public ExecutavelDeletarSerie(SerieService serieService, UUID id) {
+    public ExecutavelDeletarSerie(SerieService serieService, UUID idOriginal) {
         this.serieService = serieService;
-        this.id = id;
+        this.idOriginal = idOriginal;
     }
 
     @Override
     public void executar() {
-        this.serieRemovida = serieService.buscarSerie(id);
-        serieService.removerSerie(id);
+        UUID idParaBuscar;
+        if(this.serieRemovida == null){
+            idParaBuscar = this.idOriginal;
+        } else {
+            idParaBuscar = this.serieRemovida.getIdSerie();
+        }
+        this.serieRemovida = serieService.buscarSerie(idParaBuscar);
+        serieService.removerSerie(idParaBuscar);
     }
 
     @Override
     public void desfazer(){
         if(this.serieRemovida != null){
-            serieRemovida = serieService.adicionarSerie(serieRemovida);
+            this.serieRemovida.setIdSerie(null);
+            this.serieRemovida = serieService.adicionarSerie(serieRemovida);
         }
-    }
-
-    public Serie getSerieRemovida() {
-        return serieRemovida;
     }
 
 }
