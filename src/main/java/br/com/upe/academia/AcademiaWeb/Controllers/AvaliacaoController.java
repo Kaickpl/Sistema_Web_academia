@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/avaliacao")
+@RequestMapping("/api/avaliacao")
 public class AvaliacaoController {
     @Autowired
     private AvaliacaoService avaliacaoService;

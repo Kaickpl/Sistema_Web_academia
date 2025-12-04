@@ -32,18 +32,6 @@ public class AlunoController {
     @Autowired
     private TreinoMapper treinoMapper;
 
-    @PostMapping
-    // AlunoResponse no post
-    public ResponseEntity<AlunoResponseDTOs> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
-        Aluno aluno = alunoService.cadastrarAluno(alunoDTOs);
-        if (aluno == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        AlunoResponseDTOs dto = new AlunoResponseDTOs(aluno);
-        return ResponseEntity.ok(dto);
-    }
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarAluno(@PathVariable UUID id) {
         alunoService.removerAluno(id);
@@ -53,11 +41,7 @@ public class AlunoController {
     @GetMapping("/buscar")
     public ResponseEntity<List<AlunoResponseDTOs>> buscaraluno(@RequestParam String nome) {
         List<AlunoResponseDTOs> alunos = alunoService.buscarAlunoPorNome(nome).stream().map(AlunoResponseDTOs::new).collect(Collectors.toList());
-        if (alunos != null) {
-            return ResponseEntity.status(200).body(alunos);
-        }
-        return ResponseEntity.status(404).body(null);
-    }
+        return ResponseEntity.status(200).body(alunos);    }
 
     @GetMapping("/buscarTodos")
     public ResponseEntity<Page<AlunoResponseDTOs>> listar(@PageableDefault(size = 2)Pageable page) {
@@ -66,21 +50,14 @@ public class AlunoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AlunoResponseDTOs> atualizarAluno(@RequestBody AlunoDTOs alunoDTOs, @PathVariable UUID id) {
-
         Aluno alunoExistente = alunoService.alterarAluno(id,alunoDTOs);
-        if (alunoExistente == null) {
-            return ResponseEntity.badRequest().build();
-        }
         return ResponseEntity.ok(new AlunoResponseDTOs(alunoExistente));
     }
 
-    @PutMapping("/RecuperarSeha/{Email}")
-    public ResponseEntity<AlunoResponseDTOs> recuperarSenha(@PathVariable String Email, @RequestBody TrocaSenhaDTOs senhaDTOs) {
-        Aluno alunoExixste = alunoService.trocarSenha(Email, senhaDTOs);
-        if (alunoExixste == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(new AlunoResponseDTOs(alunoExixste));
+    @PutMapping("/RecuperarSeha")
+    public ResponseEntity<AlunoResponseDTOs> recuperarSenha(@RequestBody TrocaSenhaDTOs senhaDTOs) {
+            Aluno alunoExixste = alunoService.trocarSenha(senhaDTOs);
+            return ResponseEntity.ok(new AlunoResponseDTOs(alunoExixste));
     }
 
     @PostMapping("/{idAluno}/treinos")
@@ -119,12 +96,14 @@ public class AlunoController {
     @GetMapping("ListarGruposAluno/{idAluno}")
     public ResponseEntity<List<GruposDoAlunoDTOs>>ListaGruposAluno(@PathVariable UUID idAluno){
         List<Grupo> grupo = alunoService.ListarGruposAluno(idAluno);
-        if (grupo.isEmpty()){
-            return ResponseEntity.badRequest().build();
-        }
         List<GruposDoAlunoDTOs> gda = grupo.stream().map(GruposDoAlunoDTOs::new)
                 .toList();
         return ResponseEntity.ok(gda);
     }
 
+    @GetMapping("/VerPerfil/{idAluno}")
+    public ResponseEntity<AlunoResponseDTOs> verPerfil(@PathVariable UUID idAluno) {
+        AlunoResponseDTOs alunoResponseDTOs = alunoService.VerPerfil(idAluno);
+        return ResponseEntity.ok(alunoResponseDTOs);
     }
+}

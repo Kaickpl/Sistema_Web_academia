@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/conquistas")
+@RequestMapping("/api/conquistas")
 public class ConquistasController {
     @Autowired
     private ConquistasService conquistasService;

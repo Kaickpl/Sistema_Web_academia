@@ -13,14 +13,17 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class TrocaSenhaDTOs {
+    private String email;
     private String NovaSenha;
     private String confirmaSenha;
 
     public TrocaSenhaDTOs(Aluno aluno) {
+        this.email = aluno.getEmail();
         this.NovaSenha = aluno.getSenha();
         this.confirmaSenha = aluno.getSenha();
     }
     public TrocaSenhaDTOs(Personal personal) {
+        this.email = personal.getEmail();
         this.NovaSenha = personal.getSenha();
         this.confirmaSenha = personal.getSenha();
     }
