@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -58,6 +60,11 @@ public class PersonalServiceImpl implements PersonalService {
         }
         if (!validarEmail(personalDTOs.getEmail())) {
             throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataNasc = LocalDate.parse(personalDTOs.getDataNascimento(), formatter);
+        if (dataNasc.isAfter(LocalDate.now())) {
+            throw new OperacaoNaoPermitidaException("A data de nascimento não pode ser no futuro.");
         }
         Personal personal = new Personal();
         personal.setNomeUsuario(personalDTOs.getNomeUsuario());

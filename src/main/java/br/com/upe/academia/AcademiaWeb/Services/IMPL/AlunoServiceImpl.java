@@ -18,6 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,8 +65,15 @@ public class AlunoServiceImpl implements AlunoService {
         }
         if (!this.validarEmail(alunoDTOs.getEmail())) {
             throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
-
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataNasc = LocalDate.parse(alunoDTOs.getDataNascimento(), formatter);
+
+        // Verificar se está no futuro
+        if (dataNasc.isAfter(LocalDate.now())) {
+            throw new OperacaoNaoPermitidaException("A data de nascimento não pode ser no futuro.");
+        }
+
 
         Aluno aluno =  new Aluno();
         aluno.setEmail(alunoDTOs.getEmail());
@@ -108,6 +118,11 @@ public class AlunoServiceImpl implements AlunoService {
                 throw new OperacaoNaoPermitidaException("A data de nascimento já foi definida e não pode ser modificada.");
             }
              alunoEncontrado.setDataNascimento(alunoDTOs.getDataNascimento());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate dataNasc = LocalDate.parse(alunoDTOs.getDataNascimento(), formatter);
+            if (dataNasc.isAfter(LocalDate.now())) {
+                throw new OperacaoNaoPermitidaException("A data de nascimento não pode ser no futuro.");
+            }
         }
         if (alunoDTOs.getEmail() == null && alunoDTOs.getNomeUsuario() == null && alunoDTOs.getTelefone() == null) {
             throw new OperacaoNaoPermitidaException("Nenhuma informação foi enviada para atualização.");
