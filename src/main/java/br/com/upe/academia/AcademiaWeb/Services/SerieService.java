@@ -11,5 +11,5 @@ public interface SerieService {
     public Serie adicionarSerie(Serie serie);
     public void removerSerie(UUID uuid);
     public Serie buscarSerie(UUID uuid);
-    public List<Serie> buscarSeriePorRegra(TreinoExercicio treinoExercicio);
+    public List<Serie> buscarSeriePorRegra(UUID idTreinoExercicio);
 }

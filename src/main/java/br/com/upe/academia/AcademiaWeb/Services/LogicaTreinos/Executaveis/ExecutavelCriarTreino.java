@@ -1,27 +1,37 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis;
 
+import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
+import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 public class ExecutavelCriarTreino implements Executavel{
+    private AlunoService alunoService;
     private TreinoService treinoService;
     private Treino treinoOriginal;
     private Treino treinoCriado;
+    private UUID idAluno;
 
-    public ExecutavelCriarTreino(TreinoService service, Treino treino) {
+    public ExecutavelCriarTreino(TreinoService service, AlunoService alunoService, Treino treino, UUID idAluno) {
         this.treinoService = service;
         this.treinoOriginal = treino;
+        this.alunoService = alunoService;
+        this.idAluno = idAluno;
+        this.treinoService = treinoService;
     }
 
     @Override
     public void executar() {
+        Aluno alunoDonoDoTreino = alunoService.buscarAlunoPorId(idAluno);
         if(this.treinoOriginal.getIdTreino()!=null){
             Treino treinoLimpo = new Treino();
             treinoLimpo.setNome(this.treinoOriginal.getNome());
@@ -55,6 +65,9 @@ public class ExecutavelCriarTreino implements Executavel{
         else {
             this.treinoCriado =  treinoService.criarTreino(treinoOriginal);
         }
+
+        alunoService.atribuirTreinoAluno(idAluno ,treinoCriado.getIdTreino(), false);
+
     }
 
     @Override

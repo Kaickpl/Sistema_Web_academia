@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/treino-exercicios")
+@RequestMapping("/api/treino-exercicios")
 public class TreinoExercicioController {
     @Autowired
     private TreinoExercicioService treinoExercicioService;

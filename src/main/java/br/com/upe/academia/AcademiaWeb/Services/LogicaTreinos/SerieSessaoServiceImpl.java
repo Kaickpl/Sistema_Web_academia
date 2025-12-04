@@ -4,6 +4,7 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieSessaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SessaoProgressaoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.*;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioRepository;
+import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.ExercicioSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.SerieSessaoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AnaliseDesempenhoService;
@@ -32,20 +33,32 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
 
     @Autowired
     private ExercicioSessaoRepository exercicioSessaoRepository;
+
     @Autowired
     private ExercicioRepository exercicioRepository;
 
 
     @Override
     public SerieSessao buscarSerieSessao(UUID idSerieSessao) {
-        return serieSessaoRepository.findById(idSerieSessao).orElseThrow(() -> new RuntimeException("Série de Sessão não encontrada."));
+        return serieSessaoRepository.findById(idSerieSessao).orElseThrow(() -> new InformacaoNaoEncontradoException("Execução de série não encontrada com o ID " + idSerieSessao));
+    }
+
+    @Override
+    public SerieSessao buscarSerieSessaoSegura(UUID idExercicioSessao ,UUID idSerieSessao) {
+        SerieSessao sessao =  buscarSerieSessao(idSerieSessao);
+
+        if(!sessao.getExercicioSessao().getIdExercicioSessao().equals(idExercicioSessao)){
+            throw new InformacaoNaoEncontradoException("Execução de série pertence a uma execução de exercício diferente do informado na URL. ID do exercicio informado: " + idExercicioSessao);
+        }
+
+        return sessao;
     }
 
     @Override
     @Transactional
     public SerieSessao salvarSerieSessao(SerieSessaoDTO serieSessaoDTO) {
         ExercicioSessao exercicioSessaoPai = exercicioSessaoRepository.findById(serieSessaoDTO.getIdExercicioSessao())
-                .orElseThrow(() -> new RuntimeException("ExercicioSessao pai não encontrado"));
+                .orElseThrow(() -> new InformacaoNaoEncontradoException("Execução de exercício a qual a série a ser criada pertence não foi encontrada com o ID " + serieSessaoDTO.getIdExercicioSessao()));
         SerieSessao serieParaSalvar = serieSessaoMapper.toEntity(serieSessaoDTO);
         serieParaSalvar.setExercicioSessao(exercicioSessaoPai);
         SerieSessao novaSerieSessao = serieSessaoRepository.save(serieParaSalvar);
@@ -71,6 +84,7 @@ public class SerieSessaoServiceImpl implements SerieSessaoService {
 
     @Override
     public void removerSerieSessao(UUID idSerieSessao) {
+        this.buscarSerieSessao(idSerieSessao);
         serieSessaoRepository.deleteById(idSerieSessao);
     }
 

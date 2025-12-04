@@ -24,4 +24,6 @@ public interface SerieSessaoService {
     public SerieSessao salvarEntidade(SerieSessao serieSessao);
 
     public SerieSessaoResponseDTO buscarRecordPorExercicio(UUID idExercicioTemplate, UUID idAluno);
+
+    public SerieSessao buscarSerieSessaoSegura(UUID idExercicioSessao, UUID idSerieSessao);
 }

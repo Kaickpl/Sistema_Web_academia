@@ -73,5 +73,4 @@ public class ExecutavelDeletarTreinoSessao implements Executavel {
         }).collect(Collectors.toList());
     }
 
-
 }
