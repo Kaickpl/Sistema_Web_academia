@@ -60,9 +60,7 @@ public class ConquistasServiceImpl implements ConquistasService {
     @Override
     public List<ConquistaResponseDTO> mostrarConquistas(UUID alunoId) {
         List<Conquistas> conquistasList = conquistasRepository.findByAluno_IdUsuario(alunoId);
-        if (conquistasList.isEmpty()){
-            throw new InformacaoNaoEncontradoException("Não há nenhuma conquista registrada para esse usuário.");
-        }
+
         return conquistasList.stream().map(ConquistaResponseDTO::new).collect(Collectors.toList());
     }
 

@@ -5,13 +5,10 @@ import br.com.upe.academia.AcademiaWeb.Entities.DTOs.*;
 import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.UsuarioNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
-import br.com.upe.academia.AcademiaWeb.Repositories.AlunoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.AvaliacaoRepository;
 import br.com.upe.academia.AcademiaWeb.Repositories.MedidasCorporaisRepository;
-import br.com.upe.academia.AcademiaWeb.Repositories.PersonalRepository;
 import br.com.upe.academia.AcademiaWeb.Services.AlunoService;
 import br.com.upe.academia.AcademiaWeb.Services.AvaliacaoService;
-import br.com.upe.academia.AcademiaWeb.Services.MedidasCorporaisService;
 import br.com.upe.academia.AcademiaWeb.Services.PersonalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     @Autowired
     private PersonalService personalService;
     @Autowired
-    private MedidasCorporaisService medidasCorporaisService;
+    private MedidasCorporaisRepository medidasCorporaisRepository;
 
 
     @Override
@@ -45,14 +42,20 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         if (personal.isEmpty()){
             throw new InformacaoNaoEncontradoException("Não existe um personal registrado com esse CREF");
         }
-        MedidasCorporais medidasCorporais = medidasCorporaisService.buscarMedidasPorId(medidasCorporaisService.mostrarMedidasAtuais(avaliacaoDTOs.getAlunoId()).getMedidasCoporaisId());
-        if (medidasCorporais == null){
-            throw new InformacaoNaoEncontradoException("Não foram encontradas medidas corporais com esse id.");
-        }
+        MedidasCorporais medidasCorporais = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(avaliacaoDTOs.getAlunoId());
+
         Avaliacao novaAvaliacao = new Avaliacao();
         novaAvaliacao.setAluno(aluno);
         novaAvaliacao.setPersonal(personal.get());
-        novaAvaliacao.setMedidasCorporais(medidasCorporais);
+        if (medidasCorporais != null){
+            novaAvaliacao.setMedidasCorporais(medidasCorporais);
+        }
+        if (avaliacaoDTOs.getDataAvaliacao() == null){
+            throw new ValorInvalidoException("A data da avaliação é obrigatória.");
+        }
+        if (avaliacaoDTOs.getDataAvaliacao().isBefore(LocalDate.now())){
+            throw new ValorInvalidoException("A data de avaliação não pode ser no passado.");
+        }
         novaAvaliacao.setObjetivoAvaliacao(avaliacaoDTOs.getObjetivoAvaliacao());
         novaAvaliacao.setDataAvaliacao(avaliacaoDTOs.getDataAvaliacao());
         return avaliacaoRepository.save(novaAvaliacao);
@@ -61,12 +64,8 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     @Override
     public List<AvaliacaoResponseDTO> mostrarAvaliacaoAluno(UUID alunoId) {
         Aluno aluno = alunoService.buscarAlunoPorId(alunoId);
-        if (aluno == null){
+        if (aluno == null) {
             throw new UsuarioNaoEncontradoException();
-        }
-        boolean existeAvaliacao = avaliacaoRepository.existsByAluno_IdUsuario(alunoId);
-        if (!existeAvaliacao){
-            throw new InformacaoNaoEncontradoException("Este aluno não possui nenhuma avaliação registrada");
         }
         List<Avaliacao> avaliacoes = avaliacaoRepository.findByAluno_IdUsuario(alunoId);
         return avaliacoes.stream().map(AvaliacaoResponseDTO::new).collect(Collectors.toList());
@@ -82,9 +81,11 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         if (!existeAvaliacao){
             throw new InformacaoNaoEncontradoException("Este aluno não possui nenhuma avaliação registrada");
         }
-        Avaliacao proxAvaliacao = avaliacaoRepository.findTop1ByAluno_IdUsuario(alunoId);
-        AvaliacaoResponseDTO avaliacaoResponseDTO = new AvaliacaoResponseDTO(proxAvaliacao);
-        return avaliacaoResponseDTO;
+        Avaliacao proxAvaliacao = avaliacaoRepository.findTop1ByAluno_IdUsuarioOrderByDataAvaliacaoDesc(alunoId);
+        if (proxAvaliacao == null){
+            throw new InformacaoNaoEncontradoException("Nenhuma avaliação encontrada.");
+        }
+        return new AvaliacaoResponseDTO(proxAvaliacao);
     }
 
     @Override
@@ -93,20 +94,13 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         if (personal == null){
             throw new UsuarioNaoEncontradoException();
         }
-        boolean existeAvaliacao = avaliacaoRepository.existsByPersonal_Cref(cref);
-        if (!existeAvaliacao){
-            throw new InformacaoNaoEncontradoException("Este personal não possui nenhuma avaliação registrada");
-        }
+
         List<Avaliacao> avaliacoes = avaliacaoRepository.findByPersonal_Cref(cref);
         return avaliacoes.stream().map(AvaliacaoResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
     public List<AvaliacaoResponseDTO> mostrarAvaliacaoPersonalEData(String cref, LocalDate data) {
-        boolean existeAvaliacao = avaliacaoRepository.existsByPersonal_Cref(cref);
-        if (!existeAvaliacao){
-            throw new InformacaoNaoEncontradoException("Este personal não possui nenhuma avaliação registrada");
-        }
         List<Avaliacao> avaliacoes = avaliacaoRepository.findByPersonal_CrefAndDataAvaliacao(cref,data);
         return avaliacoes.stream().map(AvaliacaoResponseDTO::new).collect(Collectors.toList());
     }
@@ -133,6 +127,9 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         }
         if (modificarDataAvaliacaoDTO.getDataAvaliacao() == null){
             throw new ValorInvalidoException("Data de avaliação inválida");
+        }
+        if (modificarDataAvaliacaoDTO.getDataAvaliacao().isBefore(LocalDate.now())) {
+            throw new ValorInvalidoException("A nova data da avaliação não pode ser no passado.");
         }
         avaliacao.setDataAvaliacao(modificarDataAvaliacaoDTO.getDataAvaliacao());
         return avaliacaoRepository.save(avaliacao);
