@@ -49,7 +49,7 @@ public class ObjetivosServiceImpl implements ObjetivosService {
             throw new UsuarioNaoEncontradoException();
         }
         LocalDateTime inicioDia = LocalDate.now().atStartOfDay();
-        LocalDateTime fimDia = LocalDate.now().atTime(23, 59, 29);
+        LocalDateTime fimDia = LocalDate.now().atTime(23, 59, 59);
 
         boolean jaExisteHoje = objetivosRepository.existsByAluno_IdUsuarioAndTipoMedidaAndDataCriacaoBetween(
                 objetivosDto.getAlunoId(),
@@ -89,6 +89,21 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
+        LocalDateTime inicioDia = LocalDate.now().atStartOfDay();
+        LocalDateTime fimDia = LocalDate.now().atTime(23, 59, 59);
+        String nomeExercicio = serieSessaoService.acharNomeExercicioPorIdTemplate(exercicioId);
+
+        boolean jaExisteHoje = objetivosRepository.existsByAluno_IdUsuarioAndTipoMedidaAndDataCriacaoBetween(
+                objetivoRegistroDTO.getAlunoId(),
+                nomeExercicio,
+                inicioDia,
+                fimDia
+        );
+        if (jaExisteHoje){
+            throw new ValorInvalidoException("Você já definiu um objetivo para " + nomeExercicio + " hoje. Tente editar o existente.");
+        }
+
+
         SerieSessaoResponseDTO recorde = serieSessaoService.buscarRecordPorExercicio(exercicioId, objetivoRegistroDTO.getAlunoId());
         Double valorAtual = 0.0;
         if (recorde != null) {
