@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/exerciciosTemplate/{idTreinoExercicio}/seriesTemplate")
+@RequestMapping("/api/exerciciosTemplate/{idTreinoExercicio}/seriesTemplate")
 public class SerieController{
 
     @Autowired

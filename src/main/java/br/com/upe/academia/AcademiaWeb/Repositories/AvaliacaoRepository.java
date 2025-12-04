@@ -27,5 +27,5 @@ public interface AvaliacaoRepository extends JpaRepository<Avaliacao, UUID> {
 
     Avaliacao findByIdAvaliacao(UUID idAvaliacao);
 
-    Avaliacao findTop1ByAluno_IdUsuario(UUID alunoIdUsuario);
+    Avaliacao findTop1ByAluno_IdUsuarioOrderByDataAvaliacaoDesc(UUID alunoIdUsuario);
 }

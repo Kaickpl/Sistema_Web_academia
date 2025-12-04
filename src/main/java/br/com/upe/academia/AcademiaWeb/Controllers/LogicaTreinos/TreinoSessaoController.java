@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/alunos/{idAluno}")
+@RequestMapping("/api/alunos/{idAluno}")
 public class TreinoSessaoController {
     @Autowired
     private CommandHistory commandHistory;

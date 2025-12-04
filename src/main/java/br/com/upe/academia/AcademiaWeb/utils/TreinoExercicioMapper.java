@@ -86,6 +86,8 @@ public class TreinoExercicioMapper {
             dto.setSeries(serieDTOS);
         }
 
+        dto.setIdTreinoExercicio(treinoExercicio.getIdTreinoExercicio());
+
         return dto;
     }
 }

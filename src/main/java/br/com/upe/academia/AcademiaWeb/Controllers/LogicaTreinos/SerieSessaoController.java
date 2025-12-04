@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/exercicios/{idExercicioSessao}/series")
+@RequestMapping("/api/exercicios/{idExercicioSessao}/series")
 
 public class SerieSessaoController {
 

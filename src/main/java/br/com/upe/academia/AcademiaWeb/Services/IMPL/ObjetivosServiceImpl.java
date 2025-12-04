@@ -19,6 +19,8 @@ import br.com.upe.academia.AcademiaWeb.utils.MedidasUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,12 +48,25 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
+        LocalDateTime inicioDia = LocalDate.now().atStartOfDay();
+        LocalDateTime fimDia = LocalDate.now().atTime(23, 59, 59);
+
+        boolean jaExisteHoje = objetivosRepository.existsByAluno_IdUsuarioAndTipoMedidaAndDataCriacaoBetween(
+                objetivosDto.getAlunoId(),
+                objetivosDto.getTipoMedida(),
+                inicioDia,
+                fimDia
+        );
+        if (jaExisteHoje){
+            throw new ValorInvalidoException("Você já definiu um objetivo para " + objetivosDto.getTipoMedida() + " hoje. Tente editar o existente.");
+        }
+
         MedidasCorporais ultimasMedidas = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(aluno.getIdUsuario());
 
         Double valorAtual = MedidasUtils.getValorPorNome(ultimasMedidas, objetivosDto.getTipoMedida());
 
         if (valorAtual == null) {
-            throw new InformacaoNaoEncontradoException("Não há medidas corporais registradas para o tipo: " + objetivosDto.getTipoMedida());
+            throw new InformacaoNaoEncontradoException("Para criar um objetivo de " + objetivosDto.getTipoMedida() + ", você precisa primeiro registrar essa medida em 'Medidas Corporais'.");
         }
         Objetivos objetivos = new Objetivos();
         objetivos.setAluno(aluno);
@@ -74,6 +89,21 @@ public class ObjetivosServiceImpl implements ObjetivosService {
         if (aluno == null){
             throw new UsuarioNaoEncontradoException();
         }
+        LocalDateTime inicioDia = LocalDate.now().atStartOfDay();
+        LocalDateTime fimDia = LocalDate.now().atTime(23, 59, 59);
+        String nomeExercicio = serieSessaoService.acharNomeExercicioPorIdTemplate(exercicioId);
+
+        boolean jaExisteHoje = objetivosRepository.existsByAluno_IdUsuarioAndTipoMedidaAndDataCriacaoBetween(
+                objetivoRegistroDTO.getAlunoId(),
+                nomeExercicio,
+                inicioDia,
+                fimDia
+        );
+        if (jaExisteHoje){
+            throw new ValorInvalidoException("Você já definiu um objetivo para " + nomeExercicio + " hoje. Tente editar o existente.");
+        }
+
+
         SerieSessaoResponseDTO recorde = serieSessaoService.buscarRecordPorExercicio(exercicioId, objetivoRegistroDTO.getAlunoId());
         Double valorAtual = 0.0;
         if (recorde != null) {

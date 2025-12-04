@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/treino")
+@RequestMapping("/api/treino")
 public class TreinoController {
     @Autowired
     private CommandHistory commandHistory;
