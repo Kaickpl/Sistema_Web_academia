@@ -107,6 +107,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/exercicio").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.PUT, "/api/exercicio/{id}").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.DELETE, "/api/exercicio/{id}").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.GET, "/api/exercicio").permitAll()
+
 
                         // Serie
                         .requestMatchers(HttpMethod.GET, "/api/exerciciosTemplate/{idTreinoExercicio}/seriesTemplate/{id}").permitAll()
@@ -147,7 +149,6 @@ public class SecurityConfig {
                         //command
                         .requestMatchers(HttpMethod.POST, "/api/historico/desfazer").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/historico/refazer").permitAll()
-
 
                         .anyRequest().authenticated()
                 )

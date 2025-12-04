@@ -36,6 +36,11 @@ public class ExercicioServiceImpl implements ExercicioService {
      return exercicioRepository.findByTreinoIdTreino(idTreino);
     }
 
+    @Override
+    public List<Exercicio> buscarTodosOsExercicios() {
+        return exercicioRepository.findAll();
+    }
+
     @Transactional
     @Override
     public Exercicio adicionarExercicio(Exercicio exercicio) {
