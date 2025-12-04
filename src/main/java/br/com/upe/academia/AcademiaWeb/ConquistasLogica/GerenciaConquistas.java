@@ -52,6 +52,12 @@ public class GerenciaConquistas {
     }
 
     private void verificarCrucifixo(String exercicio, double peso, double valor, UUID alunoId) {
+        if (peso >= 100) {
+            registrar(new ConquistasExercicios(exercicio, 100, valor), alunoId);
+        }
+        if (peso >= 70){
+            registrar(new ConquistasExercicios(exercicio, 70, valor), alunoId);
+        }
         if (peso >= 60){
             registrar(new ConquistasExercicios(exercicio, 60, valor), alunoId);
         }
@@ -70,6 +76,12 @@ public class GerenciaConquistas {
     }
 
     private void verificarRoscaMartelo(String exercicio, double peso, double valor, UUID alunoId) {
+        if (peso >= 80){
+            registrar(new ConquistasExercicios(exercicio, 80, valor), alunoId);
+        }
+        if (peso >= 60){
+            registrar(new ConquistasExercicios(exercicio, 60, valor), alunoId);
+        }
         if (peso >= 40){
             registrar(new ConquistasExercicios(exercicio, 40, valor), alunoId);
         }
@@ -82,12 +94,15 @@ public class GerenciaConquistas {
         if (peso >= 10){
             registrar(new ConquistasExercicios(exercicio, 10, valor), alunoId);
         }
-        if (peso >= 5){
-            registrar(new ConquistasExercicios(exercicio, 5, valor), alunoId);
-        }
     }
 
     private void verificarCadeiraExtensora(String exercicio, double peso, double valor, UUID alunoId) {
+        if (peso >= 180) {
+            registrar(new ConquistasExercicios(exercicio, 180, valor), alunoId);
+        }
+        if (peso >= 100){
+            registrar(new ConquistasExercicios(exercicio, 100, valor), alunoId);
+        }
         if (peso >= 70){
             registrar(new ConquistasExercicios(exercicio, 70, valor), alunoId);
         }
@@ -122,6 +137,9 @@ public class GerenciaConquistas {
     }
 
     private void verificarLegpress(String exercicio, double peso, double valor, UUID alunoId){
+        if (peso >= 400) {
+            registrar(new ConquistasExercicios(exercicio, 400, valor), alunoId);
+        }
         if (peso >= 200) {
             registrar(new ConquistasExercicios(exercicio, 200, valor), alunoId);
         }
@@ -133,6 +151,12 @@ public class GerenciaConquistas {
         }
     }
     private void verificarSupinoInclinado(String exercicio, double peso, double valor, UUID alunoId){
+        if (peso >= 120){
+            registrar(new ConquistasExercicios(exercicio, 120, valor), alunoId);
+        }
+        if (peso >= 90){
+            registrar(new ConquistasExercicios(exercicio, 90, valor), alunoId);
+        }
         if (peso >= 70) {
             registrar(new ConquistasExercicios(exercicio, 70, valor), alunoId);
         }
@@ -144,6 +168,15 @@ public class GerenciaConquistas {
         }
     }
     private void verificarElevacaoLateral(String exercicio, double peso, double valor, UUID alunoId){
+        if (peso >= 60){
+            registrar(new ConquistasExercicios(exercicio, 60, valor), alunoId);
+        }
+        if (peso >= 40){
+            registrar(new ConquistasExercicios(exercicio, 40, valor), alunoId);
+        }
+        if (peso >= 25){
+            registrar(new ConquistasExercicios(exercicio, 60, valor), alunoId);
+        }
         if (peso >= 10) {
             registrar(new ConquistasExercicios(exercicio, 10, valor), alunoId);
         }
