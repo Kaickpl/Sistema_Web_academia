@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.IMPL;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Enums.Tipo;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
@@ -17,6 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,8 +65,15 @@ public class AlunoServiceImpl implements AlunoService {
         }
         if (!this.validarEmail(alunoDTOs.getEmail())) {
             throw new EmailInvalidoException("Formato de e-mail inválido. Informe um e-mail no formato nome@dominio.com.");
-
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataNasc = LocalDate.parse(alunoDTOs.getDataNascimento(), formatter);
+
+        // Verificar se está no futuro
+        if (dataNasc.isAfter(LocalDate.now())) {
+            throw new OperacaoNaoPermitidaException("A data de nascimento não pode ser no futuro.");
+        }
+
 
         Aluno aluno =  new Aluno();
         aluno.setEmail(alunoDTOs.getEmail());
@@ -107,6 +118,11 @@ public class AlunoServiceImpl implements AlunoService {
                 throw new OperacaoNaoPermitidaException("A data de nascimento já foi definida e não pode ser modificada.");
             }
              alunoEncontrado.setDataNascimento(alunoDTOs.getDataNascimento());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate dataNasc = LocalDate.parse(alunoDTOs.getDataNascimento(), formatter);
+            if (dataNasc.isAfter(LocalDate.now())) {
+                throw new OperacaoNaoPermitidaException("A data de nascimento não pode ser no futuro.");
+            }
         }
         if (alunoDTOs.getEmail() == null && alunoDTOs.getNomeUsuario() == null && alunoDTOs.getTelefone() == null) {
             throw new OperacaoNaoPermitidaException("Nenhuma informação foi enviada para atualização.");
@@ -252,6 +268,17 @@ public class AlunoServiceImpl implements AlunoService {
     @Override
     public Aluno buscarAlunoPorEmail(String email) {
         return alunoRepository.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public AlunoResponseDTOs VerPerfil(UUID idAluno) {
+        Optional<Aluno> aluno = alunoRepository.findById(idAluno);
+        if (aluno.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("Usuario com esse ID: " + idAluno + "não encontrado!");
+        }
+        return new AlunoResponseDTOs(
+                aluno.get()
+        );
     }
 
 }

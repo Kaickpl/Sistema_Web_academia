@@ -1,6 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.PersonalResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.Personal;
@@ -16,9 +17,9 @@ public interface PersonalService {
     public Personal cadastrarPersonal(PersonalDTOs personalDTOs);
 
 
-    public Personal alterarPersonal(String cref, PersonalDTOs personalDTOs);
+    public Personal alterarPersonal(UUID id, PersonalDTOs personalDTOs);
 
-    public void deletarPersonal(String cref);
+    public void deletarPersonal(UUID id);
 
     public Personal buscarPersonal(String cref);
 
@@ -37,4 +38,6 @@ public interface PersonalService {
     public Personal buscarPersonalPorEmail(String email);
 
     public Optional<Personal> buscarPersonalEmail(String email);
+
+    public PersonalResponseDTOs VerPerfil(UUID idPersonal);
 }

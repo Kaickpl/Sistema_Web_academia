@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services;
 
 import br.com.upe.academia.AcademiaWeb.Entities.Aluno;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoDTOs;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.AlunoResponseDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TrocaSenhaDTOs;
 import br.com.upe.academia.AcademiaWeb.Entities.Grupo;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
@@ -42,5 +43,7 @@ public interface AlunoService {
     public Aluno buscarAlunoPorEmail(String email);
 
     public List<UUID> buscarIdAlunoPorTreino(UUID idTreino);
+
+    public AlunoResponseDTOs VerPerfil(UUID idAluno);
 }
 
