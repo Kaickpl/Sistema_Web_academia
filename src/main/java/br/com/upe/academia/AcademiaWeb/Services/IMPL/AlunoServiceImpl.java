@@ -199,6 +199,7 @@ public class AlunoServiceImpl implements AlunoService {
     @Override
     public Treino buscarTreinoUnico(UUID idAluno ,UUID idTreino) {
         Aluno  aluno = this.buscarAlunoPorId(idAluno);
+        treinoService.buscarTreino(idTreino);
         Treino treinoEncontrado = aluno.getTreinosAtribuidos().stream().filter(t -> t.getIdTreino().equals(idTreino)).findFirst().get();
         return treinoEncontrado;
     }

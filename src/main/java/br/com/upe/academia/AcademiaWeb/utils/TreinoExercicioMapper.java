@@ -1,17 +1,28 @@
 package br.com.upe.academia.AcademiaWeb.utils;
+import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TempoDeDescansoResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoExercicioDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.TreinoExercicioResponseDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
 import br.com.upe.academia.AcademiaWeb.Services.ExercicioService;
+import br.com.upe.academia.AcademiaWeb.Services.SerieService;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class TreinoExercicioMapper {
+
+    @Autowired
+    private SerieService serieService;
+
+    @Autowired
+    private SerieMapper serieMapper;
 
     public TempoDeDescansoResponseDTO toTempoDescansoDTO(TreinoExercicio treinoExercicio) {
         if (treinoExercicio == null) return null;
@@ -70,9 +81,11 @@ public class TreinoExercicioMapper {
         }
 
         if(treinoExercicio.getSeriesTemplate() != null){
-            int numeroDeSeries = treinoExercicio.getSeriesTemplate().size();
-            dto.setQuantidadeSeries(numeroDeSeries);
+            List<Serie> series = treinoExercicio.getSeriesTemplate();
+            List<SerieDTO> serieDTOS = series.stream().map(serie -> serieMapper.toDTO(serie)).toList();
+            dto.setSeries(serieDTOS);
         }
+
         return dto;
     }
 }

@@ -34,7 +34,6 @@ public class SerieController{
         return ResponseEntity.ok().body(serieDTO);
     }
 
-    //A parte do uri serve para dizer que deu certo e mostar o caminho exato para o que criou
     @PostMapping
     public ResponseEntity<SerieDTO> adicionarSerie(@PathVariable UUID idTreinoExercicio){
         ExecutavelCriarSerie comandoCriarSerie = new ExecutavelCriarSerie(serieService, idTreinoExercicio);
@@ -50,5 +49,8 @@ public class SerieController{
         commandHistory.execute(comandoDeletar);
         return ResponseEntity.noContent().build();
 }
+
+
+
 }
 

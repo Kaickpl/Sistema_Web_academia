@@ -16,10 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TreinoDTO {
-    private UUID idTreino;
     private String nome;
+    private UUID idTreino;
 
     public TreinoDTO(Treino treino){
         this.idTreino = treino.getIdTreino();
+        this.nome = treino.getNome();
     }
 }

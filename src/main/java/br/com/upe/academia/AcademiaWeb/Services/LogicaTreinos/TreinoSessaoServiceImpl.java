@@ -83,10 +83,12 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
     public TreinoSessao fecharTreinoSessao(UUID idAluno,UUID idTreinoSessao) {
         TreinoSessao treinoSessaoAtt = buscarSessaoPorId(idAluno, idTreinoSessao);
         if(treinoSessaoAtt.isConcluido()){
-            throw new OperacaoNaoPermitidaException("Esta Sessão já foi finalizada e não pode ser alterada");
+            throw new OperacaoNaoPermitidaException("Esta Sessão já foi finalizada e não pode ser alterada.");
         }
 
-        if (treinoSessaoAtt.getAluno().getIdUsuario() != idAluno){
+        Aluno aluno = alunoService.buscarAlunoPorId(idAluno);
+
+        if (aluno.getIdUsuario() != idAluno){
             throw new ValorInvalidoException("A sessão de treino a ser fechada não pertence ao aluno informado na URL.");
         }
 

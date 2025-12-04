@@ -44,7 +44,7 @@ public class TreinoSessaoController {
 
     @PutMapping("/{idTreinoSessao}/fechar")
     public ResponseEntity<TreinoSessaoResponseGetDTO> fecharSessaoTreino (@PathVariable UUID idAluno, @PathVariable UUID idTreinoSessao){
-        TreinoSessao treinoEmExecucao = treinoSessaoService.fecharTreinoSessao(idTreinoSessao, idAluno);
+        TreinoSessao treinoEmExecucao = treinoSessaoService.fecharTreinoSessao(idAluno, idTreinoSessao);
         TreinoSessaoResponseGetDTO dto = treinoSessaoMapper.toResponseGetDTO(treinoEmExecucao);
         return ResponseEntity.ok(dto);
     }

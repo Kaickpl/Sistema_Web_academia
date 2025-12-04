@@ -31,6 +31,20 @@ public class AlunoController {
     private CommandHistory commandHistory;
     @Autowired
     private TreinoMapper treinoMapper;
+    @Autowired
+    private TreinoService treinoService;
+
+    @PostMapping
+    // AlunoResponse no post
+    public ResponseEntity<AlunoResponseDTOs> cadastrarAluno(@RequestBody AlunoDTOs alunoDTOs) {
+        Aluno aluno = alunoService.cadastrarAluno(alunoDTOs);
+        if (aluno == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        AlunoResponseDTOs dto = new AlunoResponseDTOs(aluno);
+        return ResponseEntity.ok(dto);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarAluno(@PathVariable UUID id) {
@@ -62,11 +76,13 @@ public class AlunoController {
 
     @PostMapping("/{idAluno}/treinos")
     public ResponseEntity<AlunoTreinoDTO> adicionarTreino(@PathVariable UUID idAluno, @RequestBody AlunoTreinoDTO alunoTreinoDTO) {
-        alunoTreinoDTO.setIdAluno(idAluno);
-        alunoService.atribuirTreinoAluno(
-                alunoTreinoDTO.getIdAluno(),
+        Treino treinoAtribuido = alunoService.atribuirTreinoAluno(
+                idAluno,
                 alunoTreinoDTO.getIdTreino(),
                 alunoTreinoDTO.isCopiaCompartilhada());
+
+        alunoTreinoDTO.setIdAluno(idAluno);
+        alunoTreinoDTO.setIdTreino(treinoAtribuido.getIdTreino());
         return ResponseEntity.ok(alunoTreinoDTO);
     }
 
@@ -89,7 +105,9 @@ public class AlunoController {
 
     @DeleteMapping("/{idAluno}/treinos/{idTreino}")
     public ResponseEntity<Void> removerTreinoAluno(@PathVariable UUID idAluno, @PathVariable UUID idTreino){
+        this.buscarTreinoEspecifico(idAluno, idTreino);
         alunoService.removerTreinoAluno(idAluno, idTreino);
+        treinoService.deletarTreino(idTreino);
         return ResponseEntity.status(200).build();
     }
 

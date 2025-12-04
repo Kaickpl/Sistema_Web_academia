@@ -1,15 +1,16 @@
 package br.com.upe.academia.AcademiaWeb.Entities.DTOs;
-
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 public class TreinoExercicioResponseDTO {
-    private String tempoDeDescanso;
     private String nomeDoExercicio;
     private String descricaoExercicio;
-    private int quantidadeSeries;
+    private String tempoDeDescanso;
+
+    private List<SerieDTO> series = new ArrayList<>();
 }

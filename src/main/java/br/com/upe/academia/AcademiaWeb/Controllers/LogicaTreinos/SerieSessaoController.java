@@ -51,8 +51,8 @@ public class SerieSessaoController {
     }
 
     @GetMapping("/{idSerieSessao}")
-    public ResponseEntity<SerieSessaoResponseDTO>  buscarSerieSessao(@PathVariable UUID idSerieSessao){
-        SerieSessao serie =  serieSessaoService.buscarSerieSessao(idSerieSessao);
+    public ResponseEntity<SerieSessaoResponseDTO>  buscarSerieSessao(@PathVariable UUID idExercicioSessao,@PathVariable UUID idSerieSessao){
+        SerieSessao serie =  serieSessaoService.buscarSerieSessaoSegura(idExercicioSessao ,idSerieSessao);
         SerieSessaoResponseDTO dto = serieSessaoMapper.toRespondeDTO(serie);
         return ResponseEntity.ok(dto);
     }

@@ -1,5 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.utils;
 
+import br.com.upe.academia.AcademiaWeb.Exceptions.ValorInvalidoException;
+
 import java.time.Duration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +24,7 @@ public class DurationManager {
             return Duration.ofSeconds(hours * 3600 + minutes * 60 + seconds);
         }
 
-        throw new IllegalArgumentException("Formato de duração inválido. Esperado HH:MM:SS.");
+        throw new ValorInvalidoException("O valor do tempo está inválido. Por favor, escreva o tempo no seguinte padrão: hh:mm:ss");
     }
 
     public static String formatDuration(Duration duration) {
