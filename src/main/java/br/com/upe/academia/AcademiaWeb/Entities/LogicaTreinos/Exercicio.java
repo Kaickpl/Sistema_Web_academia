@@ -1,6 +1,5 @@
 package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
-
-
+import br.com.upe.academia.AcademiaWeb.Entities.Enums.MusculoTrabalhado;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Duration;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,22 +23,17 @@ public class Exercicio {
     private UUID idExercicio;
     private String nomeExercicio;
     private String descricaoExercicio;
-    private Duration tempoDeDescanso;
 
-    @OneToMany(mappedBy = "exercicio", cascade = CascadeType.ALL)
-    private List<Serie> series;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MusculoTrabalhado musculoPrincipal;
 
-    private boolean isConcluido() {
-        if(this.series == null || series.isEmpty()) {return false;}
-        return this.series.stream().allMatch(Serie::isConcluida);
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "treino_id")
+    @OneToMany(mappedBy ="exercicioTemplate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Treino treino;
+    private List<TreinoExercicio> regrasDeTreinos = new ArrayList<>();
 
-    public Boolean getIsConcluido() {
-        return isConcluido();
-    }
+    @OneToMany(mappedBy = "exercicioTemplate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ExercicioSessao> exerciciosExecucao = new ArrayList<>();
+
 }

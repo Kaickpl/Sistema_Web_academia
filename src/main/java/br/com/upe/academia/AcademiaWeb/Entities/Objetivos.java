@@ -1,0 +1,40 @@
+package br.com.upe.academia.AcademiaWeb.Entities;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Objetivos {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID idObjetivo;
+    @ManyToOne
+    @JoinColumn(name = "id_aluno")
+    private Aluno aluno;
+    @Column(nullable = false)
+    private String tipoMedida;
+    @Column(nullable = false)
+    private double valorAlvo;
+    @Column(nullable = false)
+    private double valorAtual;
+    @Column(nullable = false)
+    private boolean concluido;
+    @Column(nullable = false)
+    private String tipoObjetivo;
+    private LocalDateTime dataCriacao;
+
+    @PrePersist
+    protected void onCreate() {
+        this.dataCriacao = LocalDateTime.now();
+    }
+}

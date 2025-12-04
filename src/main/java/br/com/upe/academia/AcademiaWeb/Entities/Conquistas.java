@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -17,14 +18,16 @@ public class Conquistas {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idConquistas;
+    @Column(nullable = false)
     private String nomeConquista;
+    @Column(nullable = false)
     private String descricaoConquista;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "id_aluno")
     private Aluno aluno;
 
-    private LocalDate dataConquista;
+    private LocalDateTime dataConquista;
     @Column(columnDefinition = "int", nullable = false)
     private int moedas;
 
@@ -32,7 +35,7 @@ public class Conquistas {
     @PrePersist
     protected void onCreate() {
         if (dataConquista == null) {
-            dataConquista = LocalDate.now();
+            dataConquista = LocalDateTime.now();
         }
     }
     public Conquistas(Aluno aluno, String titulo, String descricao, int moedas) {

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -21,13 +20,19 @@ public class Avaliacao {
     @GeneratedValue(strategy =  GenerationType.UUID)
     private UUID idAvaliacao;
     private LocalDate dataSolicitacao;
+    @PrePersist
+    protected void onCreate() {
+        if (dataSolicitacao == null) {
+            dataSolicitacao = LocalDate.now();
+        }
+    }
     private LocalDate dataAvaliacao;
     private String objetivoAvaliacao;
 
 
     @ManyToOne
-    @JoinColumn(name = "idMedidas")
-    private MedidasCorporais MedidasCorporais;
+    @JoinColumn(name = "idMedidas", nullable = true)
+    private MedidasCorporais medidasCorporais;
 
     @ManyToOne
     @JoinColumn(name = "idPersonal")

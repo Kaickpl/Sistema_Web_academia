@@ -1,13 +1,7 @@
 package br.com.upe.academia.AcademiaWeb.utils;
-
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.ExercicioDTO;
-import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
-import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
-
 
 @Component
 public class ExercicioMapper {
@@ -20,14 +14,7 @@ public class ExercicioMapper {
         exercicio.setIdExercicio(dto.getIdExercicio());
         exercicio.setNomeExercicio(dto.getNomeExercicio());
         exercicio.setDescricaoExercicio(dto.getDescricaoExercicio());
-        exercicio.setTempoDeDescanso(dto.getTempoDeDescanso());
-
-        UUID idTreino = dto.getIdTreino();
-        if(idTreino != null){
-            Treino treino = new Treino();
-            treino.setIdTreino(idTreino);
-            exercicio.setTreino(treino);
-        }
+        exercicio.setMusculoPrincipal(dto.getMusculoPrincipal());
 
         return exercicio;
     }
@@ -35,7 +22,12 @@ public class ExercicioMapper {
     public ExercicioDTO toDTO(Exercicio exercicio){
         if(exercicio == null) return null;
 
-        return new ExercicioDTO(exercicio);
-    }
+        ExercicioDTO dto = new ExercicioDTO();
+        dto.setIdExercicio(exercicio.getIdExercicio());
+        dto.setNomeExercicio(exercicio.getNomeExercicio());
+        dto.setDescricaoExercicio(exercicio.getDescricaoExercicio());
+        dto.setMusculoPrincipal(exercicio.getMusculoPrincipal());
 
+        return dto;
+    }
 }

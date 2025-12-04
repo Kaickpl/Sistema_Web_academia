@@ -1,12 +1,9 @@
 package br.com.upe.academia.AcademiaWeb.Entities;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +21,7 @@ public class Grupo {
     private String nomeGrupo;
     private String DescricaoGrupo;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "personal_id")
     private Personal personal;
 

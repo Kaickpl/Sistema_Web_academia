@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -14,13 +15,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class PersonalResponseDTOs extends UsuarioDTOs {
+public class PersonalResponseDTOs {
 private UUID IdUsuario;
 private String nomeUsuario;
 private String CREF;
 private String email;
 private String telefone;
-private String grupos;
+private List<String> grupos;
 
 public PersonalResponseDTOs(Personal personal) {
     this.IdUsuario = personal.getIdUsuario();
@@ -28,12 +29,14 @@ public PersonalResponseDTOs(Personal personal) {
     this.CREF = personal.getCref();
     this.email = personal.getEmail();
     this.telefone = personal.getTelefone();
-    if (personal.getGrupos() != null) {
-        this.grupos = personal.getGrupos().stream().map(grupo -> grupo.getNomeGrupo()) .toList().toString();
-    }else {
-        this.grupos = "[]";
+    if (personal.getGrupos() != null && !personal.getGrupos().isEmpty()) {
+        this.grupos = personal.getGrupos()
+                .stream()
+                .map(grupo -> grupo.getNomeGrupo())
+                .toList();
+    } else {
+        this.grupos = List.of(); // lista vazia
     }
-
 
 }
 

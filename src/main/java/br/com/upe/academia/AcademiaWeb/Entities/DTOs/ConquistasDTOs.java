@@ -21,12 +21,12 @@ public class ConquistasDTOs {
     private String descricaoConquista;
     private int moedas;
 
-    public ConquistasDTOs(UUID alunoId, String descricaoConquista, UUID idConquistas, String nomeConquista, int moedas) {
-        this.alunoId = alunoId;
-        this.descricaoConquista = descricaoConquista;
-        this.idConquistas = idConquistas;
-        this.nomeConquista = nomeConquista;
-        this.moedas = moedas;
+    public ConquistasDTOs(Conquistas conquistas) {
+        this.alunoId = conquistas.getAluno().getIdUsuario();
+        this.descricaoConquista = conquistas.getDescricaoConquista();
+        this.idConquistas = conquistas.getIdConquistas();
+        this.nomeConquista = conquistas.getNomeConquista();
+        this.moedas = conquistas.getMoedas();
     }
 
 }

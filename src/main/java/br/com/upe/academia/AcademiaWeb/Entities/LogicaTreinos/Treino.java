@@ -1,26 +1,25 @@
 package br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos;
-
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Treino {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idTreino;
-    private Duration duracao;
     private String nome;
-    private boolean isConcluido = false;
 
-    @OneToMany(mappedBy = "treino", cascade = CascadeType.ALL)
-    private List<Exercicio> exercicio;
+    @OneToMany(mappedBy = "treino", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TreinoExercicio> regrasDeExercicios =  new ArrayList<>();
+
+    @OneToMany(mappedBy = "treinoTemplate" ,fetch = FetchType.LAZY)
+    private List<TreinoSessao> treinoExecucoes =  new ArrayList<>();
 
     }

@@ -3,6 +3,7 @@ package br.com.upe.academia.AcademiaWeb.utils;
 import br.com.upe.academia.AcademiaWeb.Entities.DTOs.SerieDTO;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Exercicio;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -18,25 +19,26 @@ public class SerieMapper {
         Serie serie = new Serie();
 
         serie.setIdSerie(dto.getIdSerie());
-        serie.setNumeroDeRepeticoes(dto.getNumeroDeRepeticoes());
-        serie.setPesoDaSerie(dto.getPesoDaSerie());
-        serie.setConcluida(dto.isConcluida());
 
-        UUID idExercicio = dto.getIdExercicio();
-        if (idExercicio != null) {
-            Exercicio exercicio = new Exercicio();
-            exercicio.setIdExercicio(idExercicio);
-            serie.setExercicio(exercicio);
+        UUID idTreinoExercicio = dto.getIdTreinoExercicio();
+        if (idTreinoExercicio != null) {
+            TreinoExercicio treinoExercicio = new TreinoExercicio();
+            treinoExercicio.setIdTreinoExercicio(idTreinoExercicio);
+            serie.setTreinoExercicio(treinoExercicio);
         }
 
         return serie;
     }
 
-    public SerieDTO toResponseDTO(Serie serie) {
+    public SerieDTO toDTO(Serie serie) {
         if (serie == null) {
             return null;
         }
 
-        return new SerieDTO(serie);
+        SerieDTO serieDTO = new SerieDTO();
+        serieDTO.setIdSerie(serie.getIdSerie());
+        serieDTO.setIdTreinoExercicio(serie.getTreinoExercicio().getIdTreinoExercicio());
+
+        return serieDTO;
     }
 }

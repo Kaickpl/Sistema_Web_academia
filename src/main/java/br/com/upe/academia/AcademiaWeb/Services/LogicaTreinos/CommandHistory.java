@@ -1,8 +1,6 @@
 package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
-
 import br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos.Executaveis.Executavel;
 import org.springframework.stereotype.Component;
-
 import java.util.Stack;
 
 @Component
@@ -28,7 +26,7 @@ public class CommandHistory {
         if (!reDo.isEmpty()) {
             Executavel lastExecutavel = reDo.pop();
             lastExecutavel.executar();
-            reDo.push(lastExecutavel);
+            this.unDo.push(lastExecutavel);
         }
     }
 

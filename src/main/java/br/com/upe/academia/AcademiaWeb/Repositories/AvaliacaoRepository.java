@@ -21,5 +21,11 @@ public interface AvaliacaoRepository extends JpaRepository<Avaliacao, UUID> {
 
     List<Avaliacao> findByDataAvaliacao(LocalDate data);
 
+    boolean existsByAluno_IdUsuario(UUID alunoIdUsuario);
+
+    boolean existsByPersonal_Cref(String personalCref);
+
     Avaliacao findByIdAvaliacao(UUID idAvaliacao);
+
+    Avaliacao findTop1ByAluno_IdUsuarioOrderByDataAvaliacaoDesc(UUID alunoIdUsuario);
 }
