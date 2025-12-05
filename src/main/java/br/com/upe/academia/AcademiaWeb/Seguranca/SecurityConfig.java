@@ -71,8 +71,8 @@ public class SecurityConfig {
                         //avaliacao
                         .requestMatchers(HttpMethod.GET, "/api/avaliacao/aluno/{alunoId}").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.GET, "/api/avaliacao/aluno/{alunoId}/proxima").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET, "/api/avaliacao/personal/{cref}").hasRole("PersonalTrainer")
-                        .requestMatchers(HttpMethod.GET, "/api/avaliacao/personal/{cref}/{dataAvaliacao}").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.GET, "/api/avaliacao/personal").hasRole("PersonalTrainer")
+                        .requestMatchers(HttpMethod.GET, "/api/avaliacao/personal/data").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.DELETE, "/api/avaliacao/{idAvaliacao}").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.POST, "/api/avaliacao").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.PUT, "/api/avaliacao/{idAvaliacao}/atualizar/data").hasRole("ALUNO")

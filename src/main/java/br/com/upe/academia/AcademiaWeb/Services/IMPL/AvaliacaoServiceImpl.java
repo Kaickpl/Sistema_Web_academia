@@ -81,7 +81,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         if (!existeAvaliacao){
             throw new InformacaoNaoEncontradoException("Este aluno não possui nenhuma avaliação registrada");
         }
-        Avaliacao proxAvaliacao = avaliacaoRepository.findTop1ByAluno_IdUsuarioOrderByDataAvaliacaoDesc(alunoId);
+        Avaliacao proxAvaliacao = avaliacaoRepository.findTop1ByAluno_IdUsuarioOrderByDataAvaliacaoAsc(alunoId);
         if (proxAvaliacao == null){
             throw new InformacaoNaoEncontradoException("Nenhuma avaliação encontrada.");
         }

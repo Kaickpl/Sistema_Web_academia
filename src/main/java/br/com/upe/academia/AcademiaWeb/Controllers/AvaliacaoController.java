@@ -29,13 +29,13 @@ public class AvaliacaoController {
         return avaliacaoService.mostrarProximaAvaliacaoAluno(alunoId);
     }
 
-    @GetMapping("/personal/{cref}")
-    public List<AvaliacaoResponseDTO> listarAvaliacaoPersonal(@PathVariable String cref) {
+    @GetMapping("/personal")
+    public List<AvaliacaoResponseDTO> listarAvaliacaoPersonal(@RequestParam String cref) {
         return avaliacaoService.mostrarAvaliacaoPersonal(cref);
     }
 
-    @GetMapping("/personal/{cref}/{dataAvaliacao}")
-    public List<AvaliacaoResponseDTO> listarAvaliacaoData(@PathVariable String cref, @PathVariable LocalDate dataAvaliacao) {
+    @GetMapping("/personal/data")
+    public List<AvaliacaoResponseDTO> listarAvaliacaoData(@RequestParam String cref, @RequestParam LocalDate dataAvaliacao) {
         return avaliacaoService.mostrarAvaliacaoPersonalEData(cref, dataAvaliacao);
     }
 
