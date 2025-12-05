@@ -30,6 +30,7 @@ public class SerieServiceImpl implements SerieService {
     @Transactional
     @Override
     public Serie adicionarSerie(Serie serie) {
+        buscarSeriePorRegra(serie.getTreinoExercicio().getIdTreinoExercicio());
         return this.serieRepository.save(serie);
     }
 
@@ -41,7 +42,8 @@ public class SerieServiceImpl implements SerieService {
 
     @Override
     public List<Serie> buscarSeriePorRegra(UUID idTreinoExercicio) {
-        TreinoExercicio regra =  treinoRepository.findById(idTreinoExercicio).get();
+        TreinoExercicio regra = treinoRepository.findById(idTreinoExercicio)
+                .orElseThrow(() -> new InformacaoNaoEncontradoException("TreinoExercicio não encontrado com o id " + idTreinoExercicio));
         return this.serieRepository.findByTreinoExercicio(regra);
     }
 
