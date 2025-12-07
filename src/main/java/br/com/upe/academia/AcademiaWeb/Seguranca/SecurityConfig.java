@@ -169,7 +169,7 @@ public class SecurityConfig {
                 "*"
         ));
         configuration.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "DELETE"
+                "GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT"
         ));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(false);
