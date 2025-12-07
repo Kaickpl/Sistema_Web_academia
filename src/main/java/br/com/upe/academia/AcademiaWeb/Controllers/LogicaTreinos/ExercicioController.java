@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -60,4 +61,12 @@ public class ExercicioController {
         commandHistory.execute(comandoDelExerc);
         return  ResponseEntity.noContent().build();
     }
+
+    @GetMapping
+    public ResponseEntity<List<ExercicioDTO>> buscarExercicios(){
+        List<ExercicioDTO> listaExerciciosExistentes =  exercicioService.buscarTodosOsExercicios().stream()
+                .map(exercicio -> exercicioMapper.toDTO(exercicio)).toList();
+        return ResponseEntity.ok().body(listaExerciciosExistentes);
+    }
+
 }

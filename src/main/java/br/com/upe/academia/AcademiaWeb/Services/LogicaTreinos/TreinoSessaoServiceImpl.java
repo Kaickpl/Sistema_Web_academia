@@ -53,7 +53,7 @@ public class TreinoSessaoServiceImpl implements TreinoSessaoService {
         ));
 
         if(!treino.getAluno().getIdUsuario().equals(idAluno)){
-            throw new ValorInvalidoException("A sessão de treino a ser encontrada não pertence à sessão de treino informada na URL.");
+            throw new ValorInvalidoException("A sessão de treino a ser encontrada não pertence ao aluno informado na URL.");
         }
 
         return treino;

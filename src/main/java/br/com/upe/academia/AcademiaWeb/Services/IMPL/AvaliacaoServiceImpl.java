@@ -40,7 +40,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         }
         Optional<Personal> personal = personalService.buscarPersonalEmail(avaliacaoDTOs.getEmailPersonal());
         if (personal.isEmpty()){
-            throw new InformacaoNaoEncontradoException("Não existe um personal registrado com esse CREF");
+            throw new InformacaoNaoEncontradoException("Não existe um personal registrado com esse e-mail");
         }
         MedidasCorporais medidasCorporais = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(avaliacaoDTOs.getAlunoId());
 
@@ -81,7 +81,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         if (!existeAvaliacao){
             throw new InformacaoNaoEncontradoException("Este aluno não possui nenhuma avaliação registrada");
         }
-        Avaliacao proxAvaliacao = avaliacaoRepository.findTop1ByAluno_IdUsuarioOrderByDataAvaliacaoDesc(alunoId);
+        Avaliacao proxAvaliacao = avaliacaoRepository.findTop1ByAluno_IdUsuarioOrderByDataAvaliacaoAsc(alunoId);
         if (proxAvaliacao == null){
             throw new InformacaoNaoEncontradoException("Nenhuma avaliação encontrada.");
         }
