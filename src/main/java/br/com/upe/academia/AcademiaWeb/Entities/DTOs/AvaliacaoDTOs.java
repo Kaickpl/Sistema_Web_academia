@@ -24,7 +24,11 @@ public class AvaliacaoDTOs {
     public AvaliacaoDTOs(Avaliacao avaliacao) {
         this.alunoId = avaliacao.getAluno().getIdUsuario();
         this.emailPersonal = avaliacao.getPersonal().getEmail();
-        this.medidasId = avaliacao.getMedidasCorporais().getIdMedidas();
+        if (avaliacao.getMedidasCorporais() != null) {
+            this.medidasId = avaliacao.getMedidasCorporais().getIdMedidas();
+        } else {
+            this.medidasId = null;
+        }
         this.avaliacaoId = avaliacao.getIdAvaliacao();
         this.dataAvaliacao = avaliacao.getDataAvaliacao();
         this.objetivoAvaliacao = avaliacao.getObjetivoAvaliacao();

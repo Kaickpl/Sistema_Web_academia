@@ -11,6 +11,7 @@ import java.util.UUID;
 public interface ExercicioService {
     public Exercicio buscarExercicio(UUID idExercicio);
     public List<Exercicio> buscarExercicioPorTreino(UUID idTreino);
+    public List<Exercicio> buscarTodosOsExercicios();
     public Exercicio adicionarExercicio(Exercicio exercicio);
     public Exercicio alterarExercicio(Exercicio exercicio);
     public void removerExercicio(UUID idExercicio);
