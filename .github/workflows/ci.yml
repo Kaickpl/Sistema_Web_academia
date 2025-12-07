@@ -30,7 +30,7 @@ jobs:
 
       - name: Run tests (verify)
         run: mvn -B -Prelease -DskipITs=false clean verify
-        # Remova -DskipITs se não tiver integration tests; ajuste profiles conforme seu pom.xml.
+
 
       - name: Package (no testes)
         if: success()
