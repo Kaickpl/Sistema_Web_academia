@@ -137,7 +137,7 @@ public class GerenciaConquistas {
     }
 
     private void verificarLegpress(String exercicio, double peso, double valor, UUID alunoId){
-        if (peso >= 400) {
+        if (peso >= 1000) {
             registrar(new ConquistasExercicios(exercicio, 400, valor), alunoId);
         }
         if (peso >= 200) {
