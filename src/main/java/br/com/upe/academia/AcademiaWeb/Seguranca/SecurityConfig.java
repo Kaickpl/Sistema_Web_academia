@@ -96,22 +96,22 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/medidas").hasRole("ALUNO")
 
                         //treino
-                        .requestMatchers(HttpMethod.GET, "/api/treino/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/treino/{id}").hasAnyRole("ALUNO", "PersonalTrainer")
                         .requestMatchers(HttpMethod.POST, "/api/treino/aluno/{idAluno}").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.PUT, "/api/treino/{id}").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.DELETE, "/api/treino/{id}").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET, "/api/treino/{id}/completo").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/treino/{id}/completo").hasAnyRole("ALUNO", "PersonalTrainer")
 
                         //exercicio
-                        .requestMatchers(HttpMethod.GET, "/api/exercicio/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/exercicio/{id}").hasAnyRole("ALUNO", "PersonalTrainer")
                         .requestMatchers(HttpMethod.POST, "/api/exercicio").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.PUT, "/api/exercicio/{id}").hasRole("PersonalTrainer")
                         .requestMatchers(HttpMethod.DELETE, "/api/exercicio/{id}").hasRole("PersonalTrainer")
-                        .requestMatchers(HttpMethod.GET, "/api/exercicio").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/exercicio").hasAnyRole("ALUNO", "PersonalTrainer")
 
 
                         // Serie
-                        .requestMatchers(HttpMethod.GET, "/api/exerciciosTemplate/{idTreinoExercicio}/seriesTemplate/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/exerciciosTemplate/{idTreinoExercicio}/seriesTemplate/{id}").hasAnyRole("ALUNO", "PersonalTrainer")
                         .requestMatchers(HttpMethod.POST, "/api/exerciciosTemplate/{idTreinoExercicio}/seriesTemplate").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.DELETE, "/api/exerciciosTemplate/{idTreinoExercicio}/seriesTemplate/{id}").hasRole("ALUNO")
 
@@ -125,25 +125,25 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/alunos/{idAluno}/{idTreinoSessao}/fechar").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.PUT, "/api/alunos/{idAluno}/{idTreinoSessao}/comentar").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.DELETE, "/api/alunos/{idAluno}/{idTreinoSessao}").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET, "/api/alunos/{idAluno}/{idTreinoSessao}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/alunos/{idAluno}/{idTreinoSessao}").hasAnyRole("ALUNO", "PersonalTrainer")
 
                         //exercicioSessao
                         .requestMatchers(HttpMethod.POST, "/api/sessoes/{idSessao}/exercicios").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.DELETE, "/api/sessoes/{idSessao}/exercicios/{idExercicioSessao}").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET, "/api/sessoes/{idSessao}/exercicios/{idExercicioSessao}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/sessoes/{idSessao}/exercicios/{idExercicioSessao}").hasAnyRole("ALUNO", "PersonalTrainer")
                         .requestMatchers(HttpMethod.PUT, "/api/sessoes/{idSessao}/exercicios/{idExercicioSessao}").hasRole("ALUNO")
 
                         //serieSessao
                         .requestMatchers(HttpMethod.POST, "/api/exercicios/{idExercicioSessao}/series").hasRole("ALUNO")
                         .requestMatchers(HttpMethod.DELETE, "/api/exercicios/{idExercicioSessao}/series/{idSerieSessao}").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET, "/api/exercicios/{idExercicioSessao}/series/{idSerieSessao}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/exercicios/{idExercicioSessao}/series/{idSerieSessao}").hasAnyRole("ALUNO", "PersonalTrainer")
                         .requestMatchers(HttpMethod.PUT, "/api/exercicios/{idExercicioSessao}/series/{idSerieSessao}").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET, "/api/exercicios/{idExercicioSessao}/series/{idAluno}/recordes/{idExercicio}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/exercicios/{idExercicioSessao}/series/{idAluno}/recordes/{idExercicio}").hasAnyRole("ALUNO", "PersonalTrainer")
 
                         //treinos_alunos
                         .requestMatchers(HttpMethod.POST, "/api/aluno/{idAluno}/treinos").hasRole("ALUNO")
-                        .requestMatchers(HttpMethod.GET, "/api/aluno/{idAluno}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/aluno/{idAluno}/treinos/{idTreino}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/aluno/{idAluno}").hasAnyRole("ALUNO", "PersonalTrainer")
+                        .requestMatchers(HttpMethod.GET, "/api/aluno/{idAluno}/treinos/{idTreino}").hasAnyRole("ALUNO", "PersonalTrainer")
                         .requestMatchers(HttpMethod.DELETE, "/api/aluno/{idAluno}/treinos/{idTreino}").hasRole("ALUNO")
 
                         //command
