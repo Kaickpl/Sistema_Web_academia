@@ -31,7 +31,7 @@ public class TreinoSessao {
     private Aluno aluno;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "template_treino_id", nullable = false)
+    @JoinColumn(name = "template_treino_id", nullable = true)
     private Treino treinoTemplate;
 
     @OneToMany(mappedBy = "treinoExecucao",fetch = FetchType.LAZY, cascade = CascadeType.ALL)

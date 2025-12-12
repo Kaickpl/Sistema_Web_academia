@@ -2,6 +2,7 @@ package br.com.upe.academia.AcademiaWeb.Services.LogicaTreinos;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Serie;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.Treino;
 import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoExercicio;
+import br.com.upe.academia.AcademiaWeb.Entities.LogicaTreinos.TreinoSessao;
 import br.com.upe.academia.AcademiaWeb.Exceptions.InformacaoNaoEncontradoException;
 import br.com.upe.academia.AcademiaWeb.Repositories.TreinoRepository;
 import br.com.upe.academia.AcademiaWeb.Services.TreinoExercicioService;
@@ -46,6 +47,11 @@ public class TreinoServiceImpl implements TreinoService {
     public void deletarTreino(UUID idTreino) {
         Treino treino = this.buscarTreino(idTreino);
         treinoRepository.desvincularTreinoDeTodosAlunos(idTreino);
+        if(treino.getTreinoExecucoes() != null ){
+            for (TreinoSessao treinoSessao : treino.getTreinoExecucoes()) {
+                treinoSessao.setTreinoTemplate(null);
+            }
+        }
         this.treinoRepository.deleteById(idTreino);
     }
 
