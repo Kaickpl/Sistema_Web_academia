@@ -58,7 +58,7 @@ public class ObjetivosServiceImpl implements ObjetivosService {
                 fimDia
         );
         if (jaExisteHoje){
-            throw new ValorInvalidoException("Você já definiu um objetivo para " + objetivosDto.getTipoMedida() + " hoje. Tente editar o existente.");
+            throw new ValorInvalidoException("Você já definiu um objetivo para " + objetivosDto.getTipoMedida() + " hoje. ");
         }
 
         MedidasCorporais ultimasMedidas = medidasCorporaisRepository.findTop1ByAluno_IdUsuarioOrderByDataDesc(aluno.getIdUsuario());
@@ -100,7 +100,7 @@ public class ObjetivosServiceImpl implements ObjetivosService {
                 fimDia
         );
         if (jaExisteHoje){
-            throw new ValorInvalidoException("Você já definiu um objetivo para " + nomeExercicio + " hoje. Tente editar o existente.");
+            throw new ValorInvalidoException("Você já definiu um objetivo para " + nomeExercicio + " hoje.");
         }
 
 
